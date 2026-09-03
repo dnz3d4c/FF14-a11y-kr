@@ -1,0 +1,836 @@
+{
+  "note": "게임 한국어판이 실제로 쓰는 낱말. 지어내지 않는다 - 모든 줄에 Addon 시트 행 번호가 붙어 있고, tools/ko-terms가 게임 데이터에서 직접 뽑았다. 번역에서 쓰는 게임 낱말은 전부 여기 있어야 한다 - 없으면 검수자가 '확인하고 쓴 것'과 '지어낸 것'을 구분 못 한다.",
+  "method": "KR 클라이언트 sqpack의 Addon 시트를 Lumina로 읽는다. 게임을 켤 필요가 없다. 다시 뽑기: run\\terms.bat dump tools\\ko-terms\\out",
+  "game_version": "2026.08.05.0000.0000",
+  "dumped": "2026-08-18",
+  "not_found": {
+    "채팅": "게임은 이 낱말을 안 쓴다. Addon 전 행에서 0건 - 로그(로그 필터, 로그창) 또는 대화다",
+    "나침반": "0건. 방위는 '방향'으로만 나온다",
+    "해금": "게임은 이 낱말을 안 쓴다. Addon 전 행에서 0건 - 개방/미개방이다",
+    "장판": "Addon 전 행에서 0건. 게임이 안 쓰는 플레이어 말이고, 모드가 AoE 경고 이름으로 쓰기로 했다 (2026-08-24 사용자 결정, W-99). 게임의 '범위'(710)는 AoE 전용이 아니라 뜻이 넓다",
+    "배정": "0건. 모드가 지은 말이다 - 기술을 키에 붙이는 동작(Belegen)을 가리킨다",
+    "대화 기록": "0건. 게임은 '대화창'(1096)까지만 이름을 갖고 그 기록을 부르는 낱말은 없다",
+    "지형": "0건. '충돌'도 0건이다 - 게임 내부 기능이라 UI 낱말이 없다. 모드가 '길 정보'(navmesh)와 구별하려고 쓴다"
+  },
+  "terms": [
+    {
+      "en": "OK",
+      "ko": "확인",
+      "addon": 1,
+      "row_text": "확인"
+    },
+    {
+      "en": "Cancel",
+      "ko": "취소",
+      "addon": 2,
+      "row_text": "취소"
+    },
+    {
+      "en": "Yes",
+      "ko": "예",
+      "addon": 3,
+      "row_text": "예"
+    },
+    {
+      "en": "No",
+      "ko": "아니오",
+      "addon": 4,
+      "row_text": "아니오"
+    },
+    {
+      "en": "Hand over",
+      "ko": "건네주기",
+      "addon": 88,
+      "row_text": "건네주기"
+    },
+    {
+      "en": "Gatherer",
+      "ko": "채집가",
+      "addon": 182,
+      "row_text": "채집가"
+    },
+    {
+      "en": "Gil on hand",
+      "ko": "소지금",
+      "addon": 187,
+      "row_text": "목적지를 선택하십시오.\\n소지금: ",
+      "note": "187행이 '목적지를 선택하십시오.\\n소지금: '"
+    },
+    {
+      "en": "Progress",
+      "ko": "작업량",
+      "addon": 213,
+      "row_text": "작업량"
+    },
+    {
+      "en": "Durability",
+      "ko": "내구도",
+      "addon": 214,
+      "row_text": "내구도"
+    },
+    {
+      "en": "High quality",
+      "ko": "고품질",
+      "addon": 227,
+      "row_text": "고품질"
+    },
+    {
+      "en": "HP",
+      "ko": "HP",
+      "addon": 232,
+      "row_text": "HP",
+      "note": "게임은 HP를 그대로 쓴다. 9125·9380의 '체력'은 초코보 경주·조련 능력치라 다른 것이다"
+    },
+    {
+      "en": "MP",
+      "ko": "MP",
+      "addon": 233,
+      "row_text": "MP"
+    },
+    {
+      "en": "Level",
+      "ko": "레벨",
+      "addon": 335,
+      "row_text": "레벨"
+    },
+    {
+      "en": "Log window",
+      "ko": "로그창",
+      "addon": 370,
+      "row_text": "로그창 숨기기",
+      "note": "370행이 '로그창 숨기기'"
+    },
+    {
+      "en": "Roll need",
+      "ko": "선입찰",
+      "addon": 390,
+      "row_text": "선입찰"
+    },
+    {
+      "en": "Roll greed",
+      "ko": "입찰",
+      "addon": 391,
+      "row_text": "입찰"
+    },
+    {
+      "en": "Treasure chest",
+      "ko": "보물상자",
+      "addon": 395,
+      "row_text": "보물상자"
+    },
+    {
+      "en": "Quest",
+      "ko": "퀘스트",
+      "addon": 450,
+      "row_text": "퀘스트"
+    },
+    {
+      "en": "Duty",
+      "ko": "임무",
+      "addon": 452,
+      "row_text": "진행 중인 임무",
+      "note": "452행이 '진행 중인 임무'"
+    },
+    {
+      "en": "Materia",
+      "ko": "마테리아",
+      "addon": 481,
+      "row_text": "마테리아"
+    },
+    {
+      "en": "Inventory",
+      "ko": "소지품",
+      "addon": 520,
+      "row_text": "소지품"
+    },
+    {
+      "en": "Crystal",
+      "ko": "크리스탈",
+      "addon": 524,
+      "row_text": "크리스탈"
+    },
+    {
+      "en": "Retainer",
+      "ko": "집사",
+      "addon": 532,
+      "row_text": "집사"
+    },
+    {
+      "en": "Gear",
+      "ko": "장비",
+      "addon": 538,
+      "row_text": "장비"
+    },
+    {
+      "en": "Emote",
+      "ko": "감정 표현",
+      "addon": 635,
+      "row_text": "감정 표현"
+    },
+    {
+      "en": "Shout",
+      "ko": "외치기",
+      "addon": 645,
+      "row_text": "외치기"
+    },
+    {
+      "en": "Free company",
+      "ko": "자유부대",
+      "addon": 646,
+      "row_text": "자유부대"
+    },
+    {
+      "en": "Yell",
+      "ko": "떠들기",
+      "addon": 647,
+      "row_text": "떠들기"
+    },
+    {
+      "en": "Alliance",
+      "ko": "연합 파티",
+      "addon": 648,
+      "row_text": "연합 파티"
+    },
+    {
+      "en": "Tell",
+      "ko": "귓속말",
+      "addon": 652,
+      "row_text": "귓속말"
+    },
+    {
+      "en": "Say",
+      "ko": "말하기",
+      "addon": 653,
+      "row_text": "말하기"
+    },
+    {
+      "en": "Map",
+      "ko": "지도",
+      "addon": 671,
+      "row_text": "지도"
+    },
+    {
+      "en": "Levequest",
+      "ko": "길드 의뢰",
+      "addon": 678,
+      "row_text": "길드 의뢰"
+    },
+    {
+      "en": "Area",
+      "ko": "범위",
+      "addon": 710,
+      "row_text": "범위"
+    },
+    {
+      "en": "Experience",
+      "ko": "경험치",
+      "addon": 720,
+      "row_text": "경험치"
+    },
+    {
+      "en": "Main hand",
+      "ko": "주 무기",
+      "addon": 738,
+      "row_text": "주 무기"
+    },
+    {
+      "en": "Off hand",
+      "ko": "보조 무기",
+      "addon": 739,
+      "row_text": "보조 무기"
+    },
+    {
+      "en": "Head",
+      "ko": "머리",
+      "addon": 740,
+      "row_text": "머리"
+    },
+    {
+      "en": "Body",
+      "ko": "몸통",
+      "addon": 741,
+      "row_text": "몸통"
+    },
+    {
+      "en": "Hands",
+      "ko": "손",
+      "addon": 742,
+      "row_text": "손"
+    },
+    {
+      "en": "Waist",
+      "ko": "허리",
+      "addon": 743,
+      "row_text": "허리"
+    },
+    {
+      "en": "Legs",
+      "ko": "다리",
+      "addon": 744,
+      "row_text": "다리"
+    },
+    {
+      "en": "Feet",
+      "ko": "발",
+      "addon": 745,
+      "row_text": "발"
+    },
+    {
+      "en": "Ears",
+      "ko": "귀",
+      "addon": 746,
+      "row_text": "귀"
+    },
+    {
+      "en": "Neck",
+      "ko": "목",
+      "addon": 747,
+      "row_text": "목"
+    },
+    {
+      "en": "Wrists",
+      "ko": "손목",
+      "addon": 748,
+      "row_text": "손목"
+    },
+    {
+      "en": "Soul crystal",
+      "ko": "소울 크리스탈",
+      "addon": 751,
+      "row_text": "소울 크리스탈"
+    },
+    {
+      "en": "Gear set",
+      "ko": "장비세트",
+      "addon": 756,
+      "row_text": "장비세트"
+    },
+    {
+      "en": "Attributes",
+      "ko": "능력치",
+      "addon": 758,
+      "row_text": "능력치"
+    },
+    {
+      "en": "Class",
+      "ko": "클래스",
+      "addon": 760,
+      "row_text": "클래스/잡",
+      "note": "760행이 '클래스/잡'"
+    },
+    {
+      "en": "Currency",
+      "ko": "화폐",
+      "addon": 761,
+      "row_text": "화폐"
+    },
+    {
+      "en": "Flag",
+      "ko": "표식",
+      "addon": 770,
+      "row_text": "표식",
+      "note": "지도에 찍는 표시. 3558행 '대상에 표식 설정'도 같은 낱말"
+    },
+    {
+      "en": "Seals",
+      "ko": "군표",
+      "addon": 831,
+      "row_text": "군표"
+    },
+    {
+      "en": "Item",
+      "ko": "아이템",
+      "addon": 953,
+      "row_text": "아이템"
+    },
+    {
+      "en": "GP",
+      "ko": "GP",
+      "addon": 1003,
+      "row_text": "GP"
+    },
+    {
+      "en": "Cast",
+      "ko": "시전",
+      "addon": 1032,
+      "row_text": "시전"
+    },
+    {
+      "en": "Job",
+      "ko": "직업",
+      "addon": 1080,
+      "row_text": "전투 직업",
+      "note": "1080행이 '전투 직업'"
+    },
+    {
+      "en": "Tab",
+      "ko": "탭",
+      "addon": 1095,
+      "row_text": "탭 추가",
+      "note": "로그 탭. 1209행 '탭별 로그 필터 설정'이 채팅 맥락"
+    },
+    {
+      "en": "Log filter",
+      "ko": "로그 필터",
+      "addon": 1210,
+      "row_text": "로그 필터"
+    },
+    {
+      "en": "Conversation",
+      "ko": "대화",
+      "addon": 1212,
+      "row_text": "대화",
+      "note": "로그 필터의 갈래 이름. 게임은 이걸 '채팅'이라 안 한다"
+    },
+    {
+      "en": "Battle",
+      "ko": "전투",
+      "addon": 1213,
+      "row_text": "전투",
+      "note": "로그 필터의 갈래 이름"
+    },
+    {
+      "en": "Notice",
+      "ko": "알림",
+      "addon": 1214,
+      "row_text": "알림",
+      "note": "로그 필터의 갈래 이름"
+    },
+    {
+      "en": "Target",
+      "ko": "대상",
+      "addon": 1216,
+      "row_text": "대상"
+    },
+    {
+      "en": "Party",
+      "ko": "파티",
+      "addon": 1228,
+      "row_text": "파티"
+    },
+    {
+      "en": "Hotbar",
+      "ko": "단축바",
+      "addon": 1305,
+      "row_text": "단축바"
+    },
+    {
+      "en": "Keybind",
+      "ko": "단축키",
+      "addon": 1306,
+      "row_text": "단축키"
+    },
+    {
+      "en": "Crafting log",
+      "ko": "제작수첩",
+      "addon": 1400,
+      "row_text": "제작수첩"
+    },
+    {
+      "en": "Recipe",
+      "ko": "제작법",
+      "addon": 1409,
+      "row_text": "특수 제작법",
+      "note": "1409행이 '특수 제작법'"
+    },
+    {
+      "en": "Mailbox",
+      "ko": "편지함",
+      "addon": 1807,
+      "row_text": "친구 편지함",
+      "note": "1807행이 '친구 편지함'"
+    },
+    {
+      "en": "Hunting log",
+      "ko": "토벌수첩",
+      "addon": 1880,
+      "row_text": "토벌수첩"
+    },
+    {
+      "en": "Rank (hunting log)",
+      "ko": "단계",
+      "addon": 1893,
+      "row_text": "단계 수행 조건",
+      "note": "1893행이 '단계 수행 조건'"
+    },
+    {
+      "en": "Echo",
+      "ko": "혼잣말",
+      "addon": 1912,
+      "row_text": "혼잣말"
+    },
+    {
+      "en": "System message",
+      "ko": "시스템 메시지",
+      "addon": 1913,
+      "row_text": "시스템 메시지"
+    },
+    {
+      "en": "Gathering",
+      "ko": "채집",
+      "addon": 1915,
+      "row_text": "채집 관련 시스템 메시지",
+      "note": "1915행이 '채집 관련 시스템 메시지'"
+    },
+    {
+      "en": "Error message",
+      "ko": "오류 메시지",
+      "addon": 1916,
+      "row_text": "오류 메시지"
+    },
+    {
+      "en": "Loot",
+      "ko": "전리품",
+      "addon": 1920,
+      "row_text": "전리품 입찰 정보",
+      "note": "1920행이 '전리품 입찰 정보'"
+    },
+    {
+      "en": "FATE",
+      "ko": "돌발 임무",
+      "addon": 2275,
+      "row_text": "돌발 임무"
+    },
+    {
+      "en": "Deep dungeon",
+      "ko": "딥 던전",
+      "addon": 2304,
+      "row_text": "딥 던전"
+    },
+    {
+      "en": "Aetheryte",
+      "ko": "에테라이트",
+      "addon": 2723,
+      "row_text": "에테라이트 전송망",
+      "note": "2723행이 '에테라이트 전송망'"
+    },
+    {
+      "en": "Channel",
+      "ko": "채널",
+      "addon": 2819,
+      "row_text": "링크셸 채널 로그 설정",
+      "note": "2819행이 '링크셸 채널 로그 설정'"
+    },
+    {
+      "en": "Amount",
+      "ko": "수량",
+      "addon": 2976,
+      "row_text": "수량"
+    },
+    {
+      "en": "On",
+      "ko": "켜기",
+      "addon": 3053,
+      "row_text": "켜기"
+    },
+    {
+      "en": "Off",
+      "ko": "끄기",
+      "addon": 3054,
+      "row_text": "끄기"
+    },
+    {
+      "en": "Ability",
+      "ko": "기술",
+      "addon": 3249,
+      "row_text": "기술 시전 속도",
+      "note": "3249행이 '기술 시전 속도'. 기술 목록은 MainCommand 시트에도 있다"
+    },
+    {
+      "en": "Fishing spot",
+      "ko": "낚시터",
+      "addon": 3811,
+      "row_text": "미발견 낚시터",
+      "note": "3811행이 '미발견 낚시터'"
+    },
+    {
+      "en": "System configuration",
+      "ko": "시스템 설정",
+      "addon": 4000,
+      "row_text": "시스템 설정"
+    },
+    {
+      "en": "Sound",
+      "ko": "소리",
+      "addon": 4011,
+      "row_text": "소리"
+    },
+    {
+      "en": "Volume",
+      "ko": "음량",
+      "addon": 4047,
+      "row_text": "주 음량",
+      "note": "4047행이 '주 음량'"
+    },
+    {
+      "en": "Mount",
+      "ko": "탈것",
+      "addon": 4901,
+      "row_text": "탈것"
+    },
+    {
+      "en": "Minion",
+      "ko": "꼬마 친구",
+      "addon": 4902,
+      "row_text": "꼬마 친구"
+    },
+    {
+      "en": "Appearance",
+      "ko": "외모",
+      "addon": 4996,
+      "row_text": "외모"
+    },
+    {
+      "en": "Beast tribe",
+      "ko": "우호부족",
+      "addon": 5750,
+      "row_text": "우호부족 1(신생 에오르제아~효월의 종언)",
+      "note": "5750행이 '우호부족 1(신생 에오르제아~효월의 종언)'"
+    },
+    {
+      "en": "Exercise",
+      "ko": "훈련",
+      "addon": 6496,
+      "row_text": "훈련"
+    },
+    {
+      "en": "Slot",
+      "ko": "칸",
+      "addon": 7787,
+      "row_text": "단축바 칸에 재사용 대기 시간 표시",
+      "note": "7787행이 '단축바 칸에 재사용 대기 시간 표시'"
+    },
+    {
+      "en": "Dungeon",
+      "ko": "던전",
+      "addon": 8335,
+      "row_text": "던전"
+    },
+    {
+      "en": "Hunting target",
+      "ko": "토벌 대상",
+      "addon": 8425,
+      "row_text": "토벌 대상"
+    },
+    {
+      "en": "Habitat",
+      "ko": "서식 장소",
+      "addon": 8426,
+      "row_text": "서식 장소"
+    },
+    {
+      "en": "Trial",
+      "ko": "토벌전",
+      "addon": 8608,
+      "row_text": "토벌전"
+    },
+    {
+      "en": "Raid",
+      "ko": "레이드",
+      "addon": 8609,
+      "row_text": "레이드"
+    },
+    {
+      "en": "Hall of the Novice",
+      "ko": "초보자의 집",
+      "addon": 8614,
+      "row_text": "초보자의 집"
+    },
+    {
+      "en": "Objective",
+      "ko": "목표",
+      "addon": 8835,
+      "row_text": "주간 목표 달성 조건",
+      "note": "8835행이 '주간 목표 달성 조건'"
+    },
+    {
+      "en": "Card",
+      "ko": "카드",
+      "addon": 9160,
+      "row_text": "카드 대결 신청",
+      "note": "9160행이 '카드 대결 신청'"
+    },
+    {
+      "en": "Card match",
+      "ko": "카드 대결",
+      "addon": 9224,
+      "row_text": "카드 대결"
+    },
+    {
+      "en": "Mob",
+      "ko": "마물",
+      "addon": 9632,
+      "row_text": "마물"
+    },
+    {
+      "en": "Logout",
+      "ko": "접속 종료",
+      "addon": 9836,
+      "row_text": "접속 종료",
+      "note": "시스템 메뉴에서도 확인됨 (2026-08-18 로그)"
+    },
+    {
+      "en": "Cairn of Return",
+      "ko": "부활 석탑",
+      "addon": 10418,
+      "row_text": "부활 석탑"
+    },
+    {
+      "en": "Cairn of Passage",
+      "ko": "전송 석탑",
+      "addon": 10419,
+      "row_text": "전송 석탑"
+    },
+    {
+      "en": "North",
+      "ko": "북",
+      "addon": 12297,
+      "row_text": "북",
+      "note": "방위 배열은 12294 동, 12295 남, 12296 서, 12297 북"
+    },
+    {
+      "en": "Key item",
+      "ko": "중요 아이템",
+      "addon": 12790,
+      "row_text": "중요 아이템"
+    },
+    {
+      "en": "On (state)",
+      "ko": "켜짐",
+      "addon": 14003,
+      "row_text": "동작 반복 켜짐\\n기록한 동작을 일정 간격으로 반복합니다.",
+      "note": "상태를 말할 때. 동작을 시킬 때는 '켜기'(3053)"
+    },
+    {
+      "en": "Off (state)",
+      "ko": "꺼짐",
+      "addon": 14012,
+      "row_text": "동작 반복 꺼짐\\n동작을 반복하지 않고 대기 자세로 돌아갑니다.",
+      "note": "상태를 말할 때. 동작을 시킬 때는 '끄기'(3054)"
+    },
+    {
+      "en": "Ring",
+      "ko": "반지",
+      "addon": 14640,
+      "row_text": "반지",
+      "note": "아이템 갈래 이름. 장비창의 두 칸은 749 오른쪽 손가락 / 750 왼쪽 손가락이라 이름이 다르다 - 모드는 칸이 하나뿐이라 갈래 이름을 쓴다"
+    },
+    {
+      "en": "Duty action",
+      "ko": "임무 전용 기술",
+      "addon": 16761,
+      "row_text": "임무 전용 기술",
+      "note": "임무 상세 화면의 항목이다 - 앞뒤가 '보상'(16760)·'개요'(16762)·'목적'(16764)·'평가 조건'(16765)이다. 13867행 '임무용 기술'은 다른 것이다(로스트 기술 설정)"
+    },
+    {
+      "en": "Duty Finder",
+      "ko": "임무 찾기",
+      "addon": 2500,
+      "row_text": "임무 찾기"
+    },
+    {
+      "en": "Tame",
+      "ko": "조련",
+      "addon": 9034,
+      "row_text": "조련",
+      "note": "9036 '조련 시작', 9040 '조련에 사용할 먹이 선택'이 이어진다"
+    },
+    {
+      "en": "Deep Dungeon",
+      "ko": "딥 던전",
+      "addon": 2304,
+      "row_text": "딥 던전"
+    },
+    {
+      "en": "Enemy",
+      "ko": "적",
+      "addon": 972,
+      "row_text": "적"
+    },
+    {
+      "en": "Zone transition",
+      "ko": "지역 이동",
+      "addon": 7834,
+      "row_text": "지역 이동 시 자동 표시",
+      "note": "낱말 단독 행은 없다. 이 줄과 8092행이 같은 표현을 쓴다"
+    },
+    {
+      "en": "Objectives (todo list)",
+      "ko": "달성 조건",
+      "addon": 12462,
+      "row_text": "달성 조건"
+    },
+    {
+      "en": "Language",
+      "ko": "언어",
+      "addon": 298,
+      "row_text": "언어"
+    },
+    {
+      "en": "Japanese",
+      "ko": "일본어",
+      "addon": 10,
+      "row_text": "일본어"
+    },
+    {
+      "en": "English",
+      "ko": "영어",
+      "addon": 11,
+      "row_text": "영어"
+    },
+    {
+      "en": "German",
+      "ko": "독일어",
+      "addon": 12,
+      "row_text": "독일어"
+    },
+    {
+      "en": "French",
+      "ko": "프랑스어",
+      "addon": 13,
+      "row_text": "프랑스어"
+    },
+    {
+      "en": "Unlocked",
+      "ko": "개방",
+      "addon": 4838,
+      "row_text": "개방 조건: ",
+      "note": "게임은 해금을 안 쓴다 - Addon 전 행에서 0건이다. 8172행이 개방되지 않은 항목입니다"
+    },
+    {
+      "en": "Locked",
+      "ko": "미개방",
+      "addon": 3075,
+      "row_text": "・미개방 임무",
+      "note": "11090행에도 미개방 임무가 있다"
+    },
+    {
+      "en": "Chat window",
+      "ko": "대화창",
+      "addon": 1096,
+      "row_text": "대화창 설정",
+      "note": "1095행 '탭 추가' 바로 옆이라 로그 탭과 같은 창이다. 게임은 이 창을 '로그창'(370)으로도 부르는데, 공식 가이드는 절 제목까지 '대화창'이고 '로그창'은 0건이다 (guide 112:21)"
+    },
+    {
+      "en": "Delete",
+      "ko": "삭제",
+      "addon": 104,
+      "row_text": "삭제",
+      "note": "102 잘라내기·105 실행 취소와 한 묶음인 범용 편집 명령이다. 68행은 편지함 전용이라 맥락이 좁다"
+    },
+    {
+      "en": "Gil exchange (retainer)",
+      "ko": "길 주고받기",
+      "addon": 912,
+      "row_text": "길 주고받기",
+      "note": "910행이 '집사 소지품'이고 914행이 '얼마나 받으시겠습니까?'다 - 집사에게 길을 맡기고 찾는 창이다"
+    },
+    {
+      "en": "Cone",
+      "ko": "부채꼴",
+      "addon": 10290,
+      "row_text": "방식 2: 자신의 전방 부채꼴 범위 안에 있는 적만 선택",
+      "note": "대상 선택 방식 설명이지만 게임이 범위 모양을 이 낱말로 부른다"
+    }
+  ]
+}
