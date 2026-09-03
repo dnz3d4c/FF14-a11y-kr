@@ -1,0 +1,9 @@
+{
+  "context": [
+    "이 저장소에는 원본(derbruedi/ff14-accessibility)의 파일이 하나도 없다. 원본은 upstream/ 서브모듈이 가리키는 커밋 하나로만 담기고, 파일 내용은 git submodule update가 원본에서 받아 온다. 그러므로 upstream/ 아래에 우리가 쓴 코드는 존재하지 않는다.",
+    "리뷰 대상은 저장소 루트다. upstream/ 안쪽을 작업 디렉토리로 잡으면 상위의 tools/·korean/·graft/를 볼 수 없어서 '파일이 없다'는 오탐이 난다. 실제로 앞선 세션에서 그 오탐이 confidence 0.86과 0.88로 두 건 나왔다.",
+    "한국어는 커밋으로 얹지 않는다. tools/assemble이 원본 트리를 build/로 복사한 뒤 korean/ 대장과 graft/rules.json을 적용해서 조립한다. build/는 gitignore 대상이고 저장소에 없는 것이 정상이다.",
+    "빌드는 반드시 Release로 한다. 원본 csproj의 DeployToDevFolder 타깃이 Debug 조건이라, Debug로 빌드하면 결과가 XIVLauncher/devPlugins로 자동 복사되어 정식 설치본과 충돌한다.",
+    "사용자는 스크린리더(NVDA) 사용자다. 이 모드가 발화하는 텍스트의 어순·구두점·기호는 임의로 가공하지 않는다."
+  ]
+}

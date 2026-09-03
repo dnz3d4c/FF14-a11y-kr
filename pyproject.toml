@@ -1,0 +1,21 @@
+[project]
+name = "ff14-a11y-kr-tools"
+version = "0.1.0"
+description = "FF14 접근성 모드 한국어판의 조립·검사 도구"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.6", "mypy>=1.11"]
+
+[tool.pytest.ini_options]
+pythonpath = ["tools/codex-review"]
+testpaths = ["tools"]
+
+[tool.ruff]
+line-length = 100
+# 원본 트리와 조립 산출물은 우리 코드가 아니다. 원본 파일은 고치지 않는 것이 이 저장소의 전제다.
+extend-exclude = ["upstream", "build"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
