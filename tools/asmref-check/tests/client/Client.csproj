@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Client</AssemblyName>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="StubLib">
+      <HintPath>..\v1\bin\Release\net10.0\StubLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

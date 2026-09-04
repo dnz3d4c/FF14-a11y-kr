@@ -18,6 +18,14 @@ pythonpath = [
     "tools/ci-check",
     "tools/common",
     "tools/ko-terms",
+    "tools/commit-lint",
+    "tools/ko-lexicon",
+    "tools/ko-style",
+    "tools/loc-check",
+    "tools/kr-setup",
+    "tools/pack-check",
+    "tools/release-manifest",
+    "tools/notes-check",
 ]
 testpaths = ["tools"]
 
@@ -35,10 +43,18 @@ select = ["E", "F", "I", "UP", "B"]
 known-first-party = [
     "assemble",
     "ci_check",
+    "commit_lint",
     "compare",
     "console",
     "docs_check",
     "files",
     "graft",
+    "ko_lexicon",
+    "ko_style",
+    "kr_profile",
+    "loc_check",
+    "notes_check",
+    "pack_check",
+    "release_manifest",
     "scanner",
 ]

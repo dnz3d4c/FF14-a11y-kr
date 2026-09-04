@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- 모드는 net10.0-windows지만 이 도구는 메타데이터만 읽는다. 윈도 전용 API를
+         안 쓰므로 대상도 좁히지 않는다. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>asmrefcheck</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- 참조 어셈블리를 실행하지 않고 반사로만 들여다보기 위한 것. 런타임에 적재하면
+         한국 클라이언트용 Dalamud를 이 도구 프로세스에 끌어들이게 된다. -->
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- tests/는 독립 프로젝트 3개다. SDK 기본 글롭이 하위 .cs를 다 끌어와서 빼 준다. -->
+    <Compile Remove="tests/**" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,33 @@
+{
+  "note": "영어 사전에만 있고 아무도 `Loc.Get`으로 안 부르는 키. 글로벌 설치 프로그램에서 온 `XivLauncher` 잔재라 한국어를 지어낼 이유가 없다. 지우는 것은 원본 소스를 건드리는 일이라 여기서 안 한다 - 늘어나는 것만 막는다. 불리기 시작하면 이 목록이 아니라 `번역 없음`으로 걸린다.",
+  "keys": [
+    "AccessibilityDownloadTimeout",
+    "AccessibilityGitHubUnreachable",
+    "AutoInstallNotConfirmed",
+    "CheckingXivLauncher",
+    "DownloadFailedInstallManually",
+    "DownloadingXivLauncherAuto",
+    "DownloadingXivLauncherVersion",
+    "ErrorNoNetworkGitHub",
+    "ErrorNoReleaseAsset",
+    "GitHubUnreachable",
+    "InstallXivLauncherManually1",
+    "InstallXivLauncherManually2",
+    "InstallingXivLauncherSilent",
+    "LoginHint1",
+    "LoginHint2",
+    "LoginHint3",
+    "NoXivLauncherSetupFound",
+    "RunProgramAgain",
+    "RunSetupManuallyHint",
+    "TimeoutDownloadRetry",
+    "TimeoutFetchXivLauncher",
+    "UrlAndRunAgain",
+    "XivLauncherFound",
+    "XivLauncherInstallStarted",
+    "XivLauncherNeeded",
+    "XivLauncherNotInstalled1",
+    "XivLauncherNotInstalled2",
+    "XivLauncherSaveFailed"
+  ]
+}
