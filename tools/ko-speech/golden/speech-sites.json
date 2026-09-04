@@ -161,7 +161,7 @@
       "file": "Services/FishingService.cs",
       "rule": "speech",
       "text": "{hits.Count} Objekte in 50 Metern im Log.",
-      "why": "탐침 발화다. 키에 안 물려 있고 채팅 명령어(`/acc fish`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `FishingService.ProbeNearbyObjects`(:315)가 재고 로그에 붓는다."
+      "why": "탐침 발화이고 **`#if DEBUG` 밖이라 배포판에 들어간다.** `ProbeNearbyObjects`(:315)도 호출부인 `Plugin.cs:734`의 `case \"fishobj\":`도 조건 밖이다. 옛 저장소가 적어 둔 명령어 이름 `/acc fish`는 틀렸다 - 그 이름은 `Plugin.cs:731`이 부르는 `AnnounceSpotsInCurrentZone`의 것이라 다른 기능이다. **같은 파일의 `NavigationService` 셋과 심각도가 다르다**: 이쪽은 기본 키에 안 물려 있어서 사용자가 `/acc fishobj`를 일부러 쳐야만 나오고, 문서에 없는 진단 명령이라 그럴 일이 사실상 없다. 키 한 번으로 닿는 자리가 아니라 통과시키되, `#if DEBUG` 안으로 들어가거나 키에 물리면 그때 다시 본다."
     },
     {
       "file": "Services/KeybindService.cs",
@@ -209,19 +209,19 @@
       "file": "Services/NavigationService.cs",
       "rule": "speech",
       "text": "Marker-Sonde: {eventCount} Event, {miniCount} Minimap, {places.Count} Orte im Log.",
-      "why": "탐침 발화다. 키에 안 물려 있고 채팅 명령어(`/acc marker`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `NavigationService`가 지도 표식을 세어 로그에 붓는다."
+      "why": "**통과시키는 것이 아니라 아직 못 고친 결함이다. 옛 저장소에서 옮겨 온 `키에 안 물려 있고 채팅 명령어로만 불린다`는 근거는 이 저장소에서 사실이 아니다.** 기본 키에 물려 있다 - `Configuration.cs:57`이 `KeyDumpUI = \"Strg+F5\"`를 기본값으로 주고, 그 키를 읽는 `Plugin.cs:1880-1888`은 `#if DEBUG` 밖이다. 띄운 창이 있으면 `DumpFocusedAddon`이 먹지만 **야외처럼 창이 없으면 거짓을 돌려주고** 그때 `DumpNearbyObjects`로 떨어진다(`Plugin.cs:1886-1887`). 그 함수(`:2398`)도 `#if DEBUG` 밖이라 배포판에 그대로 들어간다. 사안 파일: `upstream-reports/object-probe-speaks-german.md`. `DumpNearbyObjects`가 `:2433`에서 `DumpMapMarkers`를 조건 없이 부르므로, 야외에서 Strg+F5 한 번에 이 문장이 `Objekt-Sonde` 다음으로 이어 나온다. 옛 근거가 적은 `/acc marker` 명령은 이 저장소에 없다."
     },
     {
       "file": "Services/NavigationService.cs",
       "rule": "speech",
       "text": "Objekt-Sonde: kein Spieler.",
-      "why": "탐침 발화다. 키에 안 물려 있고 채팅 명령어(`/acc obj`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `NavigationService.DumpNearbyObjects`(:2398, `[ObjProbe]`)의 거절이다."
+      "why": "**통과시키는 것이 아니라 아직 못 고친 결함이다. 옛 저장소에서 옮겨 온 `키에 안 물려 있고 채팅 명령어로만 불린다`는 근거는 이 저장소에서 사실이 아니다.** 기본 키에 물려 있다 - `Configuration.cs:57`이 `KeyDumpUI = \"Strg+F5\"`를 기본값으로 주고, 그 키를 읽는 `Plugin.cs:1880-1888`은 `#if DEBUG` 밖이다. 띄운 창이 있으면 `DumpFocusedAddon`이 먹지만 **야외처럼 창이 없으면 거짓을 돌려주고** 그때 `DumpNearbyObjects`로 떨어진다(`Plugin.cs:1886-1887`). 그 함수(`:2398`)도 `#if DEBUG` 밖이라 배포판에 그대로 들어간다. 사안 파일: `upstream-reports/object-probe-speaks-german.md`. 이 자리는 그 갈래에서 플레이어를 못 읽었을 때의 거절이다."
     },
     {
       "file": "Services/NavigationService.cs",
       "rule": "speech",
       "text": "Objekt-Sonde: {near.Count} Objekte im Log.",
-      "why": "탐침 발화다. 키에 안 물려 있고 채팅 명령어(`/acc obj`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `DumpNearbyObjects`가 센 개수를 알린다."
+      "why": "**통과시키는 것이 아니라 아직 못 고친 결함이다. 옛 저장소에서 옮겨 온 `키에 안 물려 있고 채팅 명령어로만 불린다`는 근거는 이 저장소에서 사실이 아니다.** 기본 키에 물려 있다 - `Configuration.cs:57`이 `KeyDumpUI = \"Strg+F5\"`를 기본값으로 주고, 그 키를 읽는 `Plugin.cs:1880-1888`은 `#if DEBUG` 밖이다. 띄운 창이 있으면 `DumpFocusedAddon`이 먹지만 **야외처럼 창이 없으면 거짓을 돌려주고** 그때 `DumpNearbyObjects`로 떨어진다(`Plugin.cs:1886-1887`). 그 함수(`:2398`)도 `#if DEBUG` 밖이라 배포판에 그대로 들어간다. 사안 파일: `upstream-reports/object-probe-speaks-german.md`. 이 자리가 그 갈래의 주 안내다 - 원본 주석이 `Announces the count so the blind user knows the dump ran`라고 적어, 로그가 아니라 **사용자에게 하는 말**임을 스스로 밝힌다."
     },
     {
       "file": "Services/PlacesService.cs",
@@ -239,7 +239,7 @@
       "file": "Services/UIReaderService.cs",
       "rule": "speech",
       "text": "ConfigSystem Dump. {addon->UldManager.NodeListCount} Nodes.",
-      "why": "덤프 발화다. `UIReaderService`가 `FFXIV_CS_Dump.txt`(:6003)로 화면 구조를 쏟는 자리이고, 키에 안 물려 있다 - 다음 미지의 화면을 읽어 내려고 두는 도구다."
+      "why": "덤프 발화인데 **지금은 도달할 수 없다.** 이 문장을 내는 `DumpConfigSystemNodes`(:5936)는 `AnnounceConfigSystemFocusIfChanged`가 `_dumpOnNextConfigSystemUpdate`를 참으로 볼 때만 불리는데(`:5151-5154`), 그 필드는 선언(`:102`)·읽기(`:5151`)·되돌리기(`:5153`)만 있고 **참으로 놓는 자리가 저장소 어디에도 없다.** 원본이 방아쇠를 뺐다고 `:5021` 주석이 적는다 - `CS-DIAG-Dump bei InputReceived (case 12) ENTFERNT`. 옛 저장소가 적어 둔 `F5로 화면 구조를 쏟는 자리`는 이 저장소에서 사실이 아니다 - Strg+F5는 `DumpFocusedAddon`(:10822)으로 가고 이 함수로는 안 온다. 부르는 자리가 생기면 그때 다시 본다."
     },
     {
       "file": "Services/UIReaderService.cs",
