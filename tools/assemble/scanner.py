@@ -122,9 +122,18 @@ def read_literal(text: str, i: int) -> tuple[str | None, int, int]:
 
     시작은 `$` 접두를 포함한다. 원문을 그대로 되쓰기 위해서다. 축자 문자열(`@"..."`)은
     이스케이프 규칙이 달라서 읽지 않는다.
+
+    ## 중괄호 깊이는 보간 리터럴에서만 센다
+
+    보간 자리(`{...}`) 안은 식이라 그 안의 문자열이 escape 없이 그대로 들어간다.
+    깊이를 안 세면 `$"{(on ? "an" : "aus")}"`의 `"an` 앞 따옴표를 리터럴의 끝으로
+    오해한다. 반대로 `$`가 없는 리터럴에서 깊이를 세면 내용에 짝 없이 들어 있는 `{`
+    하나가 닫는 따옴표를 삼켜, 멀쩡히 읽히던 자리를 잃는다. 그래서 `$` 접두를 봤을
+    때만 센다.
     """
     raw_start = i
-    if i < len(text) and text[i] == "$":
+    interpolated = i < len(text) and text[i] == "$"
+    if interpolated:
         i += 1
     if i >= len(text) or text[i] != '"':
         return None, raw_start, i
@@ -133,15 +142,40 @@ def read_literal(text: str, i: int) -> tuple[str | None, int, int]:
 
     i += 1
     out: list[str] = []
+    depth = 0
     while i < len(text):
         ch = text[i]
         if ch == chr(92) and i + 1 < len(text):
             out.append(text[i : i + 2])
             i += 2
             continue
-        if ch == '"':
-            return "".join(out), raw_start, i + 1
-        if ch == _NEWLINE:
+        # `{{`와 `}}`는 중괄호 글자 자체다. 자리가 아니라 깊이를 세지 않는다.
+        if interpolated and ch == "{" and text[i + 1 : i + 2] == "{":
+            out.append(text[i : i + 2])
+            i += 2
+            continue
+        if interpolated and ch == "}" and depth == 0 and text[i + 1 : i + 2] == "}":
+            out.append(text[i : i + 2])
+            i += 2
+            continue
+        if interpolated and ch == "{":
+            depth += 1
+        elif interpolated and ch == "}":
+            depth = max(0, depth - 1)
+        elif ch == '"':
+            if depth == 0:
+                return "".join(out), raw_start, i + 1
+            # 보간 자리 안의 문자열이다. 통째로 삼킨다. 앞 글자가 `$`이면 그 자리에서
+            # 부른다. 안쪽이 또 보간일 수 있고, 그때 안쪽에서도 깊이를 세야 한다.
+            nested_at = i - 1 if text[i - 1] == "$" else i
+            nested, _, nested_end = read_literal(text, nested_at)
+            if nested is None:
+                return None, raw_start, nested_end
+            # `$`는 앞 회차에서 이미 넣었으므로 지금 자리부터 자른다.
+            out.append(text[i:nested_end])
+            i = nested_end
+            continue
+        elif ch == _NEWLINE:
             return None, raw_start, i
         out.append(ch)
         i += 1

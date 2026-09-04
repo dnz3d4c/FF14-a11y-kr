@@ -48,6 +48,65 @@ def test_보간_접두를_포함해_리터럴을_읽는다() -> None:
     assert text[start:end] == '$"{name} 준비"'
 
 
+def test_보간_자리_안의_따옴표는_리터럴의_끝이_아니다() -> None:
+    """보간 자리 안은 식이라 그 안의 문자열이 escape 없이 그대로 들어간다."""
+    text = 'x = $"{name}, {(on ? "an" : "aus")}";'
+    value, start, end = scanner.read_literal(text, 4)
+
+    assert value == '{name}, {(on ? "an" : "aus")}'
+    assert text[start:end] == '$"{name}, {(on ? "an" : "aus")}"'
+
+
+def test_보간_자리_안의_보간_리터럴도_읽는다() -> None:
+    """안쪽이 또 보간이면 안쪽에서도 깊이를 세야 3중 중첩이 안 깨진다."""
+    text = 'x = $"{a}{(b ? "x" : $"{c} P")}";'
+    value, start, end = scanner.read_literal(text, 4)
+
+    assert value == '{a}{(b ? "x" : $"{c} P")}'
+    assert text[start:end] == '$"{a}{(b ? "x" : $"{c} P")}"'
+
+
+def test_달러가_없으면_중괄호를_세지_않는다() -> None:
+    """보간이 아닌 리터럴에서 깊이를 세면 짝 없는 `{` 하나가 닫는 따옴표를 삼킨다."""
+    text = 'x = "{ 짝이 없는 중괄호"; var y = 1;'
+    value, start, end = scanner.read_literal(text, 4)
+
+    assert value == "{ 짝이 없는 중괄호"
+    assert text[start:end] == '"{ 짝이 없는 중괄호"'
+
+
+def test_중괄호_둘은_자리가_아니라_글자다() -> None:
+    """`{{`를 자리로 세면 깊이가 안 맞아 리터럴이 제자리에서 안 끝난다."""
+    text = 'x = $"{{ {name}"; var y = 1;'
+    value, start, end = scanner.read_literal(text, 4)
+
+    assert value == "{{ {name}"
+    assert text[start:end] == '$"{{ {name}"'
+
+
+def test_중첩_안이_못_읽는_모양이면_바깥도_실패한다() -> None:
+    """휴면 경로. 안쪽이 닫히기 전에 개행이 오면 바깥도 읽은 것으로 치면 안 된다."""
+    text = 'x = $"{(on ? "an\n" : "aus")}";'
+    value, _, _ = scanner.read_literal(text, 4)
+
+    assert value is None
+
+
+def test_보간_자리에_삼항이_있는_실제_모양을_자리로_잡는다() -> None:
+    """`AccessibilityStrings.Chat.cs`의 `OptionToggle`이 이 모양이다."""
+    text = (
+        "    public static string OptionToggle(string name, bool on) =>\n"
+        '        IsGerman ? $"{name}, {(on ? "an" : "aus")}" : $"{name}, {(on ? "on" : "off")}";\n'
+    )
+    sites = scanner.find_sites(text)
+
+    assert len(sites) == 1
+    assert sites[0].de == '{name}, {(on ? "an" : "aus")}'
+    assert sites[0].en == '{name}, {(on ? "on" : "off")}'
+    assert sites[0].de_raw == '$"{name}, {(on ? "an" : "aus")}"'
+    assert sites[0].en_raw == '$"{name}, {(on ? "on" : "off")}"'
+
+
 def test_삼항_자리를_찾는다() -> None:
     text = 'public static string A => IsGerman ? "Hallo" : "Hello";\n'
     sites = scanner.find_sites(text)
@@ -137,7 +196,7 @@ def test_못_읽은_갈림길을_행_번호로_센다() -> None:
     """중첩 삼항은 이 파서의 손 밖이다. 못 읽으면 못 세므로 개수라도 낸다."""
     text = (
         'public static string A => IsGerman ? "Hallo" : "Hello";\n'
-        'public static string B => IsGerman ? $"{(on ? "an" : "aus")}" : "off";\n'
+        'public static string B => IsGerman ? (on ? "an" : "aus") : "off";\n'
     )
     sites, unreadable = scanner.scan(text)
 
