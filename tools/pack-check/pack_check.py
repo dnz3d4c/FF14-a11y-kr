@@ -797,18 +797,11 @@ def kr_dalamud_dir() -> Path | None:
     """참조 어셈블리가 있는 KR Dalamud의 Hooks 폴더.
 
     규칙을 여기서 새로 만들지 않는다 - 이 저장소가 참조 자리를 부르는 이름은
-    `DALAMUD_HOME`이고(`docs/dev/dalamud-refs.md`), 프로필 루트는
-    `kr_profile`이 정한다. 둘 다 없으면 못 찾았다고 말한다.
+    `DALAMUD_HOME`이고(`docs/dev/dalamud-refs.md`), 프로필 루트도 Hooks 폴더를
+    고르는 규칙도 `kr_profile`이 정한다. `tools/pack`이 같은 값을 배포 절차에서
+    쓰므로, 여기에 사본을 두면 둘이 갈린 채로 조용히 다른 참조를 잰다.
     """
-    home = os.environ.get("DALAMUD_HOME", "").strip()
-    if home:
-        return Path(home)
-
-    hooks = Path(kr_profile.resolve_root()) / "addon" / "Hooks"
-    if not hooks.is_dir():
-        return None
-    versions = sorted(d for d in hooks.iterdir() if d.is_dir() and d.name != "dev")
-    return versions[-1] if versions else None
+    return kr_profile.dalamud_hooks_dir()
 
 
 def dotnet_path() -> Path:

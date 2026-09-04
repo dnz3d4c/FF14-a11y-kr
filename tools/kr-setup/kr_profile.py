@@ -250,6 +250,37 @@ def source() -> str:
     return "기본값 (업데이터 설정 없음/못 씀)"
 
 
+# ── Dalamud Hooks 폴더 ────────────────────────────────────────────────────
+#
+# 참조 어셈블리가 있는 자리다. 프로필 루트에 매여 있으므로 그것을 정하는 이
+# 파일이 같이 갖는다. **부르는 곳이 둘 이상이다** - `tools/pack-check`가 배포
+# 검사에서 참조로 쓰고 `tools/pack`이 그 값을 검사에 넘긴다. 사본을 만들면
+# 둘이 갈리고, 갈려도 오류가 안 난다.
+
+#: 이 저장소가 참조 자리를 부르는 이름(`docs/dev/dalamud-refs.md`).
+DALAMUD_HOME_VARIABLE = "DALAMUD_HOME"
+
+#: 이름이 버전인 폴더들 사이에 섞여 있는 수동 구성 잔재. 개발 빌드라 참조로 안 쓴다.
+HOOKS_DEV_NAME = "dev"
+
+
+def dalamud_hooks_dir() -> Path | None:
+    """참조 어셈블리가 있는 KR Dalamud의 Hooks 폴더. 못 찾으면 None.
+
+    폴더 이름이 버전이라 업데이터가 갱신할 때마다 바뀐다. 이름 오름차순의
+    마지막이 최신이고, 그걸 손으로 고치지 않으려고 여기서 고른다.
+    """
+    home = os.environ.get(DALAMUD_HOME_VARIABLE, "").strip()
+    if home:
+        return Path(home)
+
+    hooks = Path(resolve_root()) / "addon" / "Hooks"
+    if not hooks.is_dir():
+        return None
+    versions = sorted(d for d in hooks.iterdir() if d.is_dir() and d.name != HOOKS_DEV_NAME)
+    return versions[-1] if versions else None
+
+
 def updater_install_root() -> str:
     """업데이터를 두는 폴더."""
     return str(Path(os.environ.get("LOCALAPPDATA", "")) / UPDATER_INSTALL_FOLDER)
