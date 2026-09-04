@@ -43,6 +43,17 @@ on:
 
 permissions: {}
 
+# **같은 태그를 둘이 동시에 올리지 않는다.** `release.py`의 덮어쓰기 갈래는
+# `gh release upload --clobber`라, 한 실행이 되받아 재고 초록으로 끝난 뒤에 다른
+# 실행이 자산을 다시 덮을 수 있다. 그러면 우리가 잰 것과 사용자가 받는 것이
+# 갈리는데 어느 화면에도 안 나타난다.
+#
+# `cancel-in-progress`를 켜지 않는다. 발행 도중에 접으면 자산이 반만 올라간
+# 릴리스가 바깥에 남는다 - 그것이 이 워크플로가 막으려는 상태 자체다.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 # 우리 도구는 한국어로 보고한다. 윈도 러너의 파이썬 stdout은 cp1252라서 그대로
 # 두면 첫 한국어 출력에서 UnicodeEncodeError로 죽는다.
 env:
@@ -50,13 +61,30 @@ env:
   PYTHONUTF8: "1"
 
 jobs:
-  # 입력 셋을 먼저 본다. 짓는 데 몇 분이 드는데, 승인이 없어 마지막에 서는 것은
-  # 그 시간을 통째로 버리는 것이다.
+  # 입력 셋과 어느 가지에서 도는지를 먼저 본다. 짓는 데 몇 분이 드는데, 승인이
+  # 없어 마지막에 서는 것은 그 시간을 통째로 버리는 것이다.
   gate:
     name: 사람이 잰 것 확인
     runs-on: windows-latest
     permissions: {}
     steps:
+      # **기본 가지에서만 낸다.** `workflow_dispatch`는 어느 가지에서든 부를 수
+      # 있고, 아래 발행 잡은 그 가지의 `release.py`를 쓰기 토큰으로 돌린다. 막지
+      # 않으면 아직 머지 안 된 코드가 바깥으로 릴리스를 낼 수 있다. 2026-09-05
+      # 교차 리뷰가 짚었다.
+      - name: 기본 가지인가
+        shell: bash
+        env:
+          REF: ${{ github.ref }}
+          DEFAULT: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          if [ "$REF" != "refs/heads/$DEFAULT" ]; then
+            echo "::error::발행은 기본 가지($DEFAULT)에서만 한다. 지금은 $REF 다."
+            exit 1
+          fi
+          echo "기본 가지에서 돈다: $DEFAULT"
+
       - name: 선언 셋이 다 있나
         shell: bash
         env:
