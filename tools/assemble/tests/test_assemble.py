@@ -290,7 +290,12 @@ def test_주입_앞에_도는_규칙은_대장과_만난다(tmp_path: Path) -> N
 
 
 def test_못_읽은_자리를_보고에_낸다(tmp_path: Path) -> None:
-    """미적용 개수가 전부가 아니라는 것을 도구가 스스로 말한다."""
+    """미적용 개수가 전부가 아니라는 것을 도구가 스스로 말한다.
+
+    `파일:행` 하나로는 무엇이 왜 안 읽혔는지 알 수 없다. 업스트림이 파서 손 밖인 모양을
+    더할 때 신호는 숫자가 하나 오르는 것뿐이라, 어느 멤버가 어떤 모양으로 늘었는지를
+    보고가 말해야 한다.
+    """
     repo = _repo(tmp_path)
     source = repo / "upstream" / "FF14Accessibility" / "Plugin.cs"
     source.write_text(
@@ -300,9 +305,28 @@ def test_못_읽은_자리를_보고에_낸다(tmp_path: Path) -> None:
 
     report = assemble.assemble(repo)
 
-    assert report.unreadable == ["Plugin.cs:11"]  # 축약 선언 두 줄이 앞에 들어간 뒤의 번호
+    site = report.unreadable[0]
+    assert site.where == "Plugin.cs:11"  # 축약 선언 두 줄이 앞에 들어간 뒤의 번호
     saved = json.loads((repo / "build" / "assemble-report.json").read_text(encoding="utf-8"))
-    assert saved["unreadable"] == ["Plugin.cs:11"]
+    assert saved["unreadable"] == [
+        {
+            "file": "Plugin.cs",
+            "line": 11,
+            "end_line": 11,
+            "name": "Same",
+            "shape": "리터럴이 아님",
+            "excerpt": 'IsGerman ? Concat(a, b) : "off"',
+        }
+    ]
+
+
+def test_여러_줄에_걸친_자리는_범위로_적는다() -> None:
+    """사람이 그 자리를 열어 보려면 어디서 끝나는지가 필요하다."""
+    site = assemble.Unreadable(
+        file="A.cs", line=10, end_line=14, name="Help", shape="이어붙이기", excerpt="IsGerman ? …"
+    )
+
+    assert site.where == "A.cs:10-14"
 
 
 def test_대장의_한국어가_C샵_리터럴_규약을_어기면_실패한다(tmp_path: Path) -> None:

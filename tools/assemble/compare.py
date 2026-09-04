@@ -49,6 +49,8 @@ class Change:
     counts: dict[str, tuple[int, int]] = field(default_factory=dict)
     new_orphans: list[tuple[str, str]] = field(default_factory=list)
     gone_orphans: list[tuple[str, str]] = field(default_factory=list)
+    new_unreadable: list[dict[str, Any]] = field(default_factory=list)
+    gone_unreadable: list[dict[str, Any]] = field(default_factory=list)
     new_untranslated: list[dict[str, Any]] = field(default_factory=list)
 
     @property
@@ -56,6 +58,8 @@ class Change:
         return bool(
             self.new_orphans
             or self.gone_orphans
+            or self.new_unreadable
+            or self.gone_unreadable
             or self.new_untranslated
             or any(before != after for before, after in self.counts.values())
         )
@@ -79,6 +83,18 @@ class Change:
             lines.append("")
             for de, en in self.gone_orphans:
                 lines.append(f"- `{en}` (독일어 `{de}`)")
+            lines.append("")
+        if self.new_unreadable:
+            lines.append("### 새로 생긴 못 읽음")
+            lines.append("")
+            lines.append("업스트림이 파서 손 밖인 모양을 더했다는 신호다. 미적용에도 안 잡힌다.")
+            lines.append("")
+            lines += [_blind_line(site) for site in self.new_unreadable]
+            lines.append("")
+        if self.gone_unreadable:
+            lines.append("### 사라진 못 읽음")
+            lines.append("")
+            lines += [_blind_line(site) for site in self.gone_unreadable]
             lines.append("")
 
         lines.append("### 숫자")
@@ -108,6 +124,49 @@ def _pairs(report: dict[str, Any]) -> list[tuple[str, str]]:
     return [(row["de"], row["en"]) for row in report["orphans"]]
 
 
+def _blind_line(site: dict[str, Any]) -> str:
+    """못 읽은 자리 하나를 본문의 한 줄로. 여러 줄에 걸치면 범위로 적는다."""
+    line, end = site["line"], site["end_line"]
+    where = f"{site['file']}:{line}" if end <= line else f"{site['file']}:{line}-{end}"
+    return f"- `{where}` {site['name'] or '(이름 없음)'} [{site['shape']}] {site['excerpt']}"
+
+
+def _blind(report: dict[str, Any]) -> list[dict[str, Any]] | None:
+    """못 읽은 자리 목록. 자리를 못 가르는 옛 보고면 None.
+
+    옛 보고는 `unreadable`이 `파일:행` 문자열 배열이라 멤버도 모양도 없다. 그런 보고와
+    견주게 되면 증감 목록을 비우고 개수만 낸다 - 견주다 터지는 것보다 낫다.
+    """
+    sites = report["unreadable"]
+    if any(not isinstance(site, dict) for site in sites):
+        return None
+    return list(sites)
+
+
+def _blind_changes(
+    before: dict[str, Any], after: dict[str, Any]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """못 읽은 자리의 (새로 생긴 것, 사라진 것).
+
+    가르는 열쇠에 행 번호를 안 쓴다. 위쪽에 줄이 하나만 들어도 자리가 통째로 새것으로
+    세어져, 정작 봐야 할 신호가 묻힌다. `(파일, 멤버, 모양)`이면 업스트림이 **어느 멤버에
+    어떤 모양을 더했는지**가 그대로 나온다.
+    """
+    old, new = _blind(before), _blind(after)
+    if old is None or new is None:
+        return [], []
+
+    def key(site: dict[str, Any]) -> tuple[str, str, str]:
+        return (site["file"], site["name"], site["shape"])
+
+    old_keys = {key(site) for site in old}
+    new_keys = {key(site) for site in new}
+    return (
+        [site for site in new if key(site) not in old_keys],
+        [site for site in old if key(site) not in new_keys],
+    )
+
+
 def _count(report: dict[str, Any], key: str) -> int:
     value = report[key]
     return value if isinstance(value, int) else len(value)
@@ -118,11 +177,14 @@ def compare(before: dict[str, Any], after: dict[str, Any]) -> Change:
     old_orphans = _pairs(before)
     new_orphans = _pairs(after)
     old_sites = {(site["file"], site["name"], site["en"]) for site in before["untranslated"]}
+    new_blind, gone_blind = _blind_changes(before, after)
 
     return Change(
         counts={name: (_count(before, key), _count(after, key)) for name, key in COUNTS.items()},
         new_orphans=[key for key in new_orphans if key not in set(old_orphans)],
         gone_orphans=[key for key in old_orphans if key not in set(new_orphans)],
+        new_unreadable=new_blind,
+        gone_unreadable=gone_blind,
         new_untranslated=[
             site
             for site in after["untranslated"]

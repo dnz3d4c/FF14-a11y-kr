@@ -31,6 +31,15 @@ PICK = "Pick("
 #: 한 줄이 이 칸을 넘으면 인자마다 줄을 나눈다. 원본 소스의 폭에 맞췄다.
 WIDTH = 100
 
+#: 발췌의 길이. 미적용 목록이 영어를 자르는 폭과 같아서 보고의 두 목록이 나란히 읽힌다.
+EXCERPT = 60
+
+#: 못 읽은 까닭. **실제로 남은 자리에서 뽑은 것이라 둘뿐이다.** 없는 부류를 미리 만들지
+#: 않는다 - 새 모양이 오면 `OTHER`로 나와서 보고가 그것을 지목한다.
+CONCAT = "이어붙이기"
+NOT_LITERAL = "리터럴이 아님"
+OTHER = "기타"
+
 #: 멤버 선언의 이름. `[CallerMemberName]`이 런타임에 넘기는 것과 같은 이름을
 #: 정적으로 뽑기 위한 것이라, 보고의 이름과 로그의 이름이 서로 맞는다.
 MEMBER = re.compile(
@@ -60,6 +69,27 @@ class Site:
     ternary: bool = False
 
 
+@dataclass(frozen=True)
+class Blind:
+    """갈림길인 것은 알겠는데 이 파서가 못 읽은 자리.
+
+    행 번호 하나로는 무엇이 왜 안 읽혔는지 알 수 없다. 업스트림이 파서 손 밖인 모양을
+    더할 때 신호는 **숫자가 하나 오르는 것뿐이라**, 어느 멤버가 어떤 모양으로 늘었는지를
+    보고가 스스로 말해야 한다.
+    """
+
+    #: 표식이 있는 줄.
+    line: int
+    #: 그 자리가 끝나는 줄. 여러 줄에 걸친 자리를 사람이 열어 보려면 범위가 필요하다.
+    end_line: int
+    #: 그 자리를 감싸는 멤버 이름. 모드가 로그에 적는 이름과 같다.
+    name: str
+    #: 왜 못 읽었나. `CONCAT`·`NOT_LITERAL`·`OTHER` 중 하나다.
+    shape: str
+    #: 그 자리의 앞부분을 한 줄로. 목록만 보고도 무엇인지 알아볼 만큼.
+    excerpt: str
+
+
 @dataclass
 class Result:
     """소스 한 파일을 다시 쓴 결과."""
@@ -71,8 +101,8 @@ class Result:
     seen: list[tuple[str, str]] = field(default_factory=list)
     #: 보간 자리가 안 맞아 한국어 없이 내보낸 자리.
     bad_slots: list[str] = field(default_factory=list)
-    #: 갈림길인 것은 알겠는데 못 읽은 자리의 행 번호.
-    unreadable: list[int] = field(default_factory=list)
+    #: 갈림길인 것은 알겠는데 못 읽은 자리.
+    unreadable: list[Blind] = field(default_factory=list)
 
 
 def strip_comments(text: str) -> str:
@@ -314,6 +344,70 @@ def _piece(text: str, span: Span) -> str:
     return text[span[0] : span[1]].strip()
 
 
+def _concatenated(text: str, start: int, end: int) -> bool:
+    """갈래에 최상위 `+`가 있나. 조각이 여럿이면 리터럴 하나로 안 읽힌다."""
+    depth = 0
+    i = start
+    while i < end:
+        after = _skip_literal(text, i)
+        if after >= 0:
+            i = after
+            continue
+        ch = text[i]
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth -= 1
+        elif depth == 0 and ch == "+":
+            return True
+        i += 1
+    return False
+
+
+def _shape(stripped: str, start: int, end: int) -> str:
+    """왜 못 읽었나. 지금 남아 있는 자리에서 실제로 나오는 둘로 가른다."""
+    colon = _branch(stripped, start, end, ":")
+    if colon < 0 or stripped[colon] != ":":
+        return OTHER  # 갈래를 못 가른다
+    if _concatenated(stripped, start, colon) or _concatenated(stripped, colon + 1, end):
+        return CONCAT
+    return NOT_LITERAL
+
+
+def _excerpt(text: str, start: int, end: int) -> str:
+    """그 자리의 앞부분을 한 줄로. 줄바꿈이 섞이면 목록이 무너진다."""
+    flat = " ".join(text[start:end].split())
+    if len(flat) <= EXCERPT:
+        return flat
+    return flat[:EXCERPT].rstrip() + "…"
+
+
+def _blind(stripped: str, text: str, span: int, question: int, line: int) -> Blind:
+    """못 읽은 자리 하나를 사람이 볼 수 있는 모양으로 적는다.
+
+    끝을 찾는 걸음은 `_flatten`이 갈림길 전체의 끝을 찾을 때와 같다. 못 읽는 자리라도
+    `?`와 `:`의 짝은 셀 수 있어서, 어디까지가 그 자리인지는 알아낼 수 있다.
+    """
+    stop = _branch(stripped, question + 1, len(stripped), ":,;", pending=1)
+    if stop < 0:
+        # 끝을 못 찾으면 갈래도 못 가른다. 그 줄까지만 보이고 부류는 기타다.
+        newline = text.find(_NEWLINE, span)
+        return Blind(
+            line=line,
+            end_line=line,
+            name=member_name(text, span),
+            shape=OTHER,
+            excerpt=_excerpt(text, span, len(text) if newline < 0 else newline),
+        )
+    return Blind(
+        line=line,
+        end_line=stripped.count(_NEWLINE, 0, stop) + 1,
+        name=member_name(text, span),
+        shape=_shape(stripped, question + 1, stop),
+        excerpt=_excerpt(text, span, stop),
+    )
+
+
 def unnest(text: str) -> str:
     """중첩된 갈림길을 평평한 갈림길 둘로 편다.
 
@@ -417,18 +511,20 @@ def _flatten(stripped: str, text: str, found: int, question: int) -> tuple[int, 
     return span, stop, f"{condition}{_NEWLINE}{pad}? ({first}){_NEWLINE}{pad}: ({second})"
 
 
-def scan(text: str) -> tuple[list[Site], list[int]]:
-    """소스를 훑는다. (고칠 수 있는 자리, 갈림길인데 못 읽은 곳의 행 번호).
+def scan(text: str) -> tuple[list[Site], list[Blind]]:
+    """소스를 훑는다. (고칠 수 있는 자리, 갈림길인데 못 읽은 자리).
 
     못 읽은 곳도 같이 돌려주는 까닭은 **못 읽으면 못 세기** 때문이다. 중첩 삼항이나
     이어붙이기처럼 이 파서가 못 다루는 모양은 자리 목록에 아예 안 들어오므로,
-    미적용 개수만 보면 그런 자리가 조용히 늘어도 신호가 없다. 개수를 따로 내면
+    미적용 개수만 보면 그런 자리가 조용히 늘어도 신호가 없다. 그것을 따로 내면
     도구가 자기 사각지대의 크기를 스스로 말한다.
     """
     stripped = strip_comments(text)
-    unreadable: list[int] = []
+    unreadable: list[Blind] = []
     sites = [*_ternary_sites(stripped, text, unreadable), *_pick_sites(stripped, text)]
-    return sorted(sites, key=lambda site: site.start), sorted(unreadable)
+    return sorted(sites, key=lambda site: site.start), sorted(
+        unreadable, key=lambda blind: blind.line
+    )
 
 
 def find_sites(text: str) -> list[Site]:
@@ -436,11 +532,11 @@ def find_sites(text: str) -> list[Site]:
     return scan(text)[0]
 
 
-def _ternary_sites(stripped: str, text: str, unreadable: list[int]) -> list[Site]:
+def _ternary_sites(stripped: str, text: str, unreadable: list[Blind]) -> list[Site]:
     """아직 안 옮긴 `IsGerman ? de : en`.
 
     `?`까지 왔는데 양쪽을 리터럴로 못 읽으면 갈림길이긴 한데 이 파서의 손 밖이다.
-    그 행 번호를 `unreadable`에 남긴다.
+    그 자리를 모양과 함께 `unreadable`에 남긴다.
     """
     sites: list[Site] = []
     start = 0
@@ -450,31 +546,31 @@ def _ternary_sites(stripped: str, text: str, unreadable: list[int]) -> list[Site
             return sites
         start = found + len(MARKER)
 
-        i = _skip(stripped, start)
-        if i >= len(stripped) or stripped[i] != "?":
+        question = _skip(stripped, start)
+        if question >= len(stripped) or stripped[question] != "?":
             continue  # 갈림길이 아니다. 선언이거나 다른 쓰임이다
 
         line = stripped.count(_NEWLINE, 0, found) + 1
+        span, qualifier = _qualified(stripped, found)
 
-        i = _skip(stripped, i + 1)
+        i = _skip(stripped, question + 1)
         de, de_start, i = read_literal(stripped, i)
         if de is None:
-            unreadable.append(line)
+            unreadable.append(_blind(stripped, text, span, question, line))
             continue
         de_end = i
 
         i = _skip(stripped, i)
         if i >= len(stripped) or stripped[i] != ":":
-            unreadable.append(line)
+            unreadable.append(_blind(stripped, text, span, question, line))
             continue
 
         i = _skip(stripped, i + 1)
         en, en_start, i = read_literal(stripped, i)
         if en is None:
-            unreadable.append(line)
+            unreadable.append(_blind(stripped, text, span, question, line))
             continue
 
-        span, qualifier = _qualified(stripped, found)
         sites.append(
             Site(
                 start=span,
@@ -704,7 +800,7 @@ def rewrite(text: str, catalog: dict[tuple[str, str], str]) -> Result:
     길에 그 자리가 로그에 적힌다. 독일어와 영어가 듣는 것은 한 자도 안 달라진다.
 
     바꾸는 것은 **읽어낸 자리뿐이다.** 못 읽은 모양은 자리 목록에 없으므로 손대지 않고,
-    개수만 `unreadable`로 나간다.
+    그 자리가 무엇인지만 `unreadable`로 나간다.
 
     ## 소스를 먼저 편다
 

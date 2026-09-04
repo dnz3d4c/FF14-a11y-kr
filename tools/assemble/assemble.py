@@ -71,6 +71,32 @@ class Untranslated:
     en: str
 
 
+@dataclass(frozen=True)
+class Unreadable:
+    """갈림길인 것은 알겠는데 파서가 못 읽은 자리.
+
+    `scanner.Blind`에 파일 이름을 붙인 것이다. 파서는 글 하나만 보므로 그 글이 어느
+    파일이었는지는 여기서만 안다.
+    """
+
+    file: str
+    line: int
+    end_line: int
+    #: 그 자리를 감싸는 멤버 이름. 모드가 로그에 적는 이름과 같다.
+    name: str
+    #: 왜 못 읽었나.
+    shape: str
+    #: 그 자리의 앞부분 한 줄.
+    excerpt: str
+
+    @property
+    def where(self) -> str:
+        """`파일:행`. 여러 줄에 걸치면 범위로 적어 사람이 열어 볼 수 있게 한다."""
+        if self.end_line <= self.line:
+            return f"{self.file}:{self.line}"
+        return f"{self.file}:{self.line}-{self.end_line}"
+
+
 @dataclass
 class Report:
     """조립 한 번의 결과."""
@@ -88,7 +114,7 @@ class Report:
     orphans: list[tuple[str, str]] = field(default_factory=list)
     untranslated: list[Untranslated] = field(default_factory=list)
     #: 갈림길인 것은 알겠는데 못 읽은 자리. 미적용에도 안 잡히므로 따로 낸다.
-    unreadable: list[str] = field(default_factory=list)
+    unreadable: list[Unreadable] = field(default_factory=list)
     charamake: dict[str, dict[str, int]] = field(default_factory=dict)
 
     @property
@@ -297,7 +323,7 @@ def load_graft(repo: Path, report: Report) -> list[graft.Rule]:
 # --- 세기 ------------------------------------------------------------------
 
 
-def survey(build: Path) -> tuple[list[tuple[str, str]], list[Untranslated], list[str]]:
+def survey(build: Path) -> tuple[list[tuple[str, str]], list[Untranslated], list[Unreadable]]:
     """조립이 끝난 트리를 훑는다. (만난 쌍, 영어로 나갈 자리, 못 읽은 자리).
 
     조립 전이 아니라 **조립이 끝난 뒤**에 세는 까닭은 그것이 실제로 나갈 트리이기
@@ -318,12 +344,22 @@ def survey(build: Path) -> tuple[list[tuple[str, str]], list[Untranslated], list
 
     seen: list[tuple[str, str]] = []
     untranslated: list[Untranslated] = []
-    unreadable: list[str] = []
+    unreadable: list[Unreadable] = []
     for path in source_files(root):
         text = files.read(path)
         name = path.relative_to(root).as_posix()
         sites, blind = scanner.scan(text)
-        unreadable += [f"{name}:{line}" for line in blind]
+        unreadable += [
+            Unreadable(
+                file=name,
+                line=spot.line,
+                end_line=spot.end_line,
+                name=spot.name,
+                shape=spot.shape,
+                excerpt=spot.excerpt,
+            )
+            for spot in blind
+        ]
         for site in sites:
             seen.append((site.de, site.en))
             if site.ko is not None:
@@ -400,7 +436,17 @@ def _save(build: Path, report: Report) -> None:
             {"file": site.file, "line": site.line, "name": site.name, "en": site.en}
             for site in report.untranslated
         ],
-        "unreadable": report.unreadable,
+        "unreadable": [
+            {
+                "file": site.file,
+                "line": site.line,
+                "end_line": site.end_line,
+                "name": site.name,
+                "shape": site.shape,
+                "excerpt": site.excerpt,
+            }
+            for site in report.unreadable
+        ],
         "charamake": report.charamake,
     }
     (build / "assemble-report.json").write_text(
@@ -420,8 +466,8 @@ def _print(report: Report) -> None:
         where = f"{site.file}:{site.line}"
         print(f"  {where} {site.name or '(이름 없음)'} - {site.en[:60]}")
     print(f"못 읽음 {len(report.unreadable)}곳 - 갈림길인데 이 파서의 손 밖이라 위 숫자에 없다")
-    for where in report.unreadable:
-        print(f"  {where}")
+    for blind in report.unreadable:
+        print(f"  {blind.where} {blind.name or '(이름 없음)'} [{blind.shape}] {blind.excerpt}")
 
     for name, counts in report.charamake.items():
         parts = ", ".join(f"{key} {value}" for key, value in sorted(counts.items()))

@@ -286,16 +286,50 @@ def test_자리_안의_문장을_옮긴_한국어가_들어간다() -> None:
     assert result.bad_slots == []
 
 
-def test_못_읽은_갈림길을_행_번호로_센다() -> None:
-    """중첩 삼항은 이 파서의 손 밖이다. 못 읽으면 못 세므로 개수라도 낸다."""
+def test_못_읽은_갈림길을_모양과_함께_낸다() -> None:
+    """행 번호 하나로는 무엇이 왜 안 읽혔는지 알 수 없다. 못 읽으면 못 세므로 모양이라도 낸다."""
     text = (
         'public static string A => IsGerman ? "Hallo" : "Hello";\n'
         'public static string B => IsGerman ? (on ? "an" : "aus") : "off";\n'
     )
-    sites, unreadable = scanner.scan(text)
+    sites, blind = scanner.scan(text)
 
     assert [(site.de, site.en) for site in sites] == [("Hallo", "Hello")]
-    assert unreadable == [2]
+    assert [(spot.line, spot.end_line, spot.name, spot.shape) for spot in blind] == [
+        (2, 2, "B", "리터럴이 아님")
+    ]
+    assert blind[0].excerpt == 'IsGerman ? (on ? "an" : "aus") : "off"'
+
+
+def test_이어붙인_갈래는_이어붙이기로_가른다() -> None:
+    """`/acc help` 73줄이 이 모양이다. 조각이 여럿이라 리터럴 하나로 안 읽힌다."""
+    text = (
+        "    public static string Help => IsGerman\n"
+        '        ? "Tasten: " +\n'
+        '          "Bild ab, naechstes Objekt ansagen und anvisieren. "\n'
+        '        : "Keys: " +\n'
+        '          "Page down, announce and target the next object. ";\n'
+    )
+    blind = scanner.scan(text)[1]
+
+    assert [(spot.line, spot.end_line, spot.name, spot.shape) for spot in blind] == [
+        (1, 5, "Help", "이어붙이기")
+    ]
+    # 여러 줄을 한 줄로 줄인다. 줄바꿈이 들어가면 목록이 무너진다.
+    assert blind[0].excerpt.startswith('IsGerman ? "Tasten: " + "Bild ab')
+    assert blind[0].excerpt.endswith("…")
+
+
+def test_부류를_못_가르면_기타로_두고_그_줄만_낸다() -> None:
+    """휴면 경로. 없는 부류를 미리 만들지 않으므로 새 모양은 기타로 나와 눈에 띈다."""
+    for text in (
+        "var x = IsGerman ? Foo(a) : Bar(b)\n",  # 자리의 끝을 못 찾는다
+        "var y = IsGerman ? Foo(a);\n",  # 갈래를 못 가른다
+    ):
+        spot = scanner.scan(text)[1][0]
+
+        assert spot.shape == "기타", text
+        assert spot.line == spot.end_line == 1, text
 
 
 def test_중첩_갈림길을_평평한_둘로_편다() -> None:
@@ -435,7 +469,7 @@ def test_못_읽은_자리는_손대지_않는다() -> None:
     result = scanner.rewrite(text, {})
 
     assert result.text == text
-    assert result.unreadable == [1]
+    assert [(spot.line, spot.name) for spot in result.unreadable] == [(1, "B")]
 
 
 def test_긴_호출은_여는_괄호에_맞춰_줄을_나눈다() -> None:
