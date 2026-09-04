@@ -6,6 +6,10 @@ bin/
 obj/
 *.user
 
+# 게임 텍스트 덤프. 스퀘어에닉스의 것이라 재배포하지 않는다 - 우리가 실제로
+# 쓰는 낱말만 출처와 함께 korean/terms.json에 남긴다.
+tools/ko-terms/out/
+
 # Python
 __pycache__/
 *.pyc

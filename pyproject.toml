@@ -17,6 +17,7 @@ pythonpath = [
     "tools/docs-check",
     "tools/ci-check",
     "tools/common",
+    "tools/ko-terms",
 ]
 testpaths = ["tools"]
 
