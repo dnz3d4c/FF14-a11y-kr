@@ -411,6 +411,10 @@ def check_notes(ctx: Context) -> int:
         upstream_file.write_text(body, encoding="utf-8")
         argv += ["--upstream-notes", str(upstream_file)]
         if os.environ.get(NOTES_ACKED_VARIABLE, "").strip():
+            # **넘어간 것은 화면에 남긴다.** 이 선언이 없으면 검사기가 원본 절을
+            # 우리 노트 어디에서 다뤘는지 되묻고 거기서 선다. 조용히 지나가면
+            # 사람이 실제로 대조한 판과 넘긴 판이 초록에서 같아 보인다.
+            print(f"[경고] 원본 절 대조를 사람이 {NOTES_ACKED_VARIABLE} 로 넘겼다")
             argv.append("--upstream-acked")
         if upstream_unchanged(ctx.version, latest_tag(ctx)):
             argv.append("--upstream-unchanged")

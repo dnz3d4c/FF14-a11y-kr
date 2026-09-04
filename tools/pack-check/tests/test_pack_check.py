@@ -693,8 +693,37 @@ def test_스쿠프에_있으면_그것을_쓴다(tmp_path, monkeypatch):
     sdk.parent.mkdir(parents=True)
     sdk.write_text("", encoding="utf-8")
     monkeypatch.setenv("SCOOP", str(tmp_path))
+    monkeypatch.setattr(
+        pack_check.subprocess,
+        "run",
+        lambda *a, **k: subprocess.CompletedProcess(a[0], 0, "10.0.302 [C:\\sdk]\n", ""),
+    )
 
     assert pack_check.dotnet_path() == sdk
+
+
+def test_스쿠프의_것이_SDK가_아니면_PATH를_본다(tmp_path, monkeypatch):
+    """있다는 것만으로 고르면 같은 사고가 반대 방향으로 난다.
+
+    깨진 설치나 SDK 없는 잔재가 스쿠프 자리에 남아 있으면, 존재만 보고 고른
+    뒤 빌드에서 죽는다. PATH에 멀쩡한 것이 있는데도 그렇다.
+    """
+    sdk = tmp_path / "apps" / "dotnet-sdk" / "current" / "dotnet.exe"
+    sdk.parent.mkdir(parents=True)
+    sdk.write_text("", encoding="utf-8")
+    monkeypatch.setenv("SCOOP", str(tmp_path))
+    on_path = tmp_path / "dotnet.exe"
+    on_path.write_text("", encoding="utf-8")
+    monkeypatch.setattr(pack_check.shutil, "which", lambda name: str(on_path))
+
+    def fake_run(args, **kwargs):
+        # 스쿠프 것은 SDK를 하나도 안 낸다. PATH의 것만 낸다.
+        listed = "" if args[0] == str(sdk) else "10.0.302 [C:\\sdk]\n"
+        return subprocess.CompletedProcess(args, 0, listed, "")
+
+    monkeypatch.setattr(pack_check.subprocess, "run", fake_run)
+
+    assert pack_check.dotnet_path() == on_path
 
 
 def test_스쿠프에_없으면_PATH의_SDK를_쓴다(tmp_path, monkeypatch):
@@ -711,7 +740,7 @@ def test_스쿠프에_없으면_PATH의_SDK를_쓴다(tmp_path, monkeypatch):
     monkeypatch.setattr(
         pack_check.subprocess,
         "run",
-        lambda *a, **k: subprocess.CompletedProcess(a[0], 0, "10.0.302 [C:\sdk]\n", ""),
+        lambda *a, **k: subprocess.CompletedProcess(a[0], 0, "10.0.302 [C:/sdk]\n", ""),
     )
 
     assert pack_check.dotnet_path() == found

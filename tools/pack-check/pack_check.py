@@ -821,7 +821,7 @@ def dotnet_path() -> Path:
     """
     scoop = Path(os.environ.get("SCOOP", str(Path.home() / "scoop")))
     in_scoop = scoop / "apps" / "dotnet-sdk" / "current" / "dotnet.exe"
-    if in_scoop.is_file():
+    if in_scoop.is_file() and _lists_sdks(in_scoop):
         return in_scoop
 
     found = shutil.which("dotnet")
