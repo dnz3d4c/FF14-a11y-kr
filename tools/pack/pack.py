@@ -113,6 +113,14 @@ COLLECT = "collect"
 MANIFEST = "manifest"
 VERIFY = "verify"
 
+#: 설치 실증을 개발 머신에서 이미 통과시켰다.
+#:
+#: **러너에는 게임이 없다.** 실증은 설치 프로그램을 버리는 프로필에 대고 실제로
+#: 돌리는 것인데 그 안에 플레이 바로가기를 만드는 단계가 있어서, 게임이 없는
+#: 기계에서는 원리적으로 못 지난다. 이름을 `release.py`의 탈출구들과 같은 꼴로
+#: 둔다 - 사람이 손으로 거는 값이라 이름이 갈리면 문서와 손버릇이 같이 낡는다.
+E2E_CHECKED_VARIABLE = "FF14_E2E_CHECKED"
+
 
 class PackError(Exception):
     """한 단계도 못 시작한다. 무엇이 없어서인지 말하고 끝낸다."""
@@ -272,7 +280,21 @@ def write_manifests(ctx: Context) -> int:
 
 
 def verify(ctx: Context) -> int:
-    """낸 것을 다시 잰다. 설치까지 실제로 돌려 보고 결과를 규칙으로 대조한다."""
+    """낸 것을 다시 잰다. 설치까지 실제로 돌려 보고 결과를 규칙으로 대조한다.
+
+    **러너에서는 이 단계가 원리적으로 못 돈다.** 실증은 설치 프로그램을 버리는
+    프로필에 대고 실제로 돌리는 것인데 그 안에 플레이 바로가기를 만드는 단계가
+    있고, 러너에는 게임이 없다. 2026-09-04 첫 CI 발행이 거기서 죽었다.
+
+    그래서 사람이 개발 머신에서 돌린 다음 그 사실을 선언한다. 검사가 없어지는
+    것이 아니라 재는 자리가 옮겨갈 뿐이고, 넘어간 것을 화면에 남긴다 -
+    `tools/pack/release.py`의 낱말 게이트와 같은 규약이다.
+    """
+    if os.environ.get(E2E_CHECKED_VARIABLE, "").strip():
+        print(f"[경고] 설치 실증을 여기서 안 돌렸다. 사람이 {E2E_CHECKED_VARIABLE} 로 넘겼다")
+        print("  개발 머신에서 pack_check --e2e 로 통과시켰다는 선언이다.")
+        return 0
+
     return pack_check.main(
         [
             "pack_check.py",

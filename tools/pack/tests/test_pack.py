@@ -205,3 +205,35 @@ def test_dotnet을_못_찾으면_한_단계도_안_돈다(tmp_path, monkeypatch)
     monkeypatch.setattr(pack.kr_profile, "dalamud_hooks_dir", lambda: tmp_path)
     with pytest.raises(pack.PackError):
         pack.context(repo=tmp_path)
+
+
+# ── 설치 실증 탈출구 ───────────────────────────────────────────────────────
+
+
+def test_설치_실증을_사람이_대신_했다고_하면_건너뛴다(tmp_path, monkeypatch, capsys):
+    """러너에는 게임이 없어서 이 단계가 원리적으로 못 돈다.
+
+    실증은 설치 프로그램을 버리는 프로필에 대고 실제로 돌려 보는 것인데, 그
+    안에 플레이 바로가기를 만드는 단계가 있고 러너에는 게임이 없다. 2026-09-04
+    첫 CI 발행이 정확히 거기서 죽었다.
+
+    `tools/pack/release.py`의 낱말 게이트와 같은 규약이다 - 사람이 환경변수로
+    명시하고, 넘어간 것을 화면에 남긴다. 조용히 지나가면 잰 판과 안 잰 판이
+    같아 보인다.
+    """
+    monkeypatch.setenv(pack.E2E_CHECKED_VARIABLE, "1")
+    called = []
+    monkeypatch.setattr(pack.pack_check, "main", lambda argv: called.append(argv) or 0)
+
+    assert pack.verify(context(tmp_path)) == 0
+    assert called == [], "탈출구를 걸었는데 검사기를 불렀다"
+    assert "넘겼다" in capsys.readouterr().out
+
+
+def test_탈출구가_비어_있으면_그대로_잰다(tmp_path, monkeypatch):
+    """빈 값은 선언이 아니다."""
+    called = []
+    monkeypatch.setattr(pack.pack_check, "main", lambda argv: called.append(argv) or 0)
+
+    assert pack.verify(context(tmp_path)) == 0
+    assert called and "--e2e" in called[0]
