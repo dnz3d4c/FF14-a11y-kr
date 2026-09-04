@@ -14,7 +14,9 @@ name: 빌드
 
 on:
   push:
-    branches: [main]
+    # 이 저장소의 기본 브랜치는 master다. main으로 적으면 워크플로가 조용히 안 돈다 -
+    # 문법이 맞아서 검사도 통과하고, 푸시해 봐야만 안 도는 것이 드러난다.
+    branches: [master]
   pull_request:
   workflow_dispatch:
 

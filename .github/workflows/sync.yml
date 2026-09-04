@@ -183,7 +183,9 @@ jobs:
           if [ -n "$(gh pr list --head "$branch" --state open --json number --jq '.[].number')" ]; then
             echo "state=열려 있는 PR에 밀어 넣었다" >> "$GITHUB_OUTPUT"
           else
-            gh pr create --head "$branch" --base main \
+            # 기본 브랜치 이름을 적어 두지 않고 받아 쓴다. 손으로 적으면 이 저장소처럼
+            # master를 쓰는 곳에서 main이라고 적힌 채로 조용히 실패한다.
+            gh pr create --head "$branch" --base "${{ github.event.repository.default_branch }}" \
               --title "[원본] ${{ needs.check.outputs.latest }}를 얹는다" \
               --body-file body.md
             echo "state=PR을 새로 열었다" >> "$GITHUB_OUTPUT"
