@@ -440,6 +440,73 @@ def test_파이썬을_안_부르면_안_따진다(tmp_path: Path) -> None:
     )
 
 
+SKIPPABLE = """
+name: 보기
+on: [push]
+env:
+  PYTHONIOENCODING: utf-8
+  PYTHONUTF8: "1"
+jobs:
+  check:
+    runs-on: windows-latest
+    outputs:
+      go: ${{ steps.look.outputs.go }}
+    steps:
+      - name: 본다
+        id: look
+        shell: bash
+        run: echo "go=true" >> "$GITHUB_OUTPUT"
+  port:
+    name: {label}
+    needs: check
+    if: needs.check.outputs.go == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: 한다
+        shell: bash
+        run: echo hi
+"""
+
+
+def test_건너뛸_수_있는_잡의_동적_이름을_잡는다(tmp_path: Path) -> None:
+    """2026-09-04 실측: if로 건너뛴 잡은 실행 컨텍스트가 없어서 이름의 표현식이
+    평가되지 않고 원문 그대로 뜬다. 구분하고 싶었던 바로 그 경우에 못 읽는 문자열이
+    나오므로 목적을 정반대로 이룬다."""
+    text = SKIPPABLE.format(label="${{ needs.check.outputs.go == 'true' && '한다' || '안 한다' }}")
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "port" in found[0]
+
+
+def test_정적_이름은_통과한다(tmp_path: Path) -> None:
+    assert (
+        ci_check.check_tree(_write(tmp_path, SKIPPABLE.format(label="한다 (없으면 건너뜀)"))) == []
+    )
+
+
+def test_needs만_있어도_건너뛸_수_있다(tmp_path: Path) -> None:
+    """앞 잡이 건너뛰면 이 잡도 건너뛴다. if가 없어도 같은 자리다."""
+    text = (
+        SKIPPABLE.format(label="한다")
+        .replace("    if: needs.check.outputs.go == 'true'\n", "")
+        .replace("    name: 한다\n", "    name: ${{ needs.check.outputs.go }}\n")
+    )
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "port" in found[0]
+
+
+def test_건너뛸_수_없는_잡의_동적_이름은_안_따진다(tmp_path: Path) -> None:
+    """늘 도는 잡은 실행 컨텍스트가 있어서 표현식이 평가된다. 매트릭스 이름이 그 부류다."""
+    text = WORKFLOW.replace("  build:\n", "  build:\n    name: ${{ github.event_name }}\n")
+
+    assert ci_check.check_tree(_write(tmp_path, text)) == []
+
+
 def test_워크플로가_하나도_없으면_잡는다(tmp_path: Path) -> None:
     """검사가 조용히 통과하는 가장 쉬운 길을 막는다."""
     found = ci_check.check_tree(tmp_path)

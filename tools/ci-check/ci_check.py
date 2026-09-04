@@ -24,6 +24,9 @@
 7. **파이썬을 부르는 워크플로는 출력 인코딩을 세운다.** 윈도 러너의 파이썬 stdout이
    cp1252라, 우리 도구가 한국어를 내는 순간 `UnicodeEncodeError`로 죽는다. 첫 CI 실행이
    그렇게 죽었고 문법은 멀쩡해서 다른 규칙에는 안 걸렸다.
+8. **건너뛸 수 있는 잡의 이름에 표현식을 쓰지 않는다.** 건너뛴 잡은 실행 컨텍스트가
+   없어서 이름의 표현식이 평가되지 않고 원문 그대로 뜬다(2026-09-04 실측). 이름으로
+   상태를 말하려던 시도가 정확히 그 경우에 못 읽는 문자열을 내놓는다.
 
 ## 이 검사가 못 재는 것
 
@@ -154,7 +157,26 @@ def check_document(path: str, document: dict[str, Any]) -> list[str]:
 
     problems += _artifacts(path, document)
     problems += _encoding(path, document)
+    problems += _job_names(path, document)
     return problems
+
+
+def _job_names(path: str, document: dict[str, Any]) -> list[str]:
+    """건너뛸 수 있는 잡의 이름에 표현식을 쓰지 않는다.
+
+    건너뛴 잡은 실행 컨텍스트가 없어서 이름의 표현식이 평가되지 않는다. 목록에
+    `needs.check.outputs.has-new == 'true' && ...`가 그대로 뜬다 - 이름으로 상태를
+    말하려던 시도가 **정확히 그 경우에** 못 읽는 문자열을 내놓는다.
+
+    `if`나 `needs`가 있으면 건너뛸 수 있다. 앞 잡이 건너뛰면 뒤 잡도 건너뛰므로
+    `needs`만 있어도 같은 자리다. 늘 도는 잡은 컨텍스트가 있으니 안 따진다.
+    """
+    return [
+        f"{path}: {name} 잡이 건너뛸 수 있는데 이름이 표현식이다 - "
+        "건너뛰면 평가가 안 되어 원문 그대로 뜬다. 정적 이름에 까닭을 적는다"
+        for name, job in (document.get("jobs") or {}).items()
+        if "${{" in str(job.get("name", "")) and ("if" in job or "needs" in job)
+    ]
 
 
 def _encoding(path: str, document: dict[str, Any]) -> list[str]:
