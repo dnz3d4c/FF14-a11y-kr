@@ -78,9 +78,13 @@
 
 ## 원본에 보낼 것
 
-`upstream-reports/`에 파일 다섯이 있다. 셋은 재포팅에서 버린 개선분이고 둘은 새로 찾은 원본 결함이다.
+`upstream-reports/`에 사안 일곱과 `README.md`·`rejected.md`가 있다. **무엇을 안 보내는지의 기준은 `rejected.md`가 갖는다** — 만들기 전에 그것부터 본다.
 
-새로 더한 것은 **장소 유형이 언제나 독일어로 발화되는 결함**이다. `TypeLabel`을 식별용으로 독일어로 두는 것은 의도인데 그 값이 발화 문장에 그대로 들어간다. 대장의 고아 `Aethernet`·`Place`가 그 자국이고, `place-type-spoken-twice.md`와 **한 변경으로 같이 닫힌다.**
+**장소 유형이 언제나 독일어로 발화되는 결함.** `TypeLabel`을 식별용으로 독일어로 두는 것은 의도인데 그 값이 발화 문장에 그대로 들어간다. 대장의 고아 `Aethernet`·`Place`가 그 자국이고, `place-type-spoken-twice.md`와 **한 변경으로 같이 닫힌다.**
+
+**기본 키 `Strg+F5`가 야외에서 독일어 두 문장을 발화한다** (2026-09-04, `tools/ko-speech`가 찾음). 창이 있으면 그 창을 덤프하지만 없으면 탐침으로 떨어져서 배포판 사용자가 `Objekt-Sonde: 12 Objekte im Log.`를 듣는다. **기준 다섯을 다 넘겨 보내기로 판정한 첫 사안이다** — 원본 주석이 청자를 `the blind user`로 지목하고, 같은 저장소가 순수 진단은 `#if DEBUG`로 빼는데 이 자리만 안 뺐다.
+
+`lift-probe-speaks-german.md`는 반대 판정이다. 파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어가고, 기준 2·5를 못 넘겨 **안 보낸다.**
 
 ## 못 푼 것
 
