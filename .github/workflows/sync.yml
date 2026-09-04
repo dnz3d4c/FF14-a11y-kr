@@ -1,0 +1,206 @@
+name: 원본 동기화
+
+# 원본의 새 태그를 서브모듈 포인터로 얹고, 조립과 빌드가 서는지 본 다음 PR을 연다.
+# rebase가 아니라 체크아웃이다 - 원본 위에 우리 커밋이 없으므로 옮길 것이 없다.
+#
+# 러너를 windows-latest로 두는 까닭은 build.yml 맨 위에 적어 두었다.
+
+on:
+  schedule:
+    # 매일 06:00 KST. 업스트림이 하루 1.4개꼴로 태그를 낸다.
+    - cron: "0 21 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # 얹을 것이 있는지만 본다. 없으면 아래 잡이 skipped로 남는다.
+  #
+  # 아무것도 안 한 실행을 초록으로 끝내지 않는다. 기존 구조에서는 예약 실행이
+  # 12일 연속 초록인데 자동화가 죽어 있었다 - 7건이 전부 26~56초에 아무것도
+  # 안 하고 끝났고 빌드 실측은 3분 36초였다. 초록이 "일했다"를 뜻하지 않으면
+  # 대시보드는 고장을 감추는 장치가 된다.
+  check:
+    name: 새 태그 확인
+    runs-on: windows-latest
+    outputs:
+      current: ${{ steps.look.outputs.current }}
+      latest: ${{ steps.look.outputs.latest }}
+      has-new: ${{ steps.look.outputs.has-new }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      # 서브모듈 안에서 cd 하지 않는다. cd가 남으면 다음 명령이 원본 저장소에서
+      # 돌아 우리 커밋이 원본에 들어간다.
+      - name: 태그를 견준다
+        id: look
+        shell: bash
+        run: |
+          git -C upstream fetch --tags --force origin
+          current=$(git -C upstream describe --tags --exact-match HEAD 2>/dev/null || echo "")
+          latest=$(git -C upstream tag --list 'v*' --sort=-v:refname | head -1)
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+          if [ -n "$latest" ] && [ "$current" != "$latest" ]; then
+            echo "has-new=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-new=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 잡 요약
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## 원본 태그"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| 지금 핀 | ${{ steps.look.outputs.current }} |"
+            echo "| 원본 최신 | ${{ steps.look.outputs.latest }} |"
+            echo
+            if [ "${{ steps.look.outputs.has-new }}" = "true" ]; then
+              echo "얹을 것이 있다. 아래 잡이 조립과 빌드를 본다."
+            else
+              echo "새 태그 없음. 아래 잡은 skipped로 남는다."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # 잡 이름이 결과를 말한다. 새 태그가 없으면 이 잡은 skipped로 남는데, 이름까지
+  # 바꿔야 실행 목록에서 눈으로 읽힌다.
+  #
+  # 결론을 실패로 만들지 않는 까닭: 자동화가 제대로 돌아 "새 태그 없음"을 확인한 것과
+  # 자동화가 죽은 것을 둘 다 빨강으로 만들면 빨강이 신호이기를 그만둔다. 기존 저장소가
+  # 빨강을 무의미하게 만든 것과 같은 실수의 거울상이다. 대신 목록에서 구분되게 한다 -
+  # 기존 저장소가 무너진 자리가 정확히 "대시보드만 보고 지나갔다"였고, 요약을 열어야만
+  # 아는 것은 적어 두지 않은 것과 같다.
+  port:
+    name: ${{ needs.check.outputs.has-new == 'true' && '새 판 얹기' || '새 태그 없음' }}
+    needs: check
+    if: needs.check.outputs.has-new == 'true'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Dalamud 참조
+        id: refs
+        uses: ./.github/actions/dalamud-refs
+        with:
+          token: ${{ github.token }}
+
+      # 옛 핀으로 한 번 조립해 둔다. 새 판의 절대 숫자만으로는 늘었는지 원래
+      # 그랬는지가 안 보인다. 문서에 적어 둔 기준선과 대는 방법도 있지만 그
+      # 숫자는 손으로 옮겨 적은 것이라 언젠가 실제와 갈라진다.
+      - name: 옛 핀으로 조립
+        shell: bash
+        run: |
+          uv run python tools/assemble/assemble.py
+          cp build/assemble-report.json before.json
+
+      - name: 새 태그로 갈아 끼운다
+        shell: bash
+        run: |
+          git -C upstream fetch --tags --force origin
+          git -C upstream checkout "${{ needs.check.outputs.latest }}"
+
+      - name: 조립
+        shell: bash
+        run: |
+          uv run python tools/assemble/assemble.py | tee assemble.log
+          cp build/assemble-report.json after.json
+
+      - name: 빌드
+        shell: bash
+        env:
+          DALAMUD_HOME: ${{ steps.refs.outputs.home }}
+        run: |
+          dotnet build -c Release -warnaserror \
+            build/FF14Accessibility/FF14Accessibility.csproj
+
+      - name: 미번역 인벤토리
+        uses: actions/upload-artifact@v4
+        with:
+          name: assemble-report-${{ needs.check.outputs.latest }}
+          path: |
+            before.json
+            after.json
+          if-no-files-found: error
+
+      # 고아는 업스트림이 그 문장을 고쳤다는 신호다. 새 판을 받을 때 사람이 가장
+      # 먼저 봐야 하는 것이라 본문 맨 앞에 온다.
+      - name: PR 본문
+        shell: bash
+        run: |
+          uv run python tools/assemble/compare.py before.json after.json --out change.md
+          {
+            echo "원본 \`${{ needs.check.outputs.current }}\`에서"
+            echo "\`${{ needs.check.outputs.latest }}\`로 옮긴다."
+            echo
+            echo "조립과 \`dotnet build -c Release -warnaserror\`가 선 것을 확인했다."
+            echo
+            cat change.md
+            echo
+            echo "<details><summary>조립 보고 전체</summary>"
+            echo
+            echo '```'
+            cat assemble.log
+            echo '```'
+            echo
+            echo "</details>"
+          } > body.md
+
+      - name: 브랜치와 PR
+        id: pr
+        timeout-minutes: 10
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch="sync/upstream-${{ needs.check.outputs.latest }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add upstream
+          git commit -m "[원본] upstream: ${{ needs.check.outputs.latest }}로 옮긴다"
+          git push --force-with-lease origin "$branch"
+          # 요약은 여기서 쓰지 않는다. 이 단계는 밀고 여는 일을 하므로 always()를
+          # 달 수 없고, always() 없이 요약을 쓰면 실패했을 때 그 줄이 같이 사라진다.
+          # 무엇을 했는지는 아래 요약 단계가 이 출력을 보고 적는다.
+          if [ -n "$(gh pr list --head "$branch" --state open --json number --jq '.[].number')" ]; then
+            echo "state=열려 있는 PR에 밀어 넣었다" >> "$GITHUB_OUTPUT"
+          else
+            gh pr create --head "$branch" --base main \
+              --title "[원본] ${{ needs.check.outputs.latest }}를 얹는다" \
+              --body-file body.md
+            echo "state=PR을 새로 열었다" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 잡 요약
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## ${{ needs.check.outputs.current }} 에서 ${{ needs.check.outputs.latest }} 로"
+            echo
+            echo "${{ steps.pr.outputs.state || 'PR까지 못 갔다.' }}"
+            echo
+            cat change.md 2>/dev/null || echo "견줄 것을 못 만들었다."
+            echo
+            echo '```'
+            cat assemble.log 2>/dev/null || echo "조립이 결과를 못 남겼다."
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

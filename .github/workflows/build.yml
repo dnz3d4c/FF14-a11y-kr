@@ -1,0 +1,162 @@
+name: 빌드
+
+# 러너는 windows-latest다. 까닭 셋.
+#
+#   1. 모드가 net10.0-windows를 대상으로 하고 System.Speech(윈도 전용)를 참조하는데
+#      아래에서 -warnaserror로 빌드한다. 다른 OS에서는 플랫폼 호환 경고가 그대로
+#      실패가 되고, 그 실패는 우리 코드의 문제가 아니라 러너의 문제다.
+#   2. 산출물이 윈도용 플러그인 DLL이다. 도는 곳에서 짓는다.
+#   3. 우리 파이썬 도구는 표준 라이브러리만 쓰고 플랫폼 전용 호출이 없어서
+#      러너를 가리지 않는다. 곧 제약은 dotnet 쪽 하나뿐이다.
+#
+# 러너를 바꾸려면 tools/ci-check의 VERIFIED_RUNNERS부터 고쳐야 한다. 그 표는
+# "이 OS에서 실제로 확인했다"는 뜻이고, 확인 없이 바꾸면 검사가 막는다.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # 우리 코드의 검사. 여기는 막는다 - 실패가 곧 우리 잘못이다.
+  checks:
+    name: 파이썬 검사
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: 검사 넷을 돌린다
+        shell: bash
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+          uv run mypy tools
+          uv run pytest -q
+
+      - name: 문서 분량 상한
+        shell: bash
+        run: uv run python tools/docs-check/docs_check.py
+
+      # 이 워크플로 자신을 잰다. 여기서 막는 넷은 전부 기존 저장소에서 재발한 것이다.
+      - name: 워크플로 규칙
+        shell: bash
+        run: uv run python tools/ci-check/ci_check.py
+
+  # 조립하고 빌드한다. 실패 사유는 셋뿐이다.
+  #
+  #   1. 조립 실패 - 덧대기 앵커를 못 찾음, 대장 형식 오류
+  #   2. 빌드 실패 - dotnet build -c Release -warnaserror
+  #   3. 미번역 인벤토리를 산출물로 못 남김
+  #
+  # 미번역 개수 자체는 실패가 아니다. 업스트림이 하루 1.4개꼴로 태그를 내는데
+  # 번역 완성을 게이트로 걸면 그것이 매일 무효화되고, 그러면 빨간불이 신호이기를
+  # 그만둔다. 숫자는 잡 요약에 적고 초록으로 끝낸다.
+  build:
+    name: 조립과 빌드
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Dalamud 참조
+        id: refs
+        uses: ./.github/actions/dalamud-refs
+        with:
+          token: ${{ github.token }}
+
+      # 실패 사유 1.
+      - name: 조립
+        shell: bash
+        run: uv run python tools/assemble/assemble.py | tee assemble.log
+
+      # 실패 사유 2. Debug로 빌드하지 않는다 - 원본 csproj의 DeployToDevFolder가
+      # Debug 조건이라 결과가 개발용 플러그인 자리로 자동 복사된다.
+      - name: 빌드
+        shell: bash
+        env:
+          DALAMUD_HOME: ${{ steps.refs.outputs.home }}
+        run: |
+          dotnet build -c Release -warnaserror \
+            build/FF14Accessibility/FF14Accessibility.csproj
+
+      # 실패 사유 3. 이 인벤토리가 없으면 무엇이 영어로 나가는지 아무도 못 본다.
+      - name: 미번역 인벤토리
+        uses: actions/upload-artifact@v4
+        with:
+          name: assemble-report
+          path: build/assemble-report.json
+          if-no-files-found: error
+
+      - name: 플러그인
+        uses: actions/upload-artifact@v4
+        with:
+          name: FF14Accessibility
+          path: build/FF14Accessibility/bin/Release/net10.0-windows/
+          if-no-files-found: error
+
+      # 앞이 실패해도 여기까지 온 것은 적는다. 요약이 실패에 딸려 사라지면
+      # 무엇이 어디까지 갔는지 로그를 뒤져야 한다. 같은 결함이 세 번 재발했다.
+      - name: 잡 요약
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## 조립"
+            echo
+            echo '```'
+            cat assemble.log 2>/dev/null || echo "조립이 결과를 못 남겼다."
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # 현황판에 손으로 적은 숫자가 실측과 맞는지. 막지 않는다.
+  citations:
+    name: 문서 숫자 대조
+    needs: build
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: assemble-report
+          path: report
+
+      - name: 대조
+        shell: bash
+        run: uv run python tools/docs-check/docs_check.py --report report/assemble-report.json | tee citations.log
+
+      - name: 잡 요약
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## 현황판 기준선 대조"
+            echo
+            echo "머지를 막지 않는다. 번역 잔량은 업스트림이 매일 흔드는 값이다."
+            echo
+            echo '```'
+            cat citations.log 2>/dev/null || echo "대조가 결과를 못 남겼다."
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

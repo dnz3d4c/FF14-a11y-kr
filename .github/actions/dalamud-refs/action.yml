@@ -1,0 +1,66 @@
+name: Dalamud 참조 마련
+description: >
+  빌드에 필요한 어셈블리 여섯을 한 디렉토리에 모으고 sha256으로 대조한다.
+  여섯 중 둘만 한국 클라이언트 전용이고 넷은 공식 배포본에서 꺼낸다.
+
+# 여기가 Dalamud 판을 정하는 유일한 자리다. 워크플로 둘이 이 액션을 부르므로
+# 값이 두 벌로 갈릴 자리가 없다. 기존 저장소는 워크플로마다 상수를 두고 갈리는
+# 것을 "테스트가 YAML을 grep한다"로 막고 있었다.
+inputs:
+  release-tag:
+    description: 한국 클라이언트 전용 어셈블리 둘이 붙어 있는 이 저장소의 릴리스 태그.
+    required: false
+    default: dalamud-kr-15.0.3.2
+  path:
+    description: 여섯을 모아 둘 디렉토리. 저장소 루트 기준 상대 경로다.
+    required: false
+    default: dalamud-refs
+  token:
+    description: 이 저장소의 릴리스를 받을 때 gh가 쓸 토큰.
+    required: true
+
+outputs:
+  home:
+    description: DALAMUD_HOME으로 넘길 경로. 원본 csproj가 이 아래에서 여섯을 찾는다.
+    value: ${{ steps.verify.outputs.home }}
+
+runs:
+  using: composite
+  steps:
+    # 공식 배포본과 바이트가 같은 넷. 같다는 것은 믿지 않고 아래에서 잰다.
+    #
+    # 시간 제한을 명령에 단다. 복합 액션의 단계는 timeout-minutes를 못 갖기 때문이다.
+    # 제한이 없으면 상대가 멈췄을 때 잡 제한까지 붙잡히고, 그동안 무엇을 기다리는지도
+    # 안 보인다.
+    - name: 공식 배포본에서 넷을 꺼낸다
+      shell: bash
+      run: |
+        mkdir -p "${{ inputs.path }}"
+        curl -sSL --fail --connect-timeout 20 --max-time 300 \
+          -o dalamud-latest.zip https://goatcorp.github.io/dalamud-distrib/latest.zip
+        7z x -y -odalamud-latest dalamud-latest.zip > /dev/null
+        for name in Lumina.dll Lumina.Excel.dll InteropGenerator.Runtime.dll ImGuiScene.dll; do
+          cp "dalamud-latest/$name" "${{ inputs.path }}/$name"
+        done
+
+    # 한국 클라이언트 전용 둘과, 여섯 전부의 해시 목록.
+    # gh에는 시간 제한 옵션이 없어서 timeout으로 감싼다.
+    - name: 한국 클라이언트 전용 둘을 받는다
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
+        timeout 300 gh release download "${{ inputs.release-tag }}" \
+          --repo "$GITHUB_REPOSITORY" \
+          --pattern '*.dll' --pattern 'SHA256SUMS.txt' \
+          --dir "${{ inputs.path }}" --clobber
+
+    # 공식 판이 올라가면 넷이 어느 날 달라질 수 있다. 그때 조용히 다른 어셈블리로
+    # 빌드하면 안 되므로 매번 잰다. 어긋나면 여기서 멈춘다.
+    - name: 여섯을 해시로 대조한다
+      id: verify
+      shell: bash
+      run: |
+        cd "${{ inputs.path }}"
+        sha256sum -c SHA256SUMS.txt
+        echo "home=$(pwd -W)" >> "$GITHUB_OUTPUT"
