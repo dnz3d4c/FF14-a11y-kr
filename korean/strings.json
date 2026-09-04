@@ -434,6 +434,21 @@
       "ko": "안내"
     },
     {
+      "de": "anthrazit",
+      "en": "charcoal",
+      "ko": "짙은 잿빛"
+    },
+    {
+      "de": "aschblond",
+      "en": "ash blond",
+      "ko": "잿빛 금발"
+    },
+    {
+      "de": "Aschgrau",
+      "en": "ashen grey",
+      "ko": "잿빛 회색"
+    },
+    {
       "de": "Aufgaben.",
       "en": "Tasks.",
       "ko": "달성 조건."
@@ -554,6 +569,11 @@
       "ko": "꼬마 친구 검색, 입력란."
     },
     {
+      "de": "Beige",
+      "en": "beige",
+      "ko": "베이지"
+    },
+    {
       "de": "Beine",
       "en": "Legs",
       "ko": "다리"
@@ -604,6 +624,11 @@
       "ko": "{name}까지 경로 계산 중."
     },
     {
+      "de": "Bernstein",
+      "en": "amber",
+      "ko": "호박색"
+    },
+    {
       "de": "Beschreibung: {description}",
       "en": "Description: {description}",
       "ko": "설명: {description}"
@@ -649,6 +674,26 @@
       "ko": "입질."
     },
     {
+      "de": "blasses",
+      "en": "pale",
+      "ko": "옅은"
+    },
+    {
+      "de": "Blau",
+      "en": "blue",
+      "ko": "파랑"
+    },
+    {
+      "de": "Blaugrau",
+      "en": "blue grey",
+      "ko": "청회색"
+    },
+    {
+      "de": "Blaugrün",
+      "en": "sea green",
+      "ko": "바다 초록"
+    },
+    {
       "de": "Bodenmessung fertig. {hits} Treffer, davon {withoutMesh} ohne Wegenetz.",
       "en": "Ground probe done. {hits} hits, {withoutMesh} of them without navigation mesh.",
       "ko": "바닥 측정 완료. {hits}군데 잡힘, 그중 {withoutMesh}군데는 길 정보 없음."
@@ -659,9 +704,19 @@
       "ko": "보너스 {percent} 퍼센트"
     },
     {
+      "de": "Braun",
+      "en": "brown",
+      "ko": "갈색"
+    },
+    {
       "de": "Brett. Deine Karten {yours}, gegnerische {enemy}.",
       "en": "Board. Your cards {yours}, enemy {enemy}.",
       "ko": "판에 놓인 카드, 내 것 {yours}장, 상대 것 {enemy}장."
+    },
+    {
+      "de": "Bronze",
+      "en": "bronze",
+      "ko": "청동색"
     },
     {
       "de": "Brüllt",
@@ -722,6 +777,16 @@
       "de": "Chronik: ",
       "en": "Chronicle: ",
       "ko": "연대기: "
+    },
+    {
+      "de": "Creme",
+      "en": "cream",
+      "ko": "크림색"
+    },
+    {
+      "de": "Cyan",
+      "en": "cyan",
+      "ko": "밝은 청록"
     },
     {
       "de": "Das Chatfenster ist nicht erreichbar.",
@@ -874,6 +939,56 @@
       "ko": "던전"
     },
     {
+      "de": "dunkelblond",
+      "en": "dark blond",
+      "ko": "어두운 금발"
+    },
+    {
+      "de": "dunkelbraun",
+      "en": "dark brown",
+      "ko": "어두운 갈색"
+    },
+    {
+      "de": "dunkelgrau",
+      "en": "dark grey",
+      "ko": "어두운 회색"
+    },
+    {
+      "de": "dunkles",
+      "en": "dark",
+      "ko": "어두운"
+    },
+    {
+      "de": "dunkles Aschgrau",
+      "en": "dark ashen",
+      "ko": "어두운 잿빛"
+    },
+    {
+      "de": "dunkles Blaugrau",
+      "en": "dark blue grey",
+      "ko": "어두운 청회색"
+    },
+    {
+      "de": "dunkles Braun",
+      "en": "dark brown",
+      "ko": "어두운 갈색"
+    },
+    {
+      "de": "dunkles Rotbraun",
+      "en": "dark auburn",
+      "ko": "어두운 적갈색"
+    },
+    {
+      "de": "dunkles Seegrün",
+      "en": "dark sea green",
+      "ko": "어두운 바다 초록"
+    },
+    {
+      "de": "dunkles Weinrot",
+      "en": "dark wine red",
+      "ko": "어두운 포도줏빛 빨강"
+    },
+    {
       "de": "Ebene",
       "en": "Floor",
       "ko": "층"
@@ -929,6 +1044,16 @@
       "ko": "{name} 설정을 열 수 없음."
     },
     {
+      "de": "eisblasses Weiß",
+      "en": "ice pale white",
+      "ko": "얼음빛 흰색"
+    },
+    {
+      "de": "Elfenbein",
+      "en": "ivory",
+      "ko": "아이보리"
+    },
+    {
       "de": "Emote fehlgeschlagen.",
       "en": "Emote failed.",
       "ko": "감정 표현 실패."
@@ -974,6 +1099,11 @@
       "ko": "개발용 플러그인"
     },
     {
+      "de": "erdbeerblond",
+      "en": "strawberry blond",
+      "ko": "딸기빛 금발"
+    },
+    {
       "de": "Erholungsbonus nicht verfügbar.",
       "en": "Rested bonus not available.",
       "ko": "휴식 보너스를 알 수 없음."
@@ -987,6 +1117,16 @@
       "de": "Etwas schneller",
       "en": "Slightly faster",
       "ko": "조금 빠름"
+    },
+    {
+      "de": "fast schwarz",
+      "en": "near black",
+      "ko": "거의 검정"
+    },
+    {
+      "de": "fast schwarzes Braun",
+      "en": "near black brown",
+      "ko": "거의 검은 갈색"
     },
     {
       "de": "FATEs",
@@ -1199,6 +1339,21 @@
       "ko": "채널 묶음 전체 읽어 주기"
     },
     {
+      "de": "gebräunt",
+      "en": "tan",
+      "ko": "황갈색"
+    },
+    {
+      "de": "gedecktes",
+      "en": "deep",
+      "ko": "짙은"
+    },
+    {
+      "de": "gedämpftes",
+      "en": "muted",
+      "ko": "차분한"
+    },
+    {
       "de": "Gefahr",
       "en": "Hazard",
       "ko": "위험"
@@ -1284,6 +1439,16 @@
       "ko": "집사"
     },
     {
+      "de": "Gelb",
+      "en": "yellow",
+      "ko": "노랑"
+    },
+    {
+      "de": "Gelbgrün",
+      "en": "yellow green",
+      "ko": "노란 연두"
+    },
+    {
       "de": "Geschlossen.",
       "en": "Closed.",
       "ko": "닫힘."
@@ -1299,14 +1464,49 @@
       "ko": "소지금을 알 수 없음."
     },
     {
+      "de": "Gold",
+      "en": "gold",
+      "ko": "황금색"
+    },
+    {
+      "de": "goldblond",
+      "en": "golden blond",
+      "ko": "황금 금발"
+    },
+    {
+      "de": "grau",
+      "en": "grey",
+      "ko": "회색"
+    },
+    {
+      "de": "Graugrün",
+      "en": "sage",
+      "ko": "회녹색"
+    },
+    {
       "de": "Gruppe",
       "en": "Party",
       "ko": "파티"
     },
     {
+      "de": "gräuliches",
+      "en": "greyish",
+      "ko": "회색빛"
+    },
+    {
+      "de": "Grün",
+      "en": "green",
+      "ko": "초록"
+    },
+    {
       "de": "Gürtel",
       "en": "Waist",
       "ko": "허리"
+    },
+    {
+      "de": "hellgrau",
+      "en": "light grey",
+      "ko": "밝은 회색"
     },
     {
       "de": "HP {hp} von {hpMax}, MP {Percent(mp, mpMax)} Prozent.",
@@ -1364,9 +1564,49 @@
       "ko": "주 메뉴"
     },
     {
+      "de": "hell",
+      "en": "fair",
+      "ko": "밝은 살빛"
+    },
+    {
       "de": "Hell (bisheriger Klang)",
       "en": "Bright (previous sound)",
       "ko": "맑은 소리 (이전 소리)"
+    },
+    {
+      "de": "hellbraun",
+      "en": "light brown",
+      "ko": "밝은 갈색"
+    },
+    {
+      "de": "helles",
+      "en": "light",
+      "ko": "밝은"
+    },
+    {
+      "de": "helles Aschgrau",
+      "en": "pale ashen",
+      "ko": "옅은 잿빛"
+    },
+    {
+      "de": "helles Beige",
+      "en": "light beige",
+      "ko": "밝은 베이지"
+    },
+    {
+      "de": "helles Blaugrau",
+      "en": "pale blue grey",
+      "ko": "옅은 청회색"
+    },
+    {
+      "de": "helles Rosé",
+      "en": "pale rose",
+      "ko": "옅은 장밋빛"
+    },
+    {
+      "de": "helles Seegrün",
+      "en": "pale sea green",
+      "ko": "옅은 바다 초록"
     },
     {
       "de": "Herstellbar {value}",
@@ -1382,6 +1622,16 @@
       "de": "Hier endet der begehbare Weg. Noch {MetersRemaining(distance)} nach {direction}, ich führe ab jetzt in Luftlinie.",
       "en": "This is where the walkable path ends. {MetersRemaining(distance)} to the {direction}; guiding in a straight line from here.",
       "ko": "걸어갈 수 있는 길이 여기서 끝남. {direction} 방향으로 {MetersRemaining(distance)} 남음. 여기부터는 직선으로 안내함."
+    },
+    {
+      "de": "Himbeerrot",
+      "en": "raspberry",
+      "ko": "진분홍"
+    },
+    {
+      "de": "Himmelblau",
+      "en": "sky blue",
+      "ko": "하늘색"
     },
     {
       "de": "Himmelsrichtung",
@@ -1412,6 +1662,11 @@
       "de": "Hinweismeldungen",
       "en": "Notice messages",
       "ko": "알림 메시지"
+    },
+    {
+      "de": "honigblond",
+      "en": "honey blond",
+      "ko": "꿀빛 금발"
     },
     {
       "de": "Hände",
@@ -1467,6 +1722,11 @@
       "de": "In der Nähe: {joined}",
       "en": "Nearby: {joined}",
       "ko": "근처: {joined}"
+    },
+    {
+      "de": "Indigo",
+      "en": "indigo",
+      "ko": "남색"
     },
     {
       "de": "Inhalte",
@@ -1562,6 +1822,11 @@
       "de": "Kartenspiel ist nicht offen.",
       "en": "Card game is not open.",
       "ko": "카드 대결이 열려 있지 않음."
+    },
+    {
+      "de": "kastanienbraun",
+      "en": "auburn",
+      "ko": "적갈색"
     },
     {
       "de": "Kategorie {name}.",
@@ -1904,6 +2169,11 @@
       "ko": "에테라이트를 찾을 수 없음."
     },
     {
+      "de": "Khaki",
+      "en": "khaki",
+      "ko": "카키"
+    },
+    {
       "de": "Klang AoE-Warnung",
       "en": "AoE warning sound",
       "ko": "장판 경고음"
@@ -1957,6 +2227,16 @@
       "de": "Kristall, {needed} benötigt, {owned} im Beutel",
       "en": "Crystal, {needed} needed, {owned} in bag",
       "ko": "크리스탈, {needed}개 필요, 소지품에 {owned}개"
+    },
+    {
+      "de": "kräftiges",
+      "en": "vivid",
+      "ko": "선명한"
+    },
+    {
+      "de": "kupferrot",
+      "en": "copper red",
+      "ko": "구릿빛 빨강"
     },
     {
       "de": "Laden",
@@ -2029,9 +2309,24 @@
       "ko": "석탑"
     },
     {
+      "de": "Lila",
+      "en": "purple",
+      "ko": "보라"
+    },
+    {
+      "de": "Limettgrün",
+      "en": "lime green",
+      "ko": "연두"
+    },
+    {
       "de": "Linie",
       "en": "line",
       "ko": "직선"
+    },
+    {
+      "de": "Magenta",
+      "en": "magenta",
+      "ko": "자홍"
     },
     {
       "de": "Magieabwehr {v}",
@@ -2057,6 +2352,11 @@
       "de": "Markierung",
       "en": "Flag",
       "ko": "표식"
+    },
+    {
+      "de": "Mauve",
+      "en": "mauve",
+      "ko": "연보라"
     },
     {
       "de": "Meldungen",
@@ -2087,6 +2387,11 @@
       "de": "Merkmal",
       "en": "Feature",
       "ko": "특징"
+    },
+    {
+      "de": "mittelgrau",
+      "en": "medium grey",
+      "ko": "중간 회색"
     },
     {
       "de": "NPC",
@@ -3349,6 +3654,51 @@
       "ko": "위 {up}, 오른쪽 {right}, 아래 {down}, 왼쪽 {left}"
     },
     {
+      "de": "Oliv",
+      "en": "olive",
+      "ko": "올리브"
+    },
+    {
+      "de": "oliv ",
+      "en": "olive ",
+      "ko": "올리브빛 "
+    },
+    {
+      "de": "Olivbraun",
+      "en": "olive brown",
+      "ko": "올리브 갈색"
+    },
+    {
+      "de": "Orange",
+      "en": "orange",
+      "ko": "주황"
+    },
+    {
+      "de": "Orangerot",
+      "en": "orange red",
+      "ko": "주황빛 빨강"
+    },
+    {
+      "de": "Pfirsich",
+      "en": "peach",
+      "ko": "살구색"
+    },
+    {
+      "de": "Pink",
+      "en": "pink",
+      "ko": "분홍"
+    },
+    {
+      "de": "platinblond",
+      "en": "platinum blond",
+      "ko": "백금발"
+    },
+    {
+      "de": "porzellanweiß",
+      "en": "porcelain white",
+      "ko": "도자기빛 흰색"
+    },
+    {
       "de": "rar",
       "en": "rare",
       "ko": "희귀"
@@ -3364,14 +3714,114 @@
       "ko": "오른쪽"
     },
     {
+      "de": "rosiges ",
+      "en": "rosy ",
+      "ko": "장밋빛 "
+    },
+    {
+      "de": "Rosébeige",
+      "en": "rosy beige",
+      "ko": "장밋빛 베이지"
+    },
+    {
+      "de": "Rot",
+      "en": "red",
+      "ko": "빨강"
+    },
+    {
+      "de": "rot",
+      "en": "red",
+      "ko": "빨강"
+    },
+    {
+      "de": "Rotbraun",
+      "en": "reddish brown",
+      "ko": "붉은 갈색"
+    },
+    {
+      "de": "schokobraun",
+      "en": "chocolate brown",
+      "ko": "초콜릿 갈색"
+    },
+    {
       "de": "schon gewürfelt",
       "en": "already rolled",
       "ko": "이미 입찰함"
     },
     {
+      "de": "schwarz",
+      "en": "black",
+      "ko": "검정"
+    },
+    {
+      "de": "Seegrün",
+      "en": "sea green",
+      "ko": "바다 초록"
+    },
+    {
+      "de": "sehr blasses",
+      "en": "very pale",
+      "ko": "아주 옅은"
+    },
+    {
+      "de": "sehr blasses Grün",
+      "en": "very pale green",
+      "ko": "아주 옅은 초록"
+    },
+    {
+      "de": "sehr dunkles",
+      "en": "very dark",
+      "ko": "아주 어두운"
+    },
+    {
+      "de": "sehr dunkles Braun",
+      "en": "very dark brown",
+      "ko": "아주 어두운 갈색"
+    },
+    {
+      "de": "sehr dunkles Moosgrün",
+      "en": "very dark moss green",
+      "ko": "아주 어두운 이끼 초록"
+    },
+    {
+      "de": "sehr dunkles Schiefergrau",
+      "en": "very dark slate",
+      "ko": "아주 어두운 청회색"
+    },
+    {
+      "de": "sehr hell",
+      "en": "very fair",
+      "ko": "아주 밝은 살빛"
+    },
+    {
+      "de": "sehr helles Grau",
+      "en": "off white",
+      "ko": "흰빛 회색"
+    },
+    {
+      "de": "silber",
+      "en": "silver",
+      "ko": "은색"
+    },
+    {
+      "de": "silbergrau",
+      "en": "silver grey",
+      "ko": "은회색"
+    },
+    {
+      "de": "Smaragd",
+      "en": "emerald green",
+      "ko": "에메랄드 초록"
+    },
+    {
       "de": "sofort",
       "en": "now",
       "ko": "지금"
+    },
+    {
+      "de": "Türkis",
+      "en": "teal",
+      "ko": "청록"
     },
     {
       "de": "unverändert",
@@ -3389,9 +3839,29 @@
       "ko": "숨겨짐"
     },
     {
+      "de": "Violett",
+      "en": "violet",
+      "ko": "청보라"
+    },
+    {
       "de": "vom Spiel geändert",
       "en": "changed by the game",
       "ko": "게임이 바꿈"
+    },
+    {
+      "de": "Warmbraun",
+      "en": "warm brown",
+      "ko": "따뜻한 갈색"
+    },
+    {
+      "de": "warmes Beige",
+      "en": "warm beige",
+      "ko": "따뜻한 베이지"
+    },
+    {
+      "de": "warmes Braun",
+      "en": "warm brown",
+      "ko": "따뜻한 갈색"
     },
     {
       "de": "weiblich",
@@ -3399,9 +3869,19 @@
       "ko": "여성"
     },
     {
+      "de": "weiß",
+      "en": "white",
+      "ko": "흰색"
+    },
+    {
       "de": "weitere Vergütung",
       "en": "further reward",
       "ko": "추가 보상"
+    },
+    {
+      "de": "Ziegelrot",
+      "en": "brick red",
+      "ko": "벽돌빛 빨강"
     },
     {
       "de": "{(int)MathF.Round(volume * 100)} Prozent",

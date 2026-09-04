@@ -158,6 +158,39 @@
       ]
     },
     {
+      "name": "colornamer-using-compilerservices",
+      "file": "FF14Accessibility/Services/ColorNamer.cs",
+      "why": "아래 축약 Pick이 [CallerMemberName]을 쓴다.",
+      "find": [
+        "using System;"
+      ],
+      "replace": [
+        "using System;",
+        "using System.Runtime.CompilerServices;"
+      ]
+    },
+    {
+      "name": "colornamer-pick-shorthand",
+      "file": "FF14Accessibility/Services/ColorNamer.cs",
+      "why": "이 파일의 104곳이 별칭 De로 갈리고 조립이 그 자리를 세 인자짜리 Pick으로 바꾼다. 축약이 없으면 그 104곳이 전부 CS0103으로 빌드를 세운다. AccessibilityStrings의 것과 따로 두는 까닭은 축약이 클래스마다 하나씩이기 때문이다.",
+      "find": [
+        "    private static bool De => Loc.IsGerman;"
+      ],
+      "replace": [
+        "    private static bool De => Loc.IsGerman;",
+        "",
+        "    // Three-language form. The Korean comes from korean/strings.json and is written",
+        "    // in by tools/assemble - do not hand-edit it here, the catalogue is the original.",
+        "    //",
+        "    // caller is filled in by the compiler and names the method the swatch word came",
+        "    // from, which is what the missing-Korean log prints. Fourth parameter, so the",
+        "    // three-argument calls the assembler writes cannot land on it.",
+        "    private static string Pick(string de, string en, string? ko = null,",
+        "                               [CallerMemberName] string caller = \"\") =>",
+        "        Loc.Pick(de, en, ko, caller);"
+      ]
+    },
+    {
       "name": "strings-using-compilerservices",
       "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
       "why": "아래 축약 Pick이 [CallerMemberName]을 쓴다.",
