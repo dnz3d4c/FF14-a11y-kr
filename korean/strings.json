@@ -4007,6 +4007,211 @@
       "de": "Nichts bereit.",
       "en": "Nothing ready.",
       "ko": "준비된 것 없음."
+    },
+    {
+      "de": "{name}, {(on ? \"an\" : \"aus\")}",
+      "en": "{name}, {(on ? \"on\" : \"off\")}",
+      "ko": "{name}, {(on ? \"켜짐\" : \"꺼짐\")}"
+    },
+    {
+      "de": "{name} {(on ? \"an\" : \"aus\")}.",
+      "en": "{name} {(on ? \"on\" : \"off\")}.",
+      "ko": "{name} {(on ? \"켜짐\" : \"꺼짐\")}."
+    },
+    {
+      "de": "Job-Anzeige wieder verfügbar",
+      "en": "Job gauge back up",
+      "ko": "직업 게이지 복구됨"
+    },
+    {
+      "de": "1 Tastenkonflikt.",
+      "en": "1 key conflict.",
+      "ko": "키 충돌 1개."
+    },
+    {
+      "de": "{conflictCount} Tastenkonflikte.",
+      "en": "{conflictCount} key conflicts.",
+      "ko": "키 충돌 {conflictCount}개."
+    },
+    {
+      "de": "{name}, Stufe {level}, {(preparing ? \"startet gleich\" : $\"{progress} Prozent\")}",
+      "en": "{name}, level {level}, {(preparing ? \"starting soon\" : $\"{progress} percent\")}",
+      "ko": "{name}, 레벨 {level}, {(preparing ? \"곧 시작\" : $\"{progress} 퍼센트\")}"
+    },
+    {
+      "de": ", {count} Einträge{(selection.Length > 0 ? $\": {selection}\" : string.Empty)}",
+      "en": ", {count} entries{(selection.Length > 0 ? $\": {selection}\" : string.Empty)}",
+      "ko": ", 항목 {count}개{(selection.Length > 0 ? $\": {selection}\" : string.Empty)}"
+    },
+    {
+      "de": "{items.Count} passende Gegenstände: {string.Join(\", \", items)}. Auswählen und dann Übergeben drücken.",
+      "en": "{items.Count} matching items: {string.Join(\", \", items)}. Select one, then press Hand Over.",
+      "ko": "맞는 아이템 {items.Count}개: {string.Join(\", \", items)}. 선택한 다음 건네주기 누르기."
+    },
+    {
+      "de": "{heading}, {count} {(count == 1 ? \"Einstellung\" : \"Einstellungen\")}",
+      "en": "{heading}, {count} {(count == 1 ? \"setting\" : \"settings\")}",
+      "ko": "{heading}, 설정 {count}개{(count == 1 ? \"\" : \"\")}"
+    },
+    {
+      "de": " Gegenstand: ",
+      "en": " item: ",
+      "ko": " 아이템: "
+    },
+    {
+      "de": " Gegenstände: ",
+      "en": " items: ",
+      "ko": " 아이템: "
+    },
+    {
+      "de": "{option}, {index} von {count}{(selected ? \", ausgewählt\" : \"\")}",
+      "en": "{option}, {index} of {count}{(selected ? \", selected\" : \"\")}",
+      "ko": "{option}, {count} 중 {index}{(selected ? \", 선택됨\" : \"\")}"
+    },
+    {
+      "de": "{label}, Taste {string.Join(\", \", keys)}",
+      "en": "{label}, key {string.Join(\", \", keys)}",
+      "ko": "{label}, 키 {string.Join(\", \", keys)}"
+    },
+    {
+      "de": ", für deine Klasse {classes}",
+      "en": ", for your {classes}",
+      "ko": ", 내 {classes}용"
+    },
+    {
+      "de": ", für deine Klassen {classes}",
+      "en": ", for your classes {classes}",
+      "ko": ", 내 {classes}용"
+    },
+    {
+      "de": "{name} {(v < 0 ? \"minus\" : \"plus\")} {Math.Abs(v)}",
+      "en": "{name} {(v < 0 ? \"minus\" : \"plus\")} {Math.Abs(v)}",
+      "ko": "{name} {(v < 0 ? \"마이너스\" : \"플러스\")} {Math.Abs(v)}"
+    },
+    {
+      "de": "1 Materia-Slot",
+      "en": "1 materia slot",
+      "ko": "마테리아 1칸"
+    },
+    {
+      "de": "{n} Materia-Slots",
+      "en": "{n} materia slots",
+      "ko": "마테리아 {n}칸"
+    },
+    {
+      "de": "FF14 Accessibility Version {version.Replace(\".\", \" Punkt \")} bereit.",
+      "en": "FF14 Accessibility version {version.Replace(\".\", \" point \")} ready.",
+      "ko": "FF14 접근성 {version.Replace(\".\", \" 점 \")} 버전 준비됨."
+    },
+    {
+      "de": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"in beide Richtungen\" : \"nur in Laufrichtung\")}.",
+      "en": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"both ways\" : \"one way only\")}.",
+      "ko": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"양방향\" : \"걸어간 방향으로만\")}."
+    },
+    {
+      "de": "Ziel-Leiste {bar}, {filled} von {total} belegt{(anyKey ? \"\" : \", keine Tasten zugewiesen\")}.",
+      "en": "Target bar {bar}, {filled} of {total} filled{(anyKey ? \"\" : \", no keys assigned\")}.",
+      "ko": "{bar}번 대상 단축바, {total} 중 {filled}칸 채워짐{(anyKey ? \"\" : \", 키 없음\")}."
+    },
+    {
+      "de": "{name}, Stufe {level}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "en": "{name}, level {level}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
+      "ko": "{name}, 레벨 {level}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+    },
+    {
+      "de": "{name}{(isHq ? HighQuality : \"\")}, {quantity} Stück{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "en": "{name}{(isHq ? HighQuality : \"\")}, {quantity}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
+      "ko": "{name}{(isHq ? HighQuality : \"\")}, {quantity}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+    },
+    {
+      "de": "{name}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "en": "{name}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
+      "ko": "{name}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+    },
+    {
+      "de": "{name}, {quantity} Stück{(castTime > 0 ? $\", Wirkzeit {castTime} Sekunden\" : \"\")}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "en": "{name}, {quantity}{(castTime > 0 ? $\", cast time {castTime} seconds\" : \"\")}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
+      "ko": "{name}, {quantity}{(castTime > 0 ? $\", 시전 시간 {castTime}초\" : \"\")}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+    },
+    {
+      "de": "Ifrit bereit",
+      "en": "Ifrit ready",
+      "ko": "이프리트 준비됨"
+    },
+    {
+      "de": "Titan bereit",
+      "en": "Titan ready",
+      "ko": "타이탄 준비됨"
+    },
+    {
+      "de": "Garuda bereit",
+      "en": "Garuda ready",
+      "ko": "가루다 준비됨"
+    },
+    {
+      "de": "Ätherfluss bereit",
+      "en": "Aetherflow ready",
+      "ko": "에테르 순환 준비됨"
+    },
+    {
+      "de": "Rubin",
+      "en": "Ruby",
+      "ko": "루비"
+    },
+    {
+      "de": "Topas",
+      "en": "Topaz",
+      "ko": "토파즈"
+    },
+    {
+      "de": "Smaragd",
+      "en": "Emerald",
+      "ko": "에메랄드"
+    },
+    {
+      "de": "Einstimmung",
+      "en": "attunement",
+      "ko": "속성"
+    },
+    {
+      "de": "Für diesen Job gibt es keine Anzeige.",
+      "en": "This job has no gauge.",
+      "ko": "이 직업은 게이지 없음."
+    },
+    {
+      "de": "{name}{(command.Length > 0 ? $\", Befehl {command}\" : \"\")}, {index} von {count}",
+      "en": "{name}{(command.Length > 0 ? $\", command {command}\" : \"\")}, {index} of {count}",
+      "ko": "{name}{(command.Length > 0 ? $\", 명령어 {command}\" : \"\")}, {count} 중 {index}"
+    },
+    {
+      "de": "Verlosung: {name}{(count > 1 ? $\" mal {count}\" : \"\")}. {options}",
+      "en": "Loot roll: {name}{(count > 1 ? $\" times {count}\" : \"\")}. {options}",
+      "ko": "전리품 입찰: {name}{(count > 1 ? $\" {count}개\" : \"\")}. {options}"
+    },
+    {
+      "de": "{name}{(count > 1 ? $\" mal {count}\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}",
+      "en": "{name}{(count > 1 ? $\" times {count}\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}",
+      "ko": "{name}{(count > 1 ? $\" {count}개\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}"
+    },
+    {
+      "de": "{category}, {count} {(count == 1 ? \"Nachricht\" : \"Nachrichten\")}",
+      "en": "{category}, {count} {(count == 1 ? \"message\" : \"messages\")}",
+      "ko": "{category}, 메시지 {count}개{(count == 1 ? \"\" : \"\")}"
+    },
+    {
+      "de": "{label} {number}, {(on ? \"an\" : \"aus\")}",
+      "en": "{label} {number}, {(on ? \"on\" : \"off\")}",
+      "ko": "{label} {number}, {(on ? \"켜짐\" : \"꺼짐\")}"
+    },
+    {
+      "de": "{label} {number}, {what}, {(on ? \"an\" : \"aus\")}",
+      "en": "{label} {number}, {what}, {(on ? \"on\" : \"off\")}",
+      "ko": "{label} {number}, {what}, {(on ? \"켜짐\" : \"꺼짐\")}"
+    },
+    {
+      "de": "{what}, {(on ? \"an\" : \"aus\")}",
+      "en": "{what}, {(on ? \"on\" : \"off\")}",
+      "ko": "{what}, {(on ? \"켜짐\" : \"꺼짐\")}"
     }
   ]
 }
