@@ -31,6 +31,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
+
+import console  # noqa: E402 - 위에서 경로를 넣어야 찾는다
+
 #: 상한을 건 문서. 여기 없는 문서는 재지 않는다.
 LIMITS: dict[str, int] = {
     "docs/status.md": 120,
@@ -131,6 +135,7 @@ def drifted(text: str, report: dict[str, Any]) -> list[str]:
 
 
 def main(argv: list[str] | None = None) -> int:
+    console.setup()
     parser = argparse.ArgumentParser(description="문서 검사.")
     parser.add_argument("--root", default=".", help="저장소 루트")
     parser.add_argument(

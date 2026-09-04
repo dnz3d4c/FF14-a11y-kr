@@ -333,6 +333,50 @@ def test_대장의_한국어에_줄바꿈이_있으면_실패한다(tmp_path: Pa
     assert "줄바꿈" in report.problems[0]
 
 
+def test_덧대기_규칙의_모양이_깨지면_보고로_낸다(tmp_path: Path) -> None:
+    """traceback으로 죽으면 CI의 실패 사유 하나가 그때만 다른 모양으로 나온다.
+    조립 실패는 언제나 같은 자리에서 같은 모양으로 보여야 한다."""
+    repo = _repo(tmp_path)
+    (repo / "graft" / "rules.json").write_text(
+        json.dumps(
+            {
+                "rules": [
+                    {"name": "같은이름", "file": "A.cs", "find": "x", "replace": "y"},
+                    {"name": "같은이름", "file": "B.cs", "find": "x", "replace": "y"},
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "같은이름" in report.problems[0]
+
+
+def test_덧대기_규칙이_JSON이_아니어도_보고로_낸다(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    (repo / "graft" / "rules.json").write_text("{ 이건 JSON이 아니다", encoding="utf-8")
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "덧대기 규칙" in report.problems[0]
+
+
+def test_깨진_규칙_파일도_보고를_남긴다(tmp_path: Path) -> None:
+    """CI가 산출물로 집어 갈 것이 있어야 무엇이 왜 실패했는지 남는다."""
+    repo = _repo(tmp_path)
+    (repo / "graft" / "rules.json").write_text("{ 아니다", encoding="utf-8")
+
+    assemble.assemble(repo)
+
+    saved = json.loads((repo / "build" / "assemble-report.json").read_text(encoding="utf-8"))
+    assert saved["ok"] is False
+
+
 def test_앵커가_어긋나면_규칙_이름을_대고_실패한다(tmp_path: Path) -> None:
     """일부러 어긋나게 한 사본. 조용히 넘어가면 안 된다."""
     repo = _repo(tmp_path)

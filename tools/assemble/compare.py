@@ -22,9 +22,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
+
+import console  # noqa: E402 - 위에서 경로를 넣어야 찾는다
 
 #: 보고에서 숫자를 뽑는 법. 이름은 사람이 읽을 이름이다.
 COUNTS: dict[str, str] = {
@@ -127,6 +132,7 @@ def compare(before: dict[str, Any], after: dict[str, Any]) -> Change:
 
 
 def main(argv: list[str] | None = None) -> int:
+    console.setup()
     parser = argparse.ArgumentParser(description="조립 보고 둘을 견준다.")
     parser.add_argument("before", type=Path, help="옛 핀으로 조립한 보고")
     parser.add_argument("after", type=Path, help="새 태그로 조립한 보고")

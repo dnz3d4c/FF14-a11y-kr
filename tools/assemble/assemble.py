@@ -41,6 +41,10 @@ import files
 import graft
 import scanner
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
+
+import console  # noqa: E402 - 위에서 경로를 넣어야 찾는다
+
 #: 조립 대상. 설치 프로그램과 런처는 이 단계의 범위 밖이다.
 SOURCE_NAME = "FF14Accessibility"
 
@@ -264,11 +268,21 @@ def copy_kr(repo: Path, build: Path, report: Report) -> None:
         shutil.copy2(source / name, target)
 
 
-def apply_graft(repo: Path, build: Path, report: Report, phase: str) -> None:
+def load_graft(repo: Path, report: Report) -> list[graft.Rule]:
+    """덧대기 규칙을 한 번만 읽는다. 모양이 깨져 있으면 보고에 담고 빈 목록을 돌려준다.
+
+    던지게 두면 조립이 traceback으로 죽는다. 그러면 CI의 실패 사유 하나("조립 실패")가
+    그때만 다른 모양으로 나오고, 보고 파일도 안 남아 무엇이 왜 실패했는지가 로그에만
+    남는다. 실패는 언제나 같은 자리에서 같은 모양으로 보여야 한다.
+    """
     path = repo / "graft" / "rules.json"
     if not path.is_file():
-        return
-    report.problems += graft.apply_rules(graft.load_rules(path), build, phase)
+        return []
+    try:
+        return graft.load_rules(path)
+    except (ValueError, KeyError, json.JSONDecodeError) as error:
+        report.problems.append(f"덧대기 규칙의 모양이 깨졌다 - {error}")
+        return []
 
 
 # --- 세기 ------------------------------------------------------------------
@@ -347,12 +361,14 @@ def assemble(repo: Path) -> Report:
         return report
     report.catalog_rows = len(catalog)
 
+    rules = load_graft(repo, report)
+
     copy_upstream(repo / "upstream", build)
-    apply_graft(repo, build, report, graft.BEFORE)
+    report.problems += graft.apply_rules(rules, build, graft.BEFORE)
     inject_korean(build, catalog, report)
     apply_replace(repo, build, report)
     copy_kr(repo, build, report)
-    apply_graft(repo, build, report, graft.AFTER)
+    report.problems += graft.apply_rules(rules, build, graft.AFTER)
 
     seen, report.untranslated, report.unreadable = survey(build)
     report.orphans = orphans(catalog, seen)
@@ -407,6 +423,7 @@ def _print(report: Report) -> None:
 
 
 def main(argv: list[str]) -> int:
+    console.setup()
     repo = Path(__file__).resolve().parents[2]
     if not (repo / "upstream" / SOURCE_NAME).is_dir():
         print(

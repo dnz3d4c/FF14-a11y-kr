@@ -11,7 +11,13 @@ dependencies = []
 dev = ["pytest>=8.0", "ruff>=0.6", "mypy>=1.11", "pyyaml>=6.0", "types-PyYAML>=6.0"]
 
 [tool.pytest.ini_options]
-pythonpath = ["tools/codex-review", "tools/assemble", "tools/docs-check", "tools/ci-check"]
+pythonpath = [
+    "tools/codex-review",
+    "tools/assemble",
+    "tools/docs-check",
+    "tools/ci-check",
+    "tools/common",
+]
 testpaths = ["tools"]
 
 [tool.ruff]
@@ -25,4 +31,13 @@ select = ["E", "F", "I", "UP", "B"]
 [tool.ruff.lint.isort]
 # tools/assemble의 모듈들. 루트에 graft/ 디렉토리가 있어서 ruff는 graft만 우리 것으로
 # 보고 나머지 형제 모듈과 다른 묶음에 넣는다. 넷을 같이 적어 한 묶음으로 세운다.
-known-first-party = ["assemble", "ci_check", "compare", "docs_check", "files", "graft", "scanner"]
+known-first-party = [
+    "assemble",
+    "ci_check",
+    "compare",
+    "console",
+    "docs_check",
+    "files",
+    "graft",
+    "scanner",
+]

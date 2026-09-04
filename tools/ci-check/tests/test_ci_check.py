@@ -1,11 +1,12 @@
 """워크플로 검사기의 검사.
 
-여기서 잡는 넷은 전부 **기존 저장소에서 실제로 재발한 것**이다. 사람이 다시 안
-그러기를 바라는 대신 검사가 막는다.
+여기서 잡는 것은 전부 **기존 저장소나 이 저장소에서 실제로 일어난 것**이다. 사람이
+다시 안 그러기를 바라는 대신 검사가 막는다.
 """
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 
 import ci_check
@@ -191,6 +192,242 @@ def test_yaml_확장자도_본다(tmp_path: Path) -> None:
 
     assert len(found) == 1
     assert "shell" in found[0]
+
+
+TRIGGERED = """
+name: 보기
+on:
+  push:
+    branches: [{branch}]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: 무엇
+        shell: bash
+        run: echo hi
+"""
+
+
+def _repo(tmp_path: Path, text: str, branch: str = "master") -> Path:
+    """브랜치 하나를 가진 진짜 git 저장소. 브랜치 검사는 로컬 git이 아는 것을 기준으로 잰다."""
+    root = _write(tmp_path, text)
+    subprocess.run(["git", "init", "-q", "-b", branch, str(root)], check=True)
+    subprocess.run(["git", "-C", str(root), "add", "-A"], check=True)
+    who = ["-c", "user.name=t", "-c", "user.email=t@t"]
+    subprocess.run(["git", "-C", str(root), *who, "commit", "-qm", "첫"], check=True)
+    return root
+
+
+def test_실재하는_브랜치를_가리키면_통과한다(tmp_path: Path) -> None:
+    assert ci_check.check_tree(_repo(tmp_path, TRIGGERED.format(branch="master"))) == []
+
+
+def test_없는_브랜치를_가리키면_잡는다(tmp_path: Path) -> None:
+    """문법은 맞고 YAML도 유효하다. 그래서 트리거가 조용히 안 걸린다 - 푸시해도 아무
+    일이 안 일어나고, gh run list에 그 워크플로가 아예 없다."""
+    found = ci_check.check_tree(_repo(tmp_path, TRIGGERED.format(branch="main")))
+
+    assert len(found) == 1
+    assert "main" in found[0]
+
+
+def test_표현식으로_적은_브랜치는_검사에서_뺀다(tmp_path: Path) -> None:
+    """실행 시점에 정해지는 값이라 여기서 잴 수 없다. 저장소가 말하는 값을 받아 쓰는
+    쪽이 손으로 적는 것보다 낫다."""
+    text = TRIGGERED.replace(
+        "        shell: bash\n        run: echo hi",
+        "        timeout-minutes: 5\n        shell: bash\n"
+        '        run: gh pr create --base "${{ github.event.repository.default_branch }}"'
+        " --head x --title t --body b",
+    ).format(branch="master")
+
+    assert ci_check.check_tree(_repo(tmp_path, text)) == []
+
+
+def test_리터럴로_적은_base도_본다(tmp_path: Path) -> None:
+    """트리거만 보면 sync.yml의 --base main을 놓친다. 그쪽은 조립과 빌드를 다 하고
+    마지막 PR 생성에서만 실패하는 더 나쁜 모양이다."""
+    text = TRIGGERED.replace(
+        "        shell: bash\n        run: echo hi",
+        "        timeout-minutes: 5\n        shell: bash\n"
+        "        run: gh pr create --base main --head x --title t --body b",
+    ).format(branch="master")
+
+    found = ci_check.check_tree(_repo(tmp_path, text))
+
+    assert len(found) == 1
+    assert "main" in found[0]
+
+
+def test_head는_안_본다(tmp_path: Path) -> None:
+    """--head는 워크플로가 방금 만든 브랜치를 가리키는 자리라 아직 없는 것이 정상이다."""
+    text = TRIGGERED.replace(
+        "        shell: bash\n        run: echo hi",
+        "        timeout-minutes: 5\n        shell: bash\n"
+        "        run: gh pr create --base master --head 아직-없는-브랜치 --title t --body b",
+    ).format(branch="master")
+
+    assert ci_check.check_tree(_repo(tmp_path, text)) == []
+
+
+def test_git이_아니면_브랜치_검사를_건너뛴다(tmp_path: Path) -> None:
+    """기준값을 네트워크로 얻지 않는다. 로컬 git이 아무것도 모르면 잴 수가 없다."""
+    root = _write(tmp_path, TRIGGERED.format(branch="없는브랜치"))
+
+    assert ci_check.check_tree(root) == []
+    assert ci_check.known_branches(root) is None
+
+
+def test_없는_로컬_액션을_가리키면_잡는다(tmp_path: Path) -> None:
+    """브랜치와 같은 부류다. 이름은 있는데 그 이름이 가리키는 것이 없다."""
+    text = WORKFLOW.replace(
+        "      - uses: actions/checkout@v4",
+        "      - uses: ./.github/actions/없다",
+    )
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "없다" in found[0]
+
+
+def test_있는_로컬_액션은_통과한다(tmp_path: Path) -> None:
+    root = _write(tmp_path, WORKFLOW.replace("actions/checkout@v4", "./.github/actions/무엇"))
+    action = root / ".github" / "actions" / "무엇" / "action.yml"
+    action.parent.mkdir(parents=True)
+    action.write_text("name: 무엇\nruns:\n  using: composite\n  steps: []\n", encoding="utf-8")
+
+    assert ci_check.check_tree(root) == []
+
+
+def test_안_올린_산출물을_내려받으면_잡는다(tmp_path: Path) -> None:
+    """이름이 갈리면 내려받는 잡이 실행 중에만 실패한다."""
+    text = WORKFLOW.replace(
+        "      - uses: actions/checkout@v4",
+        "      - uses: actions/download-artifact@v4\n        with:\n          name: 없는-것",
+    )
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "없는-것" in found[0]
+
+
+def test_올린_산출물을_내려받으면_통과한다(tmp_path: Path) -> None:
+    text = WORKFLOW.replace(
+        "      - uses: actions/checkout@v4",
+        "      - uses: actions/upload-artifact@v4\n        with:\n          name: 보고\n"
+        "      - uses: actions/download-artifact@v4\n        with:\n          name: 보고",
+    )
+
+    assert ci_check.check_tree(_write(tmp_path, text)) == []
+
+
+OUTPUTS = """
+name: 보기
+on: [push]
+jobs:
+  check:
+    runs-on: windows-latest
+    outputs:
+      has-new: ${{ steps.look.outputs.has-new }}
+    steps:
+      - name: 본다
+        id: look
+        shell: bash
+        run: echo "has-new=true" >> "$GITHUB_OUTPUT"
+  port:
+    needs: check
+    if: needs.check.outputs.has-new == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: 한다
+        shell: bash
+        run: echo hi
+"""
+
+
+def test_실재하는_출력은_통과한다(tmp_path: Path) -> None:
+    assert ci_check.check_tree(_write(tmp_path, OUTPUTS)) == []
+
+
+def test_잡이_선언_안_한_출력을_가리키면_잡는다(tmp_path: Path) -> None:
+    """이름이 갈리면 if가 늘 거짓이 되어 그 잡이 영영 skipped로 남는다. 워크플로는
+    초록으로 끝나고, 그것이 정확히 '12일 연속 초록인데 자동화가 죽어 있던' 모양이다."""
+    text = OUTPUTS.replace("needs.check.outputs.has-new ==", "needs.check.outputs.hasNew ==")
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "hasNew" in found[0]
+
+
+def test_없는_잡의_출력을_가리키면_잡는다(tmp_path: Path) -> None:
+    text = OUTPUTS.replace("needs.check.outputs.has-new", "needs.없는잡.outputs.has-new")
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "없는잡" in found[0]
+
+
+def test_없는_단계_id의_출력을_가리키면_잡는다(tmp_path: Path) -> None:
+    text = OUTPUTS.replace("        id: look\n", "        id: 다른이름\n")
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "look" in found[0]
+
+
+PYTHON_CALLER = """
+name: 보기
+on: [push]
+env:
+  PYTHONIOENCODING: utf-8
+  PYTHONUTF8: "1"
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: 무엇
+        shell: bash
+        run: uv run python tools/assemble/assemble.py
+"""
+
+
+def test_파이썬을_부르면서_인코딩을_안_세우면_잡는다(tmp_path: Path) -> None:
+    """첫 CI 실행이 여기서 죽었다. 윈도 러너의 stdout이 cp1252라 우리 도구가 한국어를
+    내는 순간 charmap 코덱이 못 넘긴다. 문법은 맞아서 다른 규칙에는 안 걸린다."""
+    text = PYTHON_CALLER.replace('  PYTHONUTF8: "1"\n', "")
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "PYTHONUTF8" in found[0]
+
+
+def test_둘_다_있으면_통과한다(tmp_path: Path) -> None:
+    assert ci_check.check_tree(_write(tmp_path, PYTHON_CALLER)) == []
+
+
+def test_잡_수준에_세워도_통과한다(tmp_path: Path) -> None:
+    """최상위든 잡이든 그 파이썬에 닿기만 하면 된다."""
+    text = PYTHON_CALLER.replace(
+        'env:\n  PYTHONIOENCODING: utf-8\n  PYTHONUTF8: "1"\n',
+        "",
+    ).replace(
+        "    runs-on: windows-latest\n",
+        '    runs-on: windows-latest\n    env:\n      PYTHONIOENCODING: utf-8\n'
+        '      PYTHONUTF8: "1"\n',
+    )
+
+    assert ci_check.check_tree(_write(tmp_path, text)) == []
+
+
+def test_파이썬을_안_부르면_안_따진다(tmp_path: Path) -> None:
+    assert ci_check.check_tree(_write(tmp_path, WORKFLOW.replace("uv run python tools/assemble/assemble.py", "echo hi"))) == []
 
 
 def test_워크플로가_하나도_없으면_잡는다(tmp_path: Path) -> None:
