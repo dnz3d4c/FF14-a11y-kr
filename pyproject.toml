@@ -9,7 +9,7 @@ dependencies = []
 dev = ["pytest>=8.0", "ruff>=0.6", "mypy>=1.11"]
 
 [tool.pytest.ini_options]
-pythonpath = ["tools/codex-review", "tools/assemble"]
+pythonpath = ["tools/codex-review", "tools/assemble", "tools/docs-check"]
 testpaths = ["tools"]
 
 [tool.ruff]
