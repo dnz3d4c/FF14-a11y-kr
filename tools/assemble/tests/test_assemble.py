@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Mapping
 from pathlib import Path
 
@@ -22,6 +23,18 @@ public class Plugin
     public static string Bye => IsGerman ? "Tschuess" : "Bye";
     public static string Same => IsGerman ? "Ok" : "Ok";
 }
+"""
+
+#: 원본이 적는 모양 그대로. `Version`만 세 마디이고 나머지 둘은 네 마디다.
+CSPROJ = """<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Version>5.95.0</Version>
+    <AssemblyVersion>5.95.0.0</AssemblyVersion>
+    <FileVersion>5.95.0.0</FileVersion>
+  </PropertyGroup>
+
+</Project>
 """
 
 CATALOG = {
@@ -53,15 +66,25 @@ def _repo(tmp_path: Path, *, catalog: Mapping[str, object] | None = None) -> Pat
     source = repo / "upstream" / "FF14Accessibility"
     source.mkdir(parents=True)
     (source / "Plugin.cs").write_text(PLUGIN, encoding="utf-8")
+    (source / "FF14Accessibility.csproj").write_text(CSPROJ, encoding="utf-8")
+    (repo / "upstream" / "Installer").mkdir()
+    (repo / "upstream" / "Installer" / "FF14AccessibilityInstaller.csproj").write_text(
+        CSPROJ, encoding="utf-8"
+    )
     (repo / "upstream" / "LICENSE").write_text("license\n", encoding="utf-8")
 
     (repo / "korean").mkdir()
     (repo / "korean" / "strings.json").write_text(
         json.dumps(catalog or CATALOG, ensure_ascii=False), encoding="utf-8"
     )
+    (repo / "korean" / "version.json").write_text(json.dumps({"kr_revision": 0}), encoding="utf-8")
 
     (repo / "kr" / "FF14Accessibility").mkdir(parents=True)
     (repo / "kr" / "FF14Accessibility" / "Compat.cs").write_text("// 신규\n", encoding="utf-8")
+    # 런처는 원본에 없는 우리 파일이라 kr에서 온다. 버전 찍기가 복사 뒤에 돌아야 한다는
+    # 것을 이 자리가 그대로 검사한다.
+    (repo / "kr" / "Launcher").mkdir()
+    (repo / "kr" / "Launcher" / "FF14AccessibilityPlay.csproj").write_text(CSPROJ, encoding="utf-8")
 
     (repo / "replace").mkdir()
     (repo / "graft").mkdir()
@@ -73,6 +96,20 @@ def _repo(tmp_path: Path, *, catalog: Mapping[str, object] | None = None) -> Pat
 
 def _built(repo: Path) -> str:
     return (repo / "build" / "FF14Accessibility" / "Plugin.cs").read_text(encoding="utf-8")
+
+
+#: 버전을 찍는 csproj 셋. 보고의 열쇠와 같은 이름이다.
+CSPROJ_NAMES = [
+    "FF14Accessibility/FF14Accessibility.csproj",
+    "Installer/FF14AccessibilityInstaller.csproj",
+    "Launcher/FF14AccessibilityPlay.csproj",
+]
+
+
+def _versions(repo: Path, name: str) -> list[str]:
+    """조립한 csproj에서 세 태그의 값을 적힌 차례대로 읽는다."""
+    text = (repo / "build" / name).read_text(encoding="utf-8")
+    return re.findall(r"<(?:Version|AssemblyVersion|FileVersion)>([^<]*)<", text)
 
 
 def test_조립이_한_번에_돈다(tmp_path: Path) -> None:
@@ -97,6 +134,9 @@ def test_원본은_한_자도_안_바뀐다(tmp_path: Path) -> None:
     assert (repo / "upstream" / "FF14Accessibility" / "Plugin.cs").read_text(
         encoding="utf-8"
     ) == PLUGIN
+    assert (repo / "upstream" / "FF14Accessibility" / "FF14Accessibility.csproj").read_text(
+        encoding="utf-8"
+    ) == CSPROJ
 
 
 def test_대장에_없는_자리에는_한국어가_안_들어간다(tmp_path: Path) -> None:
@@ -117,6 +157,106 @@ def test_기존_build를_지우고_새로_만든다(tmp_path: Path) -> None:
     assemble.assemble(repo)
 
     assert not stale.exists()
+
+
+def test_버전_세_태그가_같은_값이_된다(tmp_path: Path) -> None:
+    """설치 프로그램은 Version을 읽고 달라무드는 AssemblyVersion을 읽는다.
+
+    원본은 Version만 세 마디로 적는다. 셋이 갈리면 어느 값이 맞는지가 실행해 봐야만
+    드러나므로 늘 함께 쓴다.
+    """
+    repo = _repo(tmp_path)
+    report = assemble.assemble(repo)
+
+    assert report.problems == []
+    for name in CSPROJ_NAMES:
+        assert _versions(repo, name) == ["5.95.0.0", "5.95.0.0", "5.95.0.0"]
+
+
+def test_저장소의_개정_마디를_읽는다(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    (repo / "korean" / "version.json").write_text(json.dumps({"kr_revision": 2}), encoding="utf-8")
+
+    report = assemble.assemble(repo)
+
+    assert report.kr_revision == 2
+    assert _versions(repo, "Launcher/FF14AccessibilityPlay.csproj") == ["5.95.0.2"] * 3
+
+
+def test_개정_마디가_정수가_아니면_실패한다(tmp_path: Path) -> None:
+    """손으로 고치는 파일이다. 문자열이 들어오면 csproj에 그대로 적히기 전에 멈춘다."""
+    repo = _repo(tmp_path)
+    version = repo / "korean" / "version.json"
+    version.write_text(json.dumps({"kr_revision": "3"}), encoding="utf-8")
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "kr_revision" in report.problems[0]
+
+
+def test_개정_마디를_인자로_받으면_그것을_찍는다(tmp_path: Path) -> None:
+    """저장소의 값은 안 고친다. 시험 삼아 한 번 다르게 조립해 보는 길이다."""
+    repo = _repo(tmp_path)
+    report = assemble.assemble(repo, kr_revision=3)
+
+    assert report.problems == []
+    assert report.versions == dict.fromkeys(CSPROJ_NAMES, "5.95.0.3")
+    for name in CSPROJ_NAMES:
+        assert _versions(repo, name) == ["5.95.0.3"] * 3
+    saved = json.loads((repo / "build" / "assemble-report.json").read_text(encoding="utf-8"))
+    assert saved["kr_revision"] == 3
+    assert json.loads((repo / "korean" / "version.json").read_text(encoding="utf-8")) == {
+        "kr_revision": 0
+    }
+
+
+def test_버전을_찍을_파일이_없으면_실패한다(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    (repo / "kr" / "Launcher" / "FF14AccessibilityPlay.csproj").unlink()
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "Launcher/FF14AccessibilityPlay.csproj" in report.problems[0]
+
+
+def test_버전_태그가_없으면_실패한다(tmp_path: Path) -> None:
+    """버전이 안 오르면 설치 프로그램의 IsNewer가 거짓이 되어 자기 갱신이 조용히 선다."""
+    repo = _repo(tmp_path)
+    (repo / "upstream" / "FF14Accessibility" / "FF14Accessibility.csproj").write_text(
+        "<Project />\n", encoding="utf-8"
+    )
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "FF14Accessibility/FF14Accessibility.csproj" in report.problems[0]
+
+
+def test_버전_마디가_숫자가_아니면_실패한다(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    (repo / "upstream" / "Installer" / "FF14AccessibilityInstaller.csproj").write_text(
+        CSPROJ.replace("<Version>5.95.0<", "<Version>5.95.x<"), encoding="utf-8"
+    )
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "5.95.x" in report.problems[0]
+
+
+def test_한_파일_안에서_앞_세_마디가_갈리면_실패한다(tmp_path: Path) -> None:
+    """어느 태그를 따를지는 우리가 정할 일이 아니다. 원본이 한쪽만 올린 자리다."""
+    repo = _repo(tmp_path)
+    (repo / "kr" / "Launcher" / "FF14AccessibilityPlay.csproj").write_text(
+        CSPROJ.replace("<FileVersion>5.95.0.0<", "<FileVersion>5.94.0.0<"), encoding="utf-8"
+    )
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "5.94.0" in report.problems[0]
 
 
 def test_보고를_파일로도_낸다(tmp_path: Path) -> None:
