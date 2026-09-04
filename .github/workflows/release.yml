@@ -26,7 +26,7 @@ on:
   workflow_dispatch:
     inputs:
       notes_approved:
-        description: "릴리스 노트 본문을 사용자에게 보이고 승인받았다"
+        description: "릴리스 노트 본문을 사용자에게 보이고 승인받았다. 원본 절 대조도 여기 든다"
         required: true
         type: boolean
         default: false
@@ -204,6 +204,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           FF14_NOTES_APPROVED: "1"
           FF14_WORDS_CHECKED: "1"
+          # 원본 절을 우리 노트 어디에서 다뤘는지 짚는 되묻기(N23)다. 노트를
+          # 검토할 때 같이 하는 일이라 승인 입력 하나가 둘을 다 뜻한다 -
+          # 트리거의 그 입력 설명이 그렇게 적혀 있다.
+          FF14_NOTES_ACKED: "1"
         run: uv run python tools/pack/release.py | tee release.log
 
       # **올린 것을 도로 받아 잰다.** `release.py`는 올리고 끝나지 자산이 제대로
