@@ -26,6 +26,7 @@ pythonpath = [
     "tools/pack-check",
     "tools/release-manifest",
     "tools/notes-check",
+    "tools/pack",
 ]
 testpaths = ["tools"]
 
@@ -54,7 +55,9 @@ known-first-party = [
     "kr_profile",
     "loc_check",
     "notes_check",
+    "pack",
     "pack_check",
+    "release",
     "release_manifest",
     "scanner",
 ]
