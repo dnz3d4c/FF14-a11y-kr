@@ -27,6 +27,8 @@ pythonpath = [
     "tools/release-manifest",
     "tools/notes-check",
     "tools/pack",
+    "tools/ko-speech",
+    "tools/ko-words",
 ]
 testpaths = ["tools"]
 
@@ -51,7 +53,9 @@ known-first-party = [
     "files",
     "graft",
     "ko_lexicon",
+    "ko_speech",
     "ko_style",
+    "ko_words",
     "kr_profile",
     "loc_check",
     "notes_check",

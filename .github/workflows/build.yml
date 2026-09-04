@@ -113,6 +113,19 @@ jobs:
         shell: bash
         run: uv run python tools/loc-check/loc_check.py
 
+      # `Pick`을 아예 안 거치고 맨 리터럴로 박힌 외국어. 조립 도구는 표식과 `Pick`만
+      # 보므로 이 부류를 원리적으로 못 본다 - 적용에도 미적용에도 못 읽음에도 안 잡힌다.
+      # 옛 저장소에서 사용자가 인게임에서 `Übergang`을 들은 것이 이 자리였다.
+      - name: 발화 사각지대
+        shell: bash
+        run: uv run python tools/ko-speech/ko_speech.py
+
+      # 번역이 쓰는 낱말 중 게임에 없는 것. `korean/terms.json`의 `not_found`가
+      # "이 낱말은 게임에 없으니 안 쓴다"는 판정을 담는데 그것을 지키는 자리다.
+      - name: 게임 낱말
+        shell: bash
+        run: uv run python tools/ko-words/ko_words.py
+
       # 플러그인이 참조하는 멤버가 한국판 달라무드의 어셈블리에 실제로 있는지.
       # 한국판은 FFXIVClientStructs를 7.51로 낮춰 싣고, 글로벌용으로 빌드된
       # 플러그인은 그 차이로 적재는 되는데 호출 시점에 죽는다.
