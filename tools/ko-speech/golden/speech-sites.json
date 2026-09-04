@@ -34,12 +34,6 @@
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Dungeon-Wege werden selbst geladen; Entf sagt die HP des Ziels; Job-Anzeige beim Beschwörer",
-      "why": "PluginVersionTag다. Log.Info 한 줄에만 쓰이고 발화 경로에는 안 닿는다 - 말하는 것은 VersionReady가 받는 버전 번호뿐이다. 업스트림이 판마다 이 문장을 통째로 갈아서 이 항목도 판마다 바뀐다."
-    },
-    {
-      "file": "Plugin.cs",
-      "rule": "umlaut",
       "text": "Emote ausführen",
       "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
@@ -134,6 +128,42 @@
       "why": "게임 한국어판이 그대로 `PvP`라고 쓴다(KR Addon 834행). 세 언어가 같은 낱말이라 `Pick`으로 감싸도 값이 셋 다 같다. **형제 대조가 잡은 것은 맞고 판정만 통과다** - 형제와 모양을 맞출지는 손볼 때 같이 정한다."
     },
     {
+      "file": "Services/ActionSignalProbe.cs",
+      "rule": "speech",
+      "text": "Sonde nicht moeglich.",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
+      "file": "Services/ActionSignalProbe.cs",
+      "rule": "speech",
+      "text": "Sonde: {lines.Count} Aktionen ins Log geschrieben.",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
+      "file": "Services/AozNotebookProbe.cs",
+      "rule": "speech",
+      "text": "Blaumagie-Sonde. Reiter {addon->TabIndex + 1} von {addon->TabCount}. ",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
+      "file": "Services/AozNotebookProbe.cs",
+      "rule": "speech",
+      "text": "Das Zauberbuch der Blaumagie ist nicht offen.",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
+      "file": "Services/AozNotebookProbe.cs",
+      "rule": "speech",
+      "text": "{unlockVerdict} Rest im Log.",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
+      "file": "Services/AozNotebookProbe.cs",
+      "rule": "speech",
+      "text": "{withId} von 16 Kacheln mit Aktions-Id, {filled} von 24 Plaetzen belegt. ",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
       "file": "Services/AutoWalkService.cs",
       "rule": "umlaut",
       "text": "Folgen übernimmt",
@@ -152,6 +182,12 @@
       "why": "`Finish(spoken, reason)`의 둘째 인자다. 말하는 것은 첫 인자고 이 값은 `_log.Info`로만 나간다(`AutoWalkService.cs:836-843`)."
     },
     {
+      "file": "Services/AutoWalkService.cs",
+      "rule": "umlaut",
+      "text": "keine Annäherung",
+      "why": "발화가 아니라 사유 인자다. `Finish(string? spoken, string reason)`과 `EndFlightShort(Vector3, float, string reason)`의 `reason` 자리이고 로그로만 간다 - 실제로 말하는 것은 `AccessibilityStrings.FlightEndedRemaining`이 만든다."
+    },
+    {
       "file": "Services/CollisionProbe.cs",
       "rule": "umlaut",
       "text": "Kollisionssonde: {found} Einträge im Log.",
@@ -162,6 +198,24 @@
       "rule": "speech",
       "text": "{hits.Count} Objekte in 50 Metern im Log.",
       "why": "탐침 발화이고 **`#if DEBUG` 밖이라 배포판에 들어간다.** `ProbeNearbyObjects`(:315)도 호출부인 `Plugin.cs:734`의 `case \"fishobj\":`도 조건 밖이다. 옛 저장소가 적어 둔 명령어 이름 `/acc fish`는 틀렸다 - 그 이름은 `Plugin.cs:731`이 부르는 `AnnounceSpotsInCurrentZone`의 것이라 다른 기능이다. **같은 파일의 `NavigationService` 셋과 심각도가 다르다**: 이쪽은 기본 키에 안 물려 있어서 사용자가 `/acc fishobj`를 일부러 쳐야만 나오고, 문서에 없는 진단 명령이라 그럴 일이 사실상 없다. 키 한 번으로 닿는 자리가 아니라 통과시키되, `#if DEBUG` 안으로 들어가거나 키에 물리면 그때 다시 본다."
+    },
+    {
+      "file": "Services/FlightProbe.cs",
+      "rule": "speech",
+      "text": "Flugsonde: Gebiet unbekannt.",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
+      "file": "Services/FlightProbe.cs",
+      "rule": "speech",
+      "text": "Urteil {_flight.Blocked()}.",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
+      "file": "Services/FlightProbe.cs",
+      "rule": "umlaut",
+      "text": "Flugsonde. Gebiet {place}. Nutzung {use}, Ätherstrom-Satz {set}, komplett {(complete ? \"ja\" : \"nein\")}. ",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
     },
     {
       "file": "Services/KeybindService.cs",

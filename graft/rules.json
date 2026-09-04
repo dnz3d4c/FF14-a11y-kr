@@ -329,6 +329,53 @@
       ]
     },
     {
+      "name": "strings-update-needs-installer-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "이어붙인 리터럴이라 파서가 갈림길로 못 읽고, 그러면 대장과 만나지 못해 영어로 나가면서 미적용에도 안 잡힌다. 한 줄로 펴면 Pick이 되어 대장이 읽는다. 우리 사용자가 실제로 듣는 문장이다 - 정식 자리에 깐 설치는 스스로 못 갈아 끼우므로 이 안내로 떨어진다.",
+      "phase": "before",
+      "find": [
+        "        IsGerman ? \"Diese Aktualisierung ändert Dateien, die das laufende Spiel \" +",
+        "                   \"festhält. Bitte das Spiel beenden und den Installer benutzen.\"",
+        "                 : \"This update changes files the running game holds open. \" +",
+        "                   \"Please close the game and use the installer.\";"
+      ],
+      "replace": [
+        "        IsGerman ? \"Diese Aktualisierung ändert Dateien, die das laufende Spiel festhält. Bitte das Spiel beenden und den Installer benutzen.\"",
+        "                 : \"This update changes files the running game holds open. Please close the game and use the installer.\";"
+      ]
+    },
+    {
+      "name": "strings-update-not-self-managed-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "같은 모양이고 같은 이유다. 이 문장은 특히 중요하다 - 우리 배포물은 Dalamud 커스텀 저장소와 설치 프로그램으로 정식 자리에 깔리므로, 갱신을 눌렀을 때 우리 사용자가 가장 자주 듣게 되는 안내가 이것이다.",
+      "phase": "before",
+      "find": [
+        "        IsGerman ? \"Diese Installation wird von Dalamud verwaltet und kann sich \" +",
+        "                   \"nicht selbst aktualisieren.\"",
+        "                 : \"This installation is managed by Dalamud and cannot update itself.\";"
+      ],
+      "replace": [
+        "        IsGerman ? \"Diese Installation wird von Dalamud verwaltet und kann sich nicht selbst aktualisieren.\"",
+        "                 : \"This installation is managed by Dalamud and cannot update itself.\";"
+      ]
+    },
+    {
+      "name": "strings-update-busy-now-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "같은 모양이고 같은 이유다.",
+      "phase": "before",
+      "find": [
+        "        IsGerman ? \"Nicht im Kampf oder während einer Laufstrecke. \" +",
+        "                   \"Bitte danach noch einmal.\"",
+        "                 : \"Not during combat or while a walk is running. \" +",
+        "                   \"Please try again afterwards.\";"
+      ],
+      "replace": [
+        "        IsGerman ? \"Nicht im Kampf oder während einer Laufstrecke. Bitte danach noch einmal.\"",
+        "                 : \"Not during combat or while a walk is running. Please try again afterwards.\";"
+      ]
+    },
+    {
       "name": "update-service-kr-repo",
       "file": "FF14Accessibility/Services/UpdateService.cs",
       "why": "자기 갱신이 우리 릴리스를 봐야 한다. 원본 주소를 그대로 두면 옵션 메뉴의 갱신 검사가 글로벌 판의 새 릴리스를 우리 것으로 안내한다 - 오류가 아니라 잘못된 안내라 화면에 아무 이상도 안 남는다. 게다가 원본은 하루 1.4개꼴로 판을 내므로 우리 사용자는 늘 뒤처진 것처럼 듣는다. 값의 원천은 tools/release-manifest의 GH_REPO다.",
