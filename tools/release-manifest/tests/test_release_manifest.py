@@ -799,6 +799,41 @@ def test_저장소를_못_찾은_것을_릴리스_탓으로_돌리지_않는다(
 # **올리기 전에** 이 검사를 세웠다.
 
 
+def gh_listing(*tags: str) -> str:
+    """`gh release list --json tagName`이 내는 꼴. 목록 순서가 곧 최신 순이다."""
+    return json.dumps([{"tagName": tag} for tag in tags])
+
+
+def test_우리_판이_아닌_릴리스는_이전_판으로_안_본다(monkeypatch):
+    # 이 저장소에는 참조 어셈블리 릴리스(`dalamud-kr-*`)가 같이 있다. 그것에는
+    # 매니페스트가 없어서, 이전 판으로 집으면 받다가 죽는다.
+    monkeypatch.setattr(rm, "_gh", lambda *a, **k: gh_listing("dalamud-kr-15.0.3.2", "v5.95.0.0"))
+    assert rm.latest_release_tag() == "v5.95.0.0"
+
+
+def test_우리_판이_여럿이면_목록에서_앞선_것을_고른다(monkeypatch):
+    monkeypatch.setattr(rm, "_gh", lambda *a, **k: gh_listing("v5.96.0.0", "v5.95.0.0"))
+    assert rm.latest_release_tag() == "v5.96.0.0"
+
+
+def test_우리_판이_하나도_없으면_첫_판이다(monkeypatch):
+    # 릴리스는 있는데 전부 남의 것인 상태다. **첫 판을 낼 때 실제로 여기 섰다.**
+    monkeypatch.setattr(rm, "_gh", lambda *a, **k: gh_listing("dalamud-kr-15.0.3.2"))
+    assert rm.latest_release_tag() is None
+
+
+def test_릴리스가_아예_없어도_첫_판이다(monkeypatch):
+    monkeypatch.setattr(rm, "_gh", lambda *a, **k: "[]")
+    assert rm.latest_release_tag() is None
+
+
+def test_태그_이름이_없으면_첫_판으로_넘기지_않는다(monkeypatch):
+    # gh의 출력이 바뀐 것을 "우리 판이 없다"로 읽으면 검사가 조용히 죽는다.
+    monkeypatch.setattr(rm, "_gh", lambda *a, **k: json.dumps([{"name": "v5.95.0.0"}]))
+    with pytest.raises(rm.ManifestError, match="태그 이름이 없다"):
+        rm.latest_release_tag()
+
+
 def dist_versions(plugin: str = "5.88.0.0", installer: str = "1.1.1.0") -> dict[str, str]:
     """매니페스트 이름을 키로 하는 버전 둘. 이름은 상수에서 나온다."""
     return {rm.REPO_MANIFEST_NAME: plugin, rm.INSTALLER_MANIFEST_NAME: installer}

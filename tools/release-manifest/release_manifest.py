@@ -851,16 +851,46 @@ def manifest_versions(directory: Path, where: str = "릴리스의") -> dict[str,
     return found
 
 
+#: 우리가 내는 릴리스 태그의 꼴. `v` 다음에 숫자 네 마디다 - `tools/pack/release.py`의
+#: `context`가 `f"v{version}"`로 만들고, 그 버전은 `normalize_version`이 네 마디로
+#: 맞춘 것이라 마디 수가 흔들리지 않는다.
+#:
+#: **이 저장소에는 우리 판이 아닌 릴리스가 같이 있다.** `.github/actions/dalamud-refs`가
+#: 참조 어셈블리를 `dalamud-kr-15.0.3.2` 같은 태그로 올려 둔다. 거기에는 `repo.json`도
+#: `installer.json`도 없으므로, 그것을 이전 판으로 집으면 `gather_bump_facts`가
+#: 매니페스트를 받다가 `no assets match the file pattern`으로 죽는다 - 실제로 첫 판을
+#: 내다가 거기서 섰다. 안 거르면 "릴리스가 하나도 없다"와 "우리 판이 하나도 없다"가
+#: 같은 얼굴이 된다.
+OUR_TAG = re.compile(r"v\d+\.\d+\.\d+\.\d+")
+
+#: 릴리스 목록을 얼마나 받나. 우리 판 하나를 만나는 데 필요한 만큼이다 - 참조 어셈블리
+#: 릴리스가 우리 판 위에 얼마든지 쌓일 수 있어서 하나만 받으면 그것에 걸린다. 100이면
+#: 우리가 한 판도 안 내는 동안 남의 릴리스가 100개 쌓여야 새는데, 그 둘은 같은 속도로
+#: 늘지 않는다. gh는 최신 순으로 준다.
+RELEASE_LIST_LIMIT = 100
+
+
 def latest_release_tag(repo: str = GH_REPO) -> str | None:
-    """제일 최근 릴리스의 태그. 하나도 없으면 `None`이다.
+    """제일 최근에 나간 **우리 판**의 태그. 하나도 없으면 `None`이다.
 
     **`release view`가 아니라 `release list`다.** 릴리스가 없는 것을 예외가
     아니라 빈 배열로 받아야 "첫 릴리스"와 "gh가 실패했다"가 안 섞인다.
     섞이면 첫 릴리스를 영영 못 내거나, gh 고장을 첫 릴리스로 읽는다.
+
+    목록을 하나만 받지 않고 훑는 것은 `OUR_TAG`가 적어 둔 이유 때문이다.
     """
     listing = _parse_json(
         _gh(
-            ["release", "list", "--repo", repo, "--limit", "1", "--json", "tagName"],
+            [
+                "release",
+                "list",
+                "--repo",
+                repo,
+                "--limit",
+                str(RELEASE_LIST_LIMIT),
+                "--json",
+                "tagName",
+            ],
             repo,
             missing=f"저장소를 못 찾았다: {repo}",
         ),
@@ -868,13 +898,15 @@ def latest_release_tag(repo: str = GH_REPO) -> str | None:
     )
     if not isinstance(listing, list):
         raise ManifestError(f"gh의 릴리스 목록이 배열이 아니다: {type(listing).__name__}")
-    if not listing:
-        return None
 
-    tag = listing[0].get("tagName") if isinstance(listing[0], dict) else None
-    if not isinstance(tag, str) or not tag:
-        raise ManifestError("gh의 릴리스 목록에 태그 이름이 없다")
-    return tag
+    for item in listing:
+        tag = item.get("tagName") if isinstance(item, dict) else None
+        if not isinstance(tag, str) or not tag:
+            # gh의 출력이 바뀐 것을 "우리 판이 없다"로 넘기면 검사가 조용히 죽는다.
+            raise ManifestError("gh의 릴리스 목록에 태그 이름이 없다")
+        if OUR_TAG.fullmatch(tag):
+            return tag
+    return None
 
 
 class BumpFacts(NamedTuple):
