@@ -23,6 +23,13 @@ on:
 permissions:
   contents: read
 
+# 우리 도구는 한국어로 보고한다. 윈도 러너의 파이썬 stdout은 cp1252라서 그대로
+# 두면 첫 한국어 출력에서 UnicodeEncodeError로 죽는다. 로컬에서는 콘솔 인코딩이
+# 달라 안 드러나고, 실제 러너에서만 나타난다.
+env:
+  PYTHONIOENCODING: utf-8
+  PYTHONUTF8: "1"
+
 jobs:
   # 우리 코드의 검사. 여기는 막는다 - 실패가 곧 우리 잘못이다.
   checks:
