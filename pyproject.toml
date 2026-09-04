@@ -9,7 +9,7 @@ dependencies = []
 dev = ["pytest>=8.0", "ruff>=0.6", "mypy>=1.11"]
 
 [tool.pytest.ini_options]
-pythonpath = ["tools/codex-review"]
+pythonpath = ["tools/codex-review", "tools/assemble"]
 testpaths = ["tools"]
 
 [tool.ruff]
@@ -19,3 +19,8 @@ extend-exclude = ["upstream", "build"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+# tools/assemble의 모듈들. 루트에 graft/ 디렉토리가 있어서 ruff는 graft만 우리 것으로
+# 보고 나머지 형제 모듈과 다른 묶음에 넣는다. 넷을 같이 적어 한 묶음으로 세운다.
+known-first-party = ["assemble", "files", "graft", "scanner"]

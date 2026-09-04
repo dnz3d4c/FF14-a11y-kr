@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -100,6 +101,42 @@ public static class Loc
         _ => "en",
     };
 
+    private static Action<string>? _missingKorean;
+
+    /// <summary>
+    /// Where a line that has no Korean yet is reported. The plugin hooks its own
+    /// log up at startup and clears the hook on dispose; while this is null nothing
+    /// is recorded at all.
+    ///
+    /// WHY A HOOK AND NOT A DIRECT CALL: <see cref="Pick"/> is static and the log
+    /// service is injected into the plugin instance, so Pick cannot reach it.
+    ///
+    /// Setting it also empties <see cref="Reported"/>. A new hook means a new log,
+    /// and what the old one already heard is not in it - keeping the old filter
+    /// would leave the new log silent about lines that are still untranslated.
+    /// </summary>
+    public static Action<string>? MissingKorean
+    {
+        get => _missingKorean;
+        set
+        {
+            _missingKorean = value;
+            Reported.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Lines already reported, as (caller, English). Pick runs every frame from
+    /// several threads, so without this the log would fill with the same line
+    /// thousands of times over. Concurrent because the callers are not on one thread.
+    ///
+    /// The English text is part of the key, not just the caller name: one property
+    /// can hold several sentences (<c>GaugeAttunementType</c> holds four), and on
+    /// the caller name alone only the first of them would ever be reported.
+    /// </summary>
+    private static readonly ConcurrentDictionary<(string Caller, string English), byte>
+        Reported = new();
+
     /// <summary>
     /// Picks the wording for the language in use.
     ///
@@ -107,14 +144,35 @@ public static class Loc
     /// the point: the Korean strings arrive one feature group at a time, and
     /// until a line is translated it has to keep saying something usable rather
     /// than nothing. A blind user cannot tell "not translated yet" from "broken"
-    /// if the mod simply goes quiet.
+    /// if the mod simply goes quiet. The fallback is silent to the ear, so it is
+    /// written to the log instead - see <see cref="MissingKorean"/>.
+    ///
+    /// <paramref name="caller"/> is the FOURTH parameter on purpose. The calls the
+    /// assembler writes carry three arguments, so a positional argument can never
+    /// land on it and shadow the name the wrapper fills in.
     /// </summary>
-    public static string Pick(string de, string en, string? ko = null) => Current switch
+    public static string Pick(string de, string en, string? ko = null, string caller = "") =>
+        Current switch
+        {
+            LanguageMode.Korean => ko ?? ReportMissing(caller, en),
+            LanguageMode.German => de,
+            _ => en,
+        };
+
+    /// <summary>Notes one untranslated line and returns the English fallback.</summary>
+    private static string ReportMissing(string caller, string en)
     {
-        LanguageMode.Korean => ko ?? en,
-        LanguageMode.German => de,
-        _ => en,
-    };
+        var report = MissingKorean;
+        // Nothing is recorded while no one listens: a call from before the plugin
+        // hooks this up must not silence that line for the rest of the session.
+        if (report is null) return en;
+
+        // The caller name is empty for direct Loc.Pick calls, which have no
+        // [CallerMemberName] wrapper. Those are named by their English text alone.
+        if (Reported.TryAdd((caller, en), 0))
+            report(caller.Length > 0 ? $"{caller}: {en}" : en);
+        return en;
+    }
 
     /// <summary>Parses a "/acc lang" argument to a mode, or null if unknown.</summary>
     public static LanguageMode? ParseArg(string arg) =>
