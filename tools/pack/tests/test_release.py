@@ -97,6 +97,7 @@ def test_단계_순서(tmp_path):
     assert ids(release.steps(context(tmp_path))) == [
         release.NOTES,
         release.SOURCE_GATE,
+        release.WORDS,
         release.APPROVAL,
         release.NOTES_CHECK,
         release.PUBLISH,
@@ -107,7 +108,7 @@ def test_게이트가_전부_발행보다_앞이다(tmp_path):
     """`gh`를 부르고 나면 바깥에 흔적이 남는다. 되돌리는 길이 없다."""
     order = ids(release.steps(context(tmp_path)))
     publish = order.index(release.PUBLISH)
-    for gate in (release.SOURCE_GATE, release.APPROVAL, release.NOTES_CHECK):
+    for gate in (release.SOURCE_GATE, release.WORDS, release.APPROVAL, release.NOTES_CHECK):
         assert order.index(gate) < publish
 
 
@@ -135,6 +136,53 @@ def test_노트를_dist로_옮긴다(tmp_path):
 def test_노트가_없으면_선다(tmp_path):
     make_dist(tmp_path, notes=False)
     assert release.copy_notes(context(tmp_path)) == 1
+
+
+# ── 낱말 게이트 ────────────────────────────────────────────────────────────
+
+
+def stub_ko_words(tmp_path, code: int) -> Path:
+    """받은 인자를 적어 두고 정해진 코드로 끝나는 가짜 낱말 검사기.
+
+    함수를 바꿔치기하지 않고 **진짜 하위 프로세스로 돌린다.** 그래야
+    `--require-dump`가 실제로 명령줄에 실리는지가 잡힌다. 그 깃발이 빠지는 것이
+    이 게이트가 선 채로 아무것도 안 재는 유일한 길이라, 거기가 시험할 자리다.
+    """
+    script = tmp_path / release.KO_WORDS_SCRIPT
+    script.parent.mkdir(parents=True, exist_ok=True)
+    seen = tmp_path / "argv.txt"
+    script.write_text(
+        "import sys\n"
+        f"open({str(seen)!r}, 'w', encoding='utf-8').write(' '.join(sys.argv[1:]))\n"
+        f"raise SystemExit({code})\n",
+        encoding="utf-8",
+    )
+    return seen
+
+
+def test_낱말_검사를_덤프를_요구하며_부른다(tmp_path):
+    seen = stub_ko_words(tmp_path, 0)
+    assert release.check_words(context(tmp_path)) == 0
+    assert seen.read_text(encoding="utf-8") == release.REQUIRE_DUMP_FLAG
+
+
+def test_덤프가_없어_낱말_검사가_서면_발행도_선다(tmp_path):
+    """되살린 게이트의 본체다.
+
+    개발 머신에는 덤프가 있어서 이 갈래가 자연히 안 밟힌다. 그런데 막으려는
+    사고는 **덤프가 없는 기계에서 발행하는 것**이라, 검사가 1을 돌려줬을 때
+    발행이 실제로 서는지를 여기서 실증한다. 검사기 쪽에서 덤프가 없을 때 1을
+    내는 것은 `tools/ko-words`의 `test_require_dump는_덤프가_없으면_실패한다`가
+    따로 잰다 - 두 층이 맞물려야 게이트가 성립한다.
+    """
+    seen = stub_ko_words(tmp_path, 1)
+    assert release.check_words(context(tmp_path)) == 1
+    assert release.REQUIRE_DUMP_FLAG in seen.read_text(encoding="utf-8")
+
+
+def test_낱말_검사기가_없으면_선다(tmp_path):
+    """검사를 못 돌린 채로는 내지 않는다. 노트 검사기와 같은 규약이다."""
+    assert release.check_words(context(tmp_path)) == 1
 
 
 # ── 사람 승인 ──────────────────────────────────────────────────────────────
@@ -335,6 +383,9 @@ def test_매니페스트_둘은_release_폴더에서_올라간다(tmp_path):
 def test_찍어만_볼_때는_바깥을_안_부른다(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(release, "gh", lambda *a, **k: pytest.fail("gh를 불렀다"))
     monkeypatch.setattr(release, "run_notes_check", lambda *a, **k: pytest.fail("검사기를 불렀다"))
+    monkeypatch.setattr(
+        release, "run_ko_words", lambda *a, **k: pytest.fail("낱말 검사기를 불렀다")
+    )
 
     assert release.dry_run(context(tmp_path)) == 0
     assert "v5.95.0.0" in capsys.readouterr().out

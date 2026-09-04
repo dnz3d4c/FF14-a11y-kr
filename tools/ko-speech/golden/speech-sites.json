@@ -173,25 +173,25 @@
       "file": "Services/LiftProbe.cs",
       "rule": "speech",
       "text": "Aufzug-Sonde abgebrochen.",
-      "why": "탐침 발화다. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `LiftProbe.Start`를 `Plugin.cs:771`의 명령어 갈래가 부른다."
+      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `LiftProbe.Start`를 `Plugin.cs:771`의 명령어 갈래가 부른다."
     },
     {
       "file": "Services/LiftProbe.cs",
       "rule": "speech",
       "text": "Aufzug-Sonde fertig.",
-      "why": "탐침 발화다. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `LiftProbe`가 승강기에 올라탄 것을 재고 끝을 알린다."
+      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `LiftProbe`가 승강기에 올라탄 것을 재고 끝을 알린다."
     },
     {
       "file": "Services/LiftProbe.cs",
       "rule": "speech",
       "text": "Aufzug-Sonde laeuft, {TrackDuration.TotalSeconds:F0} Sekunden. ",
-      "why": "탐침 발화다. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. 측정이 도는 동안의 안내다."
+      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. 측정이 도는 동안의 안내다."
     },
     {
       "file": "Services/LiftProbe.cs",
       "rule": "speech",
       "text": "Aufzug-Sonde: kein Spieler.",
-      "why": "탐침 발화다. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. 잴 대상이 없을 때의 거절이다."
+      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. 잴 대상이 없을 때의 거절이다."
     },
     {
       "file": "Services/LiftProbe.cs",
@@ -203,7 +203,7 @@
       "file": "Services/LiftProbe.cs",
       "rule": "speech",
       "text": "Jetzt auf den Aufzug stellen und ihn ausloesen.",
-      "why": "탐침 발화다. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. 측정을 시작하며 무엇을 하라고 이르는 자리다."
+      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. 측정을 시작하며 무엇을 하라고 이르는 자리다."
     },
     {
       "file": "Services/NavigationService.cs",

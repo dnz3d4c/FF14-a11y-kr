@@ -16,10 +16,10 @@
 `gh`를 부르고 나면 바깥에 흔적이 남고, 되돌리는 길이 없다. 그래서 소스 게이트,
 사람 승인, 노트 검사가 전부 그 앞이다.
 
-## 옛 저장소에서 뺀 게이트 둘
+## 옛 저장소에서 뺀 게이트 하나
 
-옛 `run\\release.bat`에는 게이트가 둘 더 있었고, **둘 다 이 저장소에는 없는
-것에 매여 있어서 빼 왔다.** 조용히 없앤 것이 아니라 옮길 자리가 없다.
+옛 `run\\release.bat`에는 게이트가 둘 더 있었다. 하나는 되살렸고, 남은 하나만
+여기 적는다. 조용히 없앤 것이 아니라 옮길 자리가 없다.
 
 1. **`pytest -m upstream_pending`** - 아직 한국어로 안 옮긴 안내 문장이 남았나를
    보던 자리다. 그 마커는 옛 저장소 전용이고 여기 `pyproject.toml`에는 없다.
@@ -27,9 +27,12 @@
    자리를 이름과 함께 보고하고, 그 보고는 `pack.py`의 조립 단계에서 나온다.
    **다만 그것은 세기만 하고 막지는 않는다** - 여기서 발행을 세우던 게이트는
    지금 없다
-2. **`ko_words --require-dump`** - 게임에 없는 낱말을 그럴듯해서 쓴 것을 잡던
-   자리다. `tools/ko-words`를 이 저장소로 안 옮겼다. 낱말 대장은
-   `tools/ko-terms`가 갖는데 그쪽은 덤프를 요구하는 갈래가 없다
+
+되살린 것은 **`ko_words --require-dump`**다. `tools/ko-words`가 이 저장소로
+옮겨 오면서 못 넣던 이유가 사라졌다(2026-09-04). 아래 `WORDS` 단계가 그것이고,
+`--require-dump`로 부르는 것이 요점이다 - 그 깃발이 없으면 게임 덤프가 없을 때
+검사가 **조용히 건너뛰고 0을 돌려준다.** 개발 머신에서는 넘어가는 것이 맞지만
+발행 경로에서는 아니다. 그러면 낱말 검사가 한 번도 안 돈 채로 판이 나간다.
 
 ## 이번에는 안 돌린다
 
@@ -77,6 +80,13 @@ NOTES_DIR = Path("docs") / "release-notes"
 #: 검사기. 다른 도구가 만들고 있어서 **없을 수도 있다** - 없으면 선다.
 NOTES_CHECK_SCRIPT = Path("tools") / "notes-check" / "notes_check.py"
 
+#: 낱말 검사기. `--require-dump`로만 부른다 - 머리말의 `되살린 것` 참고.
+KO_WORDS_SCRIPT = Path("tools") / "ko-words" / "ko_words.py"
+
+#: 게임 덤프 없이 건너뛰는 것을 막는 깃발. 이름을 상수로 두는 까닭은 이것을
+#: 빠뜨리면 게이트가 **선 채로 아무것도 안 재기** 때문이다.
+REQUIRE_DUMP_FLAG = "--require-dump"
+
 # ── 사람이 거는 탈출구 ─────────────────────────────────────────────────────
 #
 # 이름을 옛 저장소 그대로 둔다. 사람이 손으로 거는 값이라 이름이 바뀌면
@@ -98,6 +108,7 @@ SAME_VERSION_VARIABLE = "FF14_RELEASE_SAME_VERSION"
 
 NOTES = "notes"
 SOURCE_GATE = "source-gate"
+WORDS = "ko-words"
 APPROVAL = "approval"
 NOTES_CHECK = "notes-check"
 PUBLISH = "publish"
@@ -245,6 +256,31 @@ def copy_notes(ctx: Context) -> int:
 def source_gate(ctx: Context) -> int:
     """커밋 안 된 트리에서 나온 물건이 발행되는 것을 막는다."""
     return pack_check.main(["pack_check.py", "--source-gate"])
+
+
+def check_words(ctx: Context) -> int:
+    """번역이 게임에 없는 낱말을 쓰나. **건너뛰기를 막고 부른다.**
+
+    `tools/ko-words`는 게임 덤프가 없으면 그 대조를 통째로 건너뛰고 0을
+    돌려준다. 개발 머신에서는 그것이 맞다 - 덤프는 게임 데이터라 저장소가 안
+    담고, 뽑아 두지 않은 기계가 있다. **발행 경로에서는 아니다.** 여기서 조용히
+    건너뛰면 낱말 검사가 한 번도 안 돈 판이 나가고, 화면에는 초록만 남는다.
+
+    `--require-dump`가 그 침묵을 실패로 바꾼다. CI에는 이 깃발을 안 건다 -
+    러너에는 덤프가 영영 없어서 그 잡이 영영 빨갛고, 그러면 빨간불이 신호이기를
+    그만둔다. 그쪽이 무엇을 안 재는지는 워크플로의 그 단계 주석이 적는다.
+    """
+    script = ctx.repo / KO_WORDS_SCRIPT
+    if not script.is_file():
+        print(f"[실패] 낱말 검사기가 없다: {script}", file=sys.stderr)
+        print("  검사를 못 돌린 채로는 내지 않는다.", file=sys.stderr)
+        return 1
+    return run_ko_words(ctx, [REQUIRE_DUMP_FLAG])
+
+
+def run_ko_words(ctx: Context, argv: list[str]) -> int:
+    """검사기를 부른다. **`uv run`을 겹쳐 부르지 않는다** - 이미 그 안이다."""
+    return subprocess.run([sys.executable, str(ctx.repo / KO_WORDS_SCRIPT), *argv]).returncode
 
 
 def approval(ctx: Context) -> int:
@@ -464,6 +500,15 @@ def steps(ctx: Context) -> list[Step]:
             "소스가 커밋되어 있나",
             functools.partial(source_gate, ctx),
             ("pack_check --source-gate",),
+        ),
+        Step(
+            WORDS,
+            "게임에 없는 낱말을 쓰나",
+            functools.partial(check_words, ctx),
+            (
+                f"ko_words {REQUIRE_DUMP_FLAG}",
+                "게임 덤프가 없으면 건너뛰지 않고 선다",
+            ),
         ),
         Step(
             APPROVAL,
