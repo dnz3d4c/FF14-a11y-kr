@@ -282,6 +282,33 @@ def test_git이_아니면_브랜치_검사를_건너뛴다(tmp_path: Path) -> No
     assert ci_check.known_branches(root) is None
 
 
+def test_PR_체크아웃에서는_브랜치_검사를_건너뛴다(tmp_path: Path) -> None:
+    """`actions/checkout`이 PR에서 받아 오는 것은 병합 결과 ref 하나뿐이다.
+
+    그 상태에서 로컬 git이 아는 이름은 `1/merge`뿐이라, 기본 가지를 가리키는
+    멀쩡한 워크플로가 "없는 브랜치를 가리킨다"로 걸린다. 2026-09-04에 이
+    저장소의 첫 PR에서 실제로 그랬다 - `build.yml`의 `branches: [master]`가
+    빨개졌고 우리 잘못은 아무것도 없었다.
+
+    잴 수 없는 것은 못 잰다고 하는 편이 낫다. 로컬 git이 아예 없을 때와 같은
+    갈래로 떨어뜨린다.
+    """
+    root = _repo(tmp_path, TRIGGERED.format(branch="master"))
+    subprocess.run(
+        ["git", "-C", str(root), "checkout", "-q", "-B", "1/merge"],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(root), "branch", "-q", "-D", "master"],
+        check=True,
+        capture_output=True,
+    )
+
+    assert ci_check.known_branches(root) is None
+    assert ci_check.check_tree(root) == []
+
+
 def test_없는_로컬_액션을_가리키면_잡는다(tmp_path: Path) -> None:
     """브랜치와 같은 부류다. 이름은 있는데 그 이름이 가리키는 것이 없다."""
     text = WORKFLOW.replace(

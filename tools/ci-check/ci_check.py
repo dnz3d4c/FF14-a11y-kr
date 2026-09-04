@@ -68,6 +68,10 @@ VERIFIED_RUNNERS = {"windows-latest"}
 #: Dalamud 참조 릴리스의 태그 모양. 이 값이 두 파일에 있으면 갈린다.
 VERSION_CONSTANT = re.compile(r"dalamud-kr-\d+(?:\.\d+)+")
 
+#: PR 체크아웃이 만드는 ref 이름. `actions/checkout`이 병합 결과 하나만 받아 오므로
+#: 이것만 있는 저장소는 **브랜치 이름을 잴 수 있는 상태가 아니다.**
+PULL_REQUEST_REF = re.compile(r"^\d+/(?:merge|head)$")
+
 #: 워크플로가 부르는 우리 스크립트.
 SCRIPT_CALL = re.compile(r"(?:uv run )?python3? (tools/[\w./-]+\.py)")
 
@@ -242,6 +246,13 @@ def known_branches(root: Path) -> set[str] | None:
         if found.returncode != 0:
             return None
         names.update(line for line in found.stdout.split() if line and line != "HEAD")
+
+    # **PR 체크아웃은 병합 결과 하나만 받아 온다.** 그 상태에서 아는 이름은
+    # `1/merge`뿐이라, 기본 가지를 가리키는 멀쩡한 워크플로가 "없는 브랜치"로
+    # 걸린다. 이 저장소의 첫 PR에서 실제로 그랬다(2026-09-04). 잴 수 없는 것은
+    # 못 잰다고 하는 편이 낫다 - 로컬 git이 아예 없을 때와 같은 갈래다.
+    if names and all(PULL_REQUEST_REF.match(name) for name in names):
+        return None
     return names or None
 
 
