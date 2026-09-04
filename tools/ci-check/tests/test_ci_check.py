@@ -14,6 +14,9 @@ import ci_check
 WORKFLOW = """
 name: 보기
 on: [push]
+env:
+  PYTHONIOENCODING: utf-8
+  PYTHONUTF8: "1"
 jobs:
   build:
     runs-on: windows-latest
@@ -419,7 +422,7 @@ def test_잡_수준에_세워도_통과한다(tmp_path: Path) -> None:
         "",
     ).replace(
         "    runs-on: windows-latest\n",
-        '    runs-on: windows-latest\n    env:\n      PYTHONIOENCODING: utf-8\n'
+        "    runs-on: windows-latest\n    env:\n      PYTHONIOENCODING: utf-8\n"
         '      PYTHONUTF8: "1"\n',
     )
 
@@ -427,7 +430,14 @@ def test_잡_수준에_세워도_통과한다(tmp_path: Path) -> None:
 
 
 def test_파이썬을_안_부르면_안_따진다(tmp_path: Path) -> None:
-    assert ci_check.check_tree(_write(tmp_path, WORKFLOW.replace("uv run python tools/assemble/assemble.py", "echo hi"))) == []
+    assert (
+        ci_check.check_tree(
+            _write(
+                tmp_path, WORKFLOW.replace("uv run python tools/assemble/assemble.py", "echo hi")
+            )
+        )
+        == []
+    )
 
 
 def test_워크플로가_하나도_없으면_잡는다(tmp_path: Path) -> None:
