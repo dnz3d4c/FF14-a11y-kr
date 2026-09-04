@@ -3,8 +3,11 @@
 ## 무엇을 건드리고 무엇을 안 건드리나
 
 건드리는 자리는 **대장에 있는 쌍뿐이다.** 이것이 이중 안전장치다. 파서가 못 읽는
-모양(중첩 삼항, 이어붙이기, 배열)은 애초에 안 잡히고, 잡히더라도 대장에 없으면
-안 건드린다. 잘못 읽어 조각난 문자열도 대장에 있을 리 없다.
+모양(이어붙이기, 배열)은 애초에 안 잡히고, 잡히더라도 대장에 없으면 안 건드린다.
+잘못 읽어 조각난 문자열도 대장에 있을 리 없다.
+
+중첩 삼항은 `unnest`가 평평한 갈림길 둘로 펴서 읽는다. 펴는 자리에도 안전장치가
+따로 붙어 있어서, 하나라도 어긋나면 그 자리는 안 펴고 못 읽은 자리로 남는다.
 
 독일어와 영어 리터럴은 **읽기만 한다.** 원문을 그대로 되쓰고 세 번째 인자를 붙일
 뿐이라, 독일어와 영어 사용자가 듣는 문장은 조립 전후로 같아야 한다.
@@ -196,6 +199,222 @@ def _qualified(text: str, found: int) -> tuple[int, str]:
     if text[max(0, found - len(prefix)) : found] == prefix:
         return found - len(prefix), prefix
     return found, ""
+
+
+#: 조건에 있으면 안 펴는 부작용. 편 뒤에는 조건이 두 번 적히므로 두 번 일어난다.
+SIDE_EFFECT = re.compile(r"\+\+|--|=>|\bawait\b|(?<![=!<>])=(?!=)")
+
+#: 글 안의 (시작, 끝).
+Span = tuple[int, int]
+
+
+def _skip_literal(text: str, i: int) -> int:
+    """`i`가 문자열 리터럴의 시작이면 그 끝을, 아니면 -1."""
+    if text[i] == '"' or (text[i] == "$" and text[i + 1 : i + 2] == '"'):
+        _, _, end = read_literal(text, i)
+        return max(end, i + 1)
+    return -1
+
+
+def _top_question(text: str, start: int, end: int) -> int:
+    """`text[start:end]`에서 최상위 갈림길의 `?`. 없으면 -1.
+
+    괄호 안과 문자열 안은 안 본다. `??`와 `?.`는 갈림길이 아니라 건너뛴다.
+    """
+    depth = 0
+    i = start
+    while i < end:
+        after = _skip_literal(text, i)
+        if after >= 0:
+            i = after
+            continue
+        ch = text[i]
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth -= 1
+        elif depth == 0 and ch == "?":
+            if text[i + 1 : i + 2] in ("?", "."):
+                i += 2
+                continue
+            return i
+        i += 1
+    return -1
+
+
+def _branch(text: str, start: int, end: int, stops: str, pending: int = 0) -> int:
+    """갈래 하나를 읽고 멈춘 자리를 돌려준다. 안 멈추고 `end`까지 가면 -1.
+
+    멈추는 자리는 최상위에서 만난 `stops`의 글자이거나, 짝 없이 나온 닫는 괄호다.
+    괄호 깊이와 문자열 리터럴은 넘기고, 갈래 안에 또 갈림길이 있으면 그 `?`와 `:`를
+    짝으로 세어 넘긴다. **괄호에 기대면 안 되기 때문이다** - C# 삼항은 우결합이라
+    괄호 없이 중첩된 자리가 실제로 있고, 그 자리에서는 `?`와 `:`의 짝만이 갈래의 끝을
+    말해 준다.
+
+    `pending`은 이미 열려 있는 `?`의 수다. 갈림길 전체의 끝을 찾을 때 1로 시작한다.
+    """
+    depth = 0
+    i = start
+    while i < end:
+        after = _skip_literal(text, i)
+        if after >= 0:
+            i = after
+            continue
+        ch = text[i]
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            if depth == 0:
+                return i
+            depth -= 1
+        elif depth == 0 and ch == "?":
+            if text[i + 1 : i + 2] in ("?", "."):
+                i += 2
+                continue
+            pending += 1
+        elif depth == 0 and ch == ":":
+            if text[i + 1 : i + 2] == ":":
+                i += 2  # `::`는 이름 공간 별칭이다
+                continue
+            if pending > 0:
+                pending -= 1
+            elif ch in stops:
+                return i
+        elif depth == 0 and ch in stops:
+            return i
+        i += 1
+    return -1
+
+
+def _peel(text: str, start: int, end: int) -> Span:
+    """앞뒤 공백과, 조각 전체를 감싼 괄호를 벗긴다."""
+    while True:
+        while start < end and text[start] in " \t\r\n":
+            start += 1
+        while end > start and text[end - 1] in " \t\r\n":
+            end -= 1
+        if start >= end or text[start] != "(" or _branch(text, start + 1, end, "") != end - 1:
+            return start, end
+        start, end = start + 1, end - 1
+
+
+def _split(text: str, start: int, end: int) -> tuple[Span, Span, Span] | None:
+    """`cond ? A : B`를 (조건, 참 갈래, 거짓 갈래)로 가른다. 갈림길이 아니면 None."""
+    start, end = _peel(text, start, end)
+    question = _top_question(text, start, end)
+    if question < 0:
+        return None
+    colon = _branch(text, question + 1, end, ":")
+    if colon < 0 or text[colon] != ":":
+        return None
+    return (start, question), (question + 1, colon), (colon + 1, end)
+
+
+def _piece(text: str, span: Span) -> str:
+    return text[span[0] : span[1]].strip()
+
+
+def unnest(text: str) -> str:
+    """중첩된 갈림길을 평평한 갈림길 둘로 편다.
+
+        IsGerman ? (cond ? A_de : B_de) : (cond ? A_en : B_en)
+        -> cond ? (IsGerman ? A_de : A_en) : (IsGerman ? B_de : B_en)
+
+    안쪽 조건을 밖으로 끌어올리면 `IsGerman` 갈림길 둘이 다 리터럴 쌍이 되어, 그 뒤는
+    `_ternary_sites`가 여느 자리와 똑같이 읽는다. 자리 하나에 쌍 여럿을 담는 길도
+    있었지만 그러면 `Site`를 붙잡고 있는 곳이 전부 같이 바뀐다. 소스를 먼저 펴면
+    바뀌는 곳이 이 함수 하나다.
+
+    독일어와 영어는 **원문에서 잘라 온 글자 그대로** 다시 놓는다. 다시 조립하지도
+    정규화하지도 않는다. 두 언어 사용자가 듣는 문장은 조립 전후로 같아야 한다.
+
+    ## 안전장치 - 하나라도 어긋나면 그 자리를 그대로 둔다
+
+    그러면 지금처럼 못 읽은 자리로 세어져 숫자에 남는다. 조용히 틀리게 펴는 것보다
+    못 읽는 편이 낫다.
+
+    1. 평평한 삼항은 안 건드린다. 양쪽이 리터럴이면 지금 경로 그대로다.
+    2. 양쪽 갈래가 **둘 다** 삼항이어야 한다. 한쪽만 삼항인 자리는 안 편다.
+    3. 안쪽 갈래가 또 삼항이면 안 편다. 갈래가 넷이 되어 짝이 안 맞는다.
+    4. 안쪽 조건의 글자가 양쪽에서 같아야 한다. 독일어 쪽과 영어 쪽이 다른 조건으로
+       갈리는데 뒤집으면 뜻이 달라진다.
+    5. 조건에 부작용이 없어야 한다. 편 뒤에는 조건이 두 번 적힌다.
+
+    여기에 둘을 더 뒀다. 식 안에 주석이 있으면 안 편다 - 조각을 옮기는 순간 `//` 뒤의
+    글자가 딸려 가서 뒤따르는 코드를 주석이 삼킨다. 조각이 줄을 걸쳐도 안 편다 - 다시
+    놓으면 들여쓰기가 무너지고, 그렇게 펴 봐야 안쪽이 리터럴이 아니라 어차피 못 읽는
+    자리로 남는다.
+    """
+    stripped = strip_comments(text)
+    edits: list[tuple[int, int, str]] = []
+    at = 0
+    while True:
+        found = stripped.find(MARKER, at)
+        if found < 0:
+            break
+        at = found + len(MARKER)
+
+        question = _skip(stripped, at)
+        if stripped[question : question + 1] != "?":
+            continue
+        if stripped[question + 1 : question + 2] in ("?", "."):
+            continue
+
+        edit = _flatten(stripped, text, found, question)
+        if edit is not None:
+            edits.append(edit)
+            at = edit[1]  # 편 자리 안을 다시 훑지 않는다
+
+    for begin, stop, replacement in reversed(edits):
+        text = text[:begin] + replacement + text[stop:]
+    return text
+
+
+def _flatten(stripped: str, text: str, found: int, question: int) -> tuple[int, int, str] | None:
+    """갈림길 하나를 편다. (시작, 끝, 그 자리에 놓을 글). 못 펴면 None."""
+    stop = _branch(stripped, question + 1, len(stripped), ":,;", pending=1)
+    if stop < 0:
+        return None
+
+    span, qualifier = _qualified(stripped, found)
+    if text[span:stop] != stripped[span:stop]:
+        return None  # 식 안에 주석이 있다
+
+    colon = _branch(stripped, question + 1, stop, ":")
+    if colon < 0 or stripped[colon] != ":":
+        return None
+
+    de = _split(stripped, question + 1, colon)
+    en = _split(stripped, colon + 1, stop)
+    if de is None or en is None:
+        return None  # 안전장치 1·2 - 양쪽 갈래가 둘 다 삼항이어야 한다
+    inner = (*de[1:], *en[1:])
+    if any(_split(stripped, *piece) is not None for piece in inner):
+        return None  # 안전장치 3 - 안쪽이 또 중첩이다
+
+    condition = _piece(text, de[0])
+    if condition != _piece(text, en[0]):
+        return None  # 안전장치 4 - 양쪽이 다른 조건으로 갈린다
+    if SIDE_EFFECT.search(condition):
+        return None  # 안전장치 5 - 조건이 두 번 일어난다
+
+    pieces = [condition, *(_piece(text, piece) for piece in inner)]
+    if any(not piece or _NEWLINE in piece for piece in pieces):
+        return None  # 줄을 걸친 조각은 다시 놓으면 들여쓰기가 무너진다
+
+    condition, de_true, de_false, en_true, en_false = pieces
+    marker = qualifier + MARKER
+    first = f"{marker} ? {de_true} : {en_true}"
+    second = f"{marker} ? {de_false} : {en_false}"
+
+    line_start = text.rfind(_NEWLINE, 0, span) + 1
+    single = f"{condition} ? ({first}) : ({second})"
+    if span - line_start + len(single) <= WIDTH:
+        return span, stop, single
+
+    head = text[line_start:span]
+    pad = " " * (len(head) - len(head.lstrip()) + 4)
+    return span, stop, f"{condition}{_NEWLINE}{pad}? ({first}){_NEWLINE}{pad}: ({second})"
 
 
 def scan(text: str) -> tuple[list[Site], list[int]]:
@@ -486,7 +705,13 @@ def rewrite(text: str, catalog: dict[tuple[str, str], str]) -> Result:
 
     바꾸는 것은 **읽어낸 자리뿐이다.** 못 읽은 모양은 자리 목록에 없으므로 손대지 않고,
     개수만 `unreadable`로 나간다.
+
+    ## 소스를 먼저 편다
+
+    중첩 삼항은 `unnest`가 평평한 갈림길 둘로 펴 놓는다. 그래야 아래의 자리 찾기가
+    여느 자리와 똑같이 읽는다. 펴는 것도 소스를 다시 쓰는 일이므로 여기 첫 줄에 둔다.
     """
+    text = unnest(text)
     result = Result(text=text)
     edits: list[tuple[int, int, str]] = []
 

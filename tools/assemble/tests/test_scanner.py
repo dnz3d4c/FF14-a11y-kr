@@ -298,6 +298,138 @@ def test_못_읽은_갈림길을_행_번호로_센다() -> None:
     assert unreadable == [2]
 
 
+def test_중첩_갈림길을_평평한_둘로_편다() -> None:
+    """안쪽 조건을 밖으로 끌어올리면 `IsGerman` 갈림길 둘이 다 리터럴 쌍이 된다."""
+    text = '    var s = IsGerman ? (n == 1 ? "Slot" : "Slots") : (n == 1 ? "slot" : "slots");\n'
+
+    assert scanner.unnest(text) == (
+        '    var s = n == 1 ? (IsGerman ? "Slot" : "slot") : (IsGerman ? "Slots" : "slots");\n'
+    )
+
+
+def test_괄호가_없어도_갈래의_끝을_찾는다() -> None:
+    """C# 삼항은 우결합이라 괄호 없이 중첩된 자리가 실제로 있다 - `CategoryLevequestCount`."""
+    text = (
+        "    public static string A(int n) =>\n"
+        "        IsGerman\n"
+        "            ? n > 0\n"
+        '                ? "viele"\n'
+        '                : "keine"\n'
+        "            : n > 0\n"
+        '                ? "many"\n'
+        '                : "none";\n'
+    )
+
+    assert scanner.unnest(text) == (
+        "    public static string A(int n) =>\n"
+        '        n > 0 ? (IsGerman ? "viele" : "many") : (IsGerman ? "keine" : "none");\n'
+    )
+
+
+def test_한_줄에_안_들어가면_원래_들여쓰기에_맞춰_나눈다() -> None:
+    """실제 여섯 자리는 문장이 길어서 대개 이 갈래로 간다."""
+    de = "Freibriefe: {givers} Geber, {goals} Ziele und noch einiges mehr dazu."
+    en = "Levequests: {givers} givers, {goals} goals and a good deal more."
+    text = (
+        "    public static string A(int n) =>\n"
+        "        IsGerman\n"
+        f'            ? (n > 0 ? $"{de}" : "-")\n'
+        f'            : (n > 0 ? $"{en}" : "-");\n'
+    )
+
+    assert scanner.unnest(text) == (
+        "    public static string A(int n) =>\n"
+        "        n > 0\n"
+        f'            ? (IsGerman ? $"{de}" : $"{en}")\n'
+        '            : (IsGerman ? "-" : "-");\n'
+    )
+
+
+def test_평평한_삼항은_안_건드린다() -> None:
+    """안전장치 1. 양쪽이 리터럴이면 지금 경로 그대로다."""
+    text = 'public static string A => IsGerman ? "Hallo" : "Hello";\n'
+
+    assert scanner.unnest(text) == text
+
+
+def test_한쪽만_삼항이면_안_편다() -> None:
+    """안전장치 2. 펼 짝이 없어서 뒤집을 수 없다."""
+    text = 'public static string B => IsGerman ? (on ? "an" : "aus") : "off";\n'
+
+    assert scanner.unnest(text) == text
+
+
+def test_안쪽이_또_중첩이면_안_편다() -> None:
+    """안전장치 3. 갈래가 넷이 되어 짝이 안 맞는다."""
+    text = 'var s = IsGerman ? (a ? (b ? "1" : "2") : "3") : (a ? (b ? "4" : "5") : "6");\n'
+
+    assert scanner.unnest(text) == text
+
+
+def test_안쪽_조건이_양쪽에서_다르면_안_편다() -> None:
+    """안전장치 4. 다른 조건으로 갈리는 자리를 뒤집으면 뜻이 달라진다."""
+    text = 'var s = IsGerman ? (a ? "1" : "2") : (b ? "3" : "4");\n'
+
+    assert scanner.unnest(text) == text
+
+
+def test_조건에_부작용이_있으면_안_편다() -> None:
+    """안전장치 5. 편 뒤에는 조건이 두 번 적히므로 부작용도 두 번 일어난다."""
+    for condition in ("n++ > 0", "(k = f()) != null", "await Ready()"):
+        text = f'var s = IsGerman ? ({condition} ? "1" : "2") : ({condition} ? "3" : "4");\n'
+
+        assert scanner.unnest(text) == text, condition
+
+
+def test_같음_비교는_부작용이_아니다() -> None:
+    """`==`와 `!=`, `<=`, `>=`까지 부작용으로 세면 실제 여섯 자리가 전부 안 열린다."""
+    for condition in ("n == 1", "n != 1", "n <= 1", "n >= 1"):
+        text = f'var s = IsGerman ? ({condition} ? "1" : "2") : ({condition} ? "3" : "4");\n'
+
+        assert scanner.unnest(text) != text, condition
+
+
+def test_식_안에_주석이_있으면_안_편다() -> None:
+    """휴면 경로. 조각을 옮기면 `//` 뒤의 글자가 딸려 가서 뒤따르는 코드를 삼킨다."""
+    text = 'var s = IsGerman ? (n == 1 ? "1" // 하나\n : "2") : (n == 1 ? "3" : "4");\n'
+
+    assert scanner.unnest(text) == text
+
+
+def test_줄을_걸친_조각은_안_편다() -> None:
+    """휴면 경로. 다시 놓으면 들여쓰기가 무너지고, 안쪽이 리터럴도 아니라 얻는 것이 없다."""
+    text = (
+        "var s = IsGerman\n"
+        '    ? (n == 1 ? "1" +\n'
+        '                "2" : "3")\n'
+        '    : (n == 1 ? "4" + "5" : "6");\n'
+    )
+
+    assert scanner.unnest(text) == text
+
+
+def test_편_자리의_독일어와_영어는_원문에서_잘라_온_그대로다() -> None:
+    """다시 조립하거나 정규화하면 두 언어 사용자가 듣는 문장이 달라진다."""
+    text = '    var s = IsGerman ? (n == 1 ? $"1 Slot" : $"{n} Slots")\n'
+    text += '                     : (n == 1 ? $"1 slot" : $"{n} slots");\n'
+    opened = scanner.unnest(text)
+
+    for raw in ('$"1 Slot"', '$"{n} Slots"', '$"1 slot"', '$"{n} slots"'):
+        assert raw in opened
+
+
+def test_펴고_나면_Pick_둘이_된다() -> None:
+    """편 자리는 여느 자리와 똑같이 읽혀서 대장의 한국어가 갈래마다 따로 들어간다."""
+    text = '    var s = IsGerman ? (n == 1 ? "Slot" : "Slots") : (n == 1 ? "slot" : "slots");\n'
+    result = scanner.rewrite(text, {("Slot", "slot"): "슬롯"})
+
+    assert result.text == (
+        '    var s = n == 1 ? (Pick("Slot", "slot", "슬롯")) : (Pick("Slots", "slots"));\n'
+    )
+    assert result.applied == [("Slot", "slot")]
+    assert result.unreadable == []
+
+
 def test_못_읽은_자리는_손대지_않는다() -> None:
     text = 'public static string B => IsGerman ? Concat(a, b) : "off";\n'
     result = scanner.rewrite(text, {})

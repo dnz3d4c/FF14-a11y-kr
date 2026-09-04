@@ -55,15 +55,36 @@ def test_대장의_모든_행이_C샵에_그대로_들어갈_모양이다() -> N
 
 
 def test_독일어와_영어는_조립_전후로_한_자도_안_바뀐다() -> None:
-    """이 저장소의 전제다. 두 언어 사용자가 듣는 문장은 조립 전후로 같아야 한다."""
+    """이 저장소의 전제다. 두 언어 사용자가 듣는 문장은 조립 전후로 같아야 한다.
+
+    견주는 앞쪽이 `unnest`를 지난 글인 까닭은 갈래를 펴면 자리가 늘기 때문이다. 원문
+    그대로와 대면 늘어난 자리마다 목록이 어긋나, 문장이 바뀌었는지를 이 검사가 더는
+    못 본다. 펴는 단계가 문장을 안 건드리는지는 바로 아래 검사가 따로 본다.
+    """
     catalog = _catalog()
     for path in _sources():
-        before = files.read(path)
-        after = scanner.rewrite(before, catalog).text
+        source = files.read(path)
+        after = scanner.rewrite(source, catalog).text
 
         assert [(site.de_raw, site.en_raw) for site in scanner.find_sites(after)] == [
-            (site.de_raw, site.en_raw) for site in scanner.find_sites(before)
+            (site.de_raw, site.en_raw) for site in scanner.find_sites(scanner.unnest(source))
         ], path.name
+
+
+def test_갈래를_펴도_문장은_원문에서_잘라_온_그대로다() -> None:
+    """편 자리의 독일어와 영어는 원문에 그 글자 그대로 있어야 한다.
+
+    다시 조립하거나 정규화하면 두 언어 사용자가 듣는 문장이 달라진다. 위 검사는 펴고
+    난 뒤부터 보므로, 펴는 그 순간에 문장이 바뀌는 것은 여기서만 잡힌다.
+    """
+    for path in _sources():
+        source = files.read(path)
+        opened = scanner.unnest(source)
+        if opened == source:
+            continue
+        for site in scanner.find_sites(opened):
+            assert site.de_raw in source, f"{path.name}: {site.de_raw}"
+            assert site.en_raw in source, f"{path.name}: {site.en_raw}"
 
 
 def test_소스에서_만나는_쌍이_조립_전후로_같다() -> None:
