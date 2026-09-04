@@ -185,6 +185,30 @@ def test_낱말_검사기가_없으면_선다(tmp_path):
     assert release.check_words(context(tmp_path)) == 1
 
 
+def test_사람이_로컬에서_쟀다고_말하면_넘어간다(tmp_path, monkeypatch, capsys):
+    """러너에는 게임 덤프가 영영 없다. 그 하나 때문에 CI 발행 경로가 막힌다.
+
+    덤프는 스퀘어에닉스의 게임 텍스트라 재배포하지 않기로 하고 `.gitignore`에
+    넣었다. 그래서 이 게이트는 **개발 머신에서만 실물로 돌 수 있다.** 탈출구가
+    없으면 발행을 CI로 옮기는 순간 게이트를 통째로 빼는 수밖에 없어진다.
+
+    다른 탈출구들과 같은 규약이다 - 사람이 환경변수로 명시해야 하고, 넘어간
+    것을 화면에 남긴다. 조용히 지나가면 잰 판과 안 잰 판이 같아 보인다.
+    """
+    monkeypatch.setenv(release.WORDS_CHECKED_VARIABLE, "1")
+    # 검사기 파일조차 없는 상태에서도 지나야 한다 - 러너가 그럴 수 있다는 뜻이
+    # 아니라, 이 갈래가 검사기를 아예 안 부른다는 것을 못 박는 것이다.
+    assert release.check_words(context(tmp_path)) == 0
+    assert "넘겼다" in capsys.readouterr().out
+
+
+def test_탈출구가_비어_있으면_그대로_잰다(tmp_path):
+    """빈 값은 선언이 아니다. `FF14_WORDS_CHECKED=` 는 안 건 것과 같다."""
+    seen = stub_ko_words(tmp_path, 1)
+    assert release.check_words(context(tmp_path)) == 1
+    assert release.REQUIRE_DUMP_FLAG in seen.read_text(encoding="utf-8")
+
+
 # ── 사람 승인 ──────────────────────────────────────────────────────────────
 
 

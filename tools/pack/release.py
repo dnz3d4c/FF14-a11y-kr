@@ -104,6 +104,14 @@ UPSTREAM_UNREACHABLE_VARIABLE = "FF14_UPSTREAM_NOTES_UNREACHABLE"
 #: 같은 판을 그대로 다시 올린다. 버전 검사를 건너뛴다.
 SAME_VERSION_VARIABLE = "FF14_RELEASE_SAME_VERSION"
 
+#: 낱말 검사를 개발 머신에서 이미 통과시켰다.
+#:
+#: **러너에는 게임 덤프가 영영 없다.** 스퀘어에닉스의 게임 텍스트라 재배포하지
+#: 않기로 하고 `.gitignore`에 넣었고, 그래서 `--require-dump`가 러너에서는
+#: 원리적으로 못 지난다. 탈출구가 없으면 발행을 CI로 옮기는 순간 이 게이트를
+#: 통째로 빼는 수밖에 없어진다 - 그것이야말로 이 게이트를 되살린 이유를 지운다.
+WORDS_CHECKED_VARIABLE = "FF14_WORDS_CHECKED"
+
 # ── 단계 이름 ──────────────────────────────────────────────────────────────
 
 NOTES = "notes"
@@ -269,7 +277,16 @@ def check_words(ctx: Context) -> int:
     `--require-dump`가 그 침묵을 실패로 바꾼다. CI에는 이 깃발을 안 건다 -
     러너에는 덤프가 영영 없어서 그 잡이 영영 빨갛고, 그러면 빨간불이 신호이기를
     그만둔다. 그쪽이 무엇을 안 재는지는 워크플로의 그 단계 주석이 적는다.
+
+    **발행이 러너에서 돌 때는 사람이 대신 선언한다.** 그때도 검사가 없어지는
+    것이 아니라 재는 자리가 개발 머신으로 옮겨갈 뿐이고, 넘어간 것을 화면에
+    남겨서 잰 판과 안 잰 판이 같아 보이지 않게 한다.
     """
+    if os.environ.get(WORDS_CHECKED_VARIABLE, "").strip():
+        print(f"[경고] 낱말 검사를 여기서 안 돌렸다. 사람이 {WORDS_CHECKED_VARIABLE} 로 넘겼다")
+        print("  개발 머신에서 --require-dump 로 통과시켰다는 선언이다.")
+        return 0
+
     script = ctx.repo / KO_WORDS_SCRIPT
     if not script.is_file():
         print(f"[실패] 낱말 검사기가 없다: {script}", file=sys.stderr)

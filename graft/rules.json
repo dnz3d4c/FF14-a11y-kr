@@ -329,6 +329,136 @@
       ]
     },
     {
+      "name": "strings-flight-ended-remaining-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "높낮이가 5미터를 넘는 갈래가 이어붙이기에 삼항까지 품고 있어 파서 손 밖이었다. 그래서 그 갈래만 영어로 나가는데 미적용에도 안 잡힌다 - 2026-09-04 교차 리뷰가 짚었다. 삼항을 문장 밖으로 빼면 갈래 셋이 전부 맨 리터럴이 되어 대장이 읽는다. 방위 낱말을 원소별로 편 것과 같은 수법이다.",
+      "phase": "before",
+      "find": [
+        "        MathF.Abs(rise) >= 5f",
+        "            ? (IsGerman",
+        "                ? $\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, \" +",
+        "                  $\"{(rise > 0 ? \"das Ziel liegt höher\" : \"das Ziel liegt tiefer\")}.\"",
+        "                : $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, \" +",
+        "                  $\"{(rise > 0 ? \"the target is higher up\" : \"the target is further down\")}.\")"
+      ],
+      "replace": [
+        "        MathF.Abs(rise) >= 5f",
+        "            ? (rise > 0",
+        "                ? (IsGerman",
+        "                    ? $\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt höher.\"",
+        "                    : $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is higher up.\")",
+        "                : (IsGerman",
+        "                    ? $\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt tiefer.\"",
+        "                    : $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is further down.\"))"
+      ]
+    },
+    {
+      "name": "strings-in-area-with-hops-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "영어가 단복수를 문장 안에서 삼항으로 고른다. 한국어에는 그 구분이 없어서 그 자리를 그대로 두면 한국어 문장에서 transition이 발화된다. 단복수를 갈래 밖으로 빼면 영어 문장 둘이 각각 맨 리터럴이 되고, 독일어는 원래 한 꼴이라 양쪽에 같은 것을 쓴다 - 대장의 열쇠가 (독일어, 영어) 쌍이라 부딪히지 않는다.",
+      "phase": "before",
+      "find": [
+        "            : (IsGerman",
+        "                // \"Gebietswechsel\" ist im Deutschen in Ein- und Mehrzahl gleich.",
+        "                ? $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\"",
+        "                : $\"in the area {zone}, {hops} {(hops == 1 ? \"transition\" : \"transitions\")} away.\");"
+      ],
+      "replace": [
+        "            : (hops == 1",
+        "                // \"Gebietswechsel\" ist im Deutschen in Ein- und Mehrzahl gleich.",
+        "                ? (IsGerman",
+        "                    ? $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\"",
+        "                    : $\"in the area {zone}, {hops} transition away.\")",
+        "                : (IsGerman",
+        "                    ? $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\"",
+        "                    : $\"in the area {zone}, {hops} transitions away.\"));"
+      ]
+    },
+    {
+      "name": "strings-update-needs-installer-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "이어붙인 리터럴이라 파서가 갈림길로 못 읽고, 그러면 대장과 만나지 못해 영어로 나가면서 미적용에도 안 잡힌다. 한 줄로 펴면 Pick이 되어 대장이 읽는다. 우리 사용자가 실제로 듣는 문장이다 - 정식 자리에 깐 설치는 스스로 못 갈아 끼우므로 이 안내로 떨어진다.",
+      "phase": "before",
+      "find": [
+        "        IsGerman ? \"Diese Aktualisierung ändert Dateien, die das laufende Spiel \" +",
+        "                   \"festhält. Bitte das Spiel beenden und den Installer benutzen.\"",
+        "                 : \"This update changes files the running game holds open. \" +",
+        "                   \"Please close the game and use the installer.\";"
+      ],
+      "replace": [
+        "        IsGerman ? \"Diese Aktualisierung ändert Dateien, die das laufende Spiel festhält. Bitte das Spiel beenden und den Installer benutzen.\"",
+        "                 : \"This update changes files the running game holds open. Please close the game and use the installer.\";"
+      ]
+    },
+    {
+      "name": "strings-update-not-self-managed-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "같은 모양이고 같은 이유다. 이 문장은 특히 중요하다 - 우리 배포물은 Dalamud 커스텀 저장소와 설치 프로그램으로 정식 자리에 깔리므로, 갱신을 눌렀을 때 우리 사용자가 가장 자주 듣게 되는 안내가 이것이다.",
+      "phase": "before",
+      "find": [
+        "        IsGerman ? \"Diese Installation wird von Dalamud verwaltet und kann sich \" +",
+        "                   \"nicht selbst aktualisieren.\"",
+        "                 : \"This installation is managed by Dalamud and cannot update itself.\";"
+      ],
+      "replace": [
+        "        IsGerman ? \"Diese Installation wird von Dalamud verwaltet und kann sich nicht selbst aktualisieren.\"",
+        "                 : \"This installation is managed by Dalamud and cannot update itself.\";"
+      ]
+    },
+    {
+      "name": "strings-update-busy-now-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "같은 모양이고 같은 이유다.",
+      "phase": "before",
+      "find": [
+        "        IsGerman ? \"Nicht im Kampf oder während einer Laufstrecke. \" +",
+        "                   \"Bitte danach noch einmal.\"",
+        "                 : \"Not during combat or while a walk is running. \" +",
+        "                   \"Please try again afterwards.\";"
+      ],
+      "replace": [
+        "        IsGerman ? \"Nicht im Kampf oder während einer Laufstrecke. Bitte danach noch einmal.\"",
+        "                 : \"Not during combat or while a walk is running. Please try again afterwards.\";"
+      ]
+    },
+    {
+      "name": "update-service-kr-repo",
+      "file": "FF14Accessibility/Services/UpdateService.cs",
+      "why": "자기 갱신이 우리 릴리스를 봐야 한다. 원본 주소를 그대로 두면 옵션 메뉴의 갱신 검사가 글로벌 판의 새 릴리스를 우리 것으로 안내한다 - 오류가 아니라 잘못된 안내라 화면에 아무 이상도 안 남는다. 게다가 원본은 하루 1.4개꼴로 판을 내므로 우리 사용자는 늘 뒤처진 것처럼 듣는다. 값의 원천은 tools/release-manifest의 GH_REPO다.",
+      "find": [
+        "    private const string RepoOwner = \"derbruedi\";",
+        "    private const string RepoName  = \"ff14-accessibility\";"
+      ],
+      "replace": [
+        "    // KOREAN BUILD LOOKS AT THE KOREAN RELEASES. Leaving the upstream address here",
+        "    // makes the update check offer the global build as if it were ours - not an",
+        "    // error, just a wrong answer, and nothing on screen says so.",
+        "    // Single source of these two: tools/release-manifest (GH_REPO).",
+        "    private const string RepoOwner = \"dnz3d4c\";",
+        "    private const string RepoName  = \"FF14-a11y-kr\";"
+      ]
+    },
+    {
+      "name": "update-service-kr-asset",
+      "file": "FF14Accessibility/Services/UpdateService.cs",
+      "why": "원본은 판마다 이름이 바뀌는 FF14Accessibility-v<버전>.zip을 내지만 우리 자산 이름은 FF14Accessibility.zip 하나로 고정이다 - repo.json과 installer.json이 releases/latest/download의 고정 주소를 가리켜야 하기 때문이다. 접두를 안 맞추면 FindAssetUrl이 우리 자산을 못 찾고 검사가 '맞는 파일이 없는 릴리스'로 실패한다. 주석까지 앵커에 넣은 것은 원본이 이 상수의 뜻을 바꾸면 조립이 멈춰 다시 보게 하려는 것이다. 값의 원천은 tools/release-manifest의 ZIP_NAME이다.",
+      "find": [
+        "    /// <summary>Release asset carrying the plugin, named",
+        "    /// \"FF14Accessibility-v&lt;version&gt;.zip\" - same asset the installer picks",
+        "    /// (InstallerService.UpdateAccessibilityPluginAsync).</summary>",
+        "    private const string AssetPrefix = \"FF14Accessibility-v\";"
+      ],
+      "replace": [
+        "    /// <summary>Release asset carrying the plugin. The Korean release names it",
+        "    /// \"FF14Accessibility.zip\" with NO version in it, because repo.json and",
+        "    /// installer.json point at the fixed releases/latest/download address.",
+        "    /// FindAssetUrl selects by StartsWith plus EndsWith(\".zip\"), and that pair",
+        "    /// matches exactly one asset of ours. Single source: tools/release-manifest",
+        "    /// (ZIP_NAME).</summary>",
+        "    private const string AssetPrefix = \"FF14Accessibility.zip\";"
+      ]
+    },
+    {
       "name": "installer-mainform-owner-updated",
       "file": "Installer/MainForm.cs",
       "why": "소유자 없는 대화 상자는 남의 창 뒤로 숨는다. 스스로 업데이트한 뒤 다시 뜨는 자리라 사용자가 이 안내를 못 들으면 재시작이 고장으로 들린다. MessageBox.Show( 한 줄만으로는 이 파일 네 곳에서 잡히므로 다음 줄까지 묶어 유일하게 만든다.",

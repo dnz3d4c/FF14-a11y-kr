@@ -14,6 +14,21 @@
       "ko": " 주의: 장비세트에 저장됨. 판매 금지."
     },
     {
+      "de": " Dabei {down:F0} Meter abwärts.",
+      "en": " Along the way {down:F0} meters down.",
+      "ko": " 내리막 {down:F0}미터."
+    },
+    {
+      "de": " Dabei {up:F0} Meter aufwärts und {down:F0} Meter abwärts.",
+      "en": " Along the way {up:F0} meters up and {down:F0} meters down.",
+      "ko": " 오르막 {up:F0}미터, 내리막 {down:F0}미터."
+    },
+    {
+      "de": " Dabei {up:F0} Meter aufwärts.",
+      "en": " Along the way {up:F0} meters up.",
+      "ko": " 오르막 {up:F0}미터."
+    },
+    {
       "de": " Das Wegenetz ist hier älter als die Häuser. Mit dem Befehl vnav rebuild neu bauen lassen.",
       "en": " The navigation mesh here is older than the houses. Rebuild it with the vnav rebuild command.",
       "ko": "길 정보가 집보다 오래돼 지형과 맞지 않음. vnav rebuild 명령으로 다시 만들기 필요."
@@ -37,6 +52,16 @@
       "de": " Erholungsbonus für {percent} Prozent einer Stufe.",
       "en": " Rested bonus for {percent} percent of a level.",
       "ko": " 휴식 보너스, 한 레벨의 {percent} 퍼센트."
+    },
+    {
+      "de": " Gegenstand: ",
+      "en": " item: ",
+      "ko": " 아이템: "
+    },
+    {
+      "de": " Gegenstände: ",
+      "en": " items: ",
+      "ko": " 아이템: "
     },
     {
       "de": " Hinter {before}.",
@@ -159,6 +184,16 @@
       "ko": ", 완료"
     },
     {
+      "de": ", für deine Klasse {classes}",
+      "en": ", for your {classes}",
+      "ko": ", 내 {classes}용"
+    },
+    {
+      "de": ", für deine Klassen {classes}",
+      "en": ", for your classes {classes}",
+      "ko": ", 내 {classes}용"
+    },
+    {
       "de": ", für {count} {currency}",
       "en": ", for {count} {currency}",
       "ko": ", 가격 {count} {currency}"
@@ -214,6 +249,11 @@
       "ko": ", 나보다 {-heightDiff:F0}미터 아래"
     },
     {
+      "de": ", {count} Einträge{(selection.Length > 0 ? $\": {selection}\" : string.Empty)}",
+      "en": ", {count} entries{(selection.Length > 0 ? $\": {selection}\" : string.Empty)}",
+      "ko": ", 항목 {count}개{(selection.Length > 0 ? $\": {selection}\" : string.Empty)}"
+    },
+    {
       "de": ", {current}",
       "en": ", {current}",
       "ko": ", {current}"
@@ -254,9 +294,19 @@
       "ko": ". 훈련: {exercise}"
     },
     {
+      "de": "1 Materia-Slot",
+      "en": "1 materia slot",
+      "ko": "마테리아 1칸"
+    },
+    {
       "de": "1 Sekunde",
       "en": "1 second",
       "ko": "1초"
+    },
+    {
+      "de": "1 Tastenkonflikt.",
+      "en": "1 key conflict.",
+      "ko": "키 충돌 1개."
     },
     {
       "de": "Achtung, diese Spur ueberwindet {MetersRemaining(drop)} Hoehe und gilt deshalb nur in Laufrichtung. Fuer den Rueckweg zeichne bitte eine eigene Spur auf.",
@@ -299,6 +349,11 @@
       "ko": "{bar}번 단축바. "
     },
     {
+      "de": "Aktive Kommandos {active.Trim()}.",
+      "en": "Active commands {active.Trim()}.",
+      "ko": "활성 기술 {active.Trim()}."
+    },
+    {
       "de": "Aktives Fenster: {name}. {visibleCount} Fenster sichtbar, Liste im Log.",
       "en": "Active window: {name}. {visibleCount} windows visible, list written to log.",
       "ko": "초점 받은 창: {name}. 보이는 창 {visibleCount}개, 전체 목록은 로그에."
@@ -307,6 +362,11 @@
       "de": "Aktiviere: {text}",
       "en": "Activating: {text}",
       "ko": "실행: {text}"
+    },
+    {
+      "de": "Aktualisierung",
+      "en": "Update",
+      "ko": "업데이트"
     },
     {
       "de": "Aktuelle Karte unbekannt, kann Koordinaten nicht bestimmen.",
@@ -379,6 +439,11 @@
       "ko": "초보자의 집"
     },
     {
+      "de": "Angekommen und gelandet: {name}.",
+      "en": "Arrived and landed: {name}.",
+      "ko": "도착 후 착륙함: {name}."
+    },
+    {
       "de": "Angekommen, neues Gebiet erreicht.",
       "en": "Arrived, reached a new area.",
       "ko": "도착. 새 지역에 들어옴."
@@ -432,16 +497,6 @@
       "de": "Ansagen",
       "en": "Announcements",
       "ko": "안내"
-    },
-    {
-      "de": "anthrazit",
-      "en": "charcoal",
-      "ko": "짙은 잿빛"
-    },
-    {
-      "de": "aschblond",
-      "en": "ash blond",
-      "ko": "잿빛 금발"
     },
     {
       "de": "Aschgrau",
@@ -542,6 +597,11 @@
       "de": "Automatisch",
       "en": "Automatic",
       "ko": "자동"
+    },
+    {
+      "de": "Automatisch herunterladen",
+      "en": "Download automatically",
+      "ko": "자동 다운로드"
     },
     {
       "de": "Bedarf, Gier oder Passen möglich",
@@ -674,11 +734,6 @@
       "ko": "입질."
     },
     {
-      "de": "blasses",
-      "en": "pale",
-      "ko": "옅은"
-    },
-    {
       "de": "Blau",
       "en": "blue",
       "ko": "파랑"
@@ -694,6 +749,21 @@
       "ko": "바다 초록"
     },
     {
+      "de": "Blaumagie",
+      "en": "Blue magic",
+      "ko": "청마법"
+    },
+    {
+      "de": "Blaumagie: {total} Zauber fehlen, keiner in diesem Gebiet.",
+      "en": "Blue magic: {total} spells missing, none in this area.",
+      "ko": "청마법: 기술 {total}개 미체득, 이 지역에는 없음."
+    },
+    {
+      "de": "Blaumagie: {total} Zauber fehlen, {here} in diesem Gebiet.",
+      "en": "Blue magic: {total} spells missing, {here} in this area.",
+      "ko": "청마법: 기술 {total}개 미체득, 이 지역에 {here}개."
+    },
+    {
       "de": "Bodenmessung fertig. {hits} Treffer, davon {withoutMesh} ohne Wegenetz.",
       "en": "Ground probe done. {hits} hits, {withoutMesh} of them without navigation mesh.",
       "ko": "바닥 측정 완료. {hits}군데 잡힘, 그중 {withoutMesh}군데는 길 정보 없음."
@@ -702,6 +772,11 @@
       "de": "Bonus {percent} Prozent",
       "en": "Bonus {percent} percent",
       "ko": "보너스 {percent} 퍼센트"
+    },
+    {
+      "de": "Boss",
+      "en": "boss",
+      "ko": "보스"
     },
     {
       "de": "Braun",
@@ -834,6 +909,11 @@
       "ko": "대화"
     },
     {
+      "de": "Die Aktualisierung hat nicht geklappt. Einzelheiten stehen im Log.",
+      "en": "The update failed. Details are in the log.",
+      "ko": "업데이트 실패. 자세한 내용은 로그에 있음."
+    },
+    {
       "de": "Die Bildbeschreibungen stammen vom Mod, nicht vom Spiel.",
       "en": "The picture descriptions come from the mod, not from the game.",
       "ko": "그림 설명은 게임이 아니라 모드가 작성한 것임."
@@ -849,9 +929,29 @@
       "ko": "게임의 지형 판정을 사용할 수 없음."
     },
     {
+      "de": "Die Suche nach dem Flugweg dauert zu lange. Ich breche ab.",
+      "en": "The flight route search is taking too long. Stopping.",
+      "ko": "비행 경로 탐색이 너무 오래 걸림. 중단함."
+    },
+    {
+      "de": "Die Wegsuche läuft noch. Gleich noch einmal versuchen.",
+      "en": "A path search is still running. Try again in a moment.",
+      "ko": "경로 탐색이 아직 진행 중. 잠시 후 다시 시도 필요."
+    },
+    {
+      "de": "Diese Aktualisierung ändert Dateien, die das laufende Spiel festhält. Bitte das Spiel beenden und den Installer benutzen.",
+      "en": "This update changes files the running game holds open. Please close the game and use the installer.",
+      "ko": "실행 중인 게임이 잡고 있는 파일이 바뀜. 게임을 끄고 설치 프로그램 사용 필요."
+    },
+    {
       "de": "Diese Ebene",
       "en": "This floor",
       "ko": "이 층"
+    },
+    {
+      "de": "Diese Installation wird von Dalamud verwaltet und kann sich nicht selbst aktualisieren.",
+      "en": "This installation is managed by Dalamud and cannot update itself.",
+      "ko": "이 설치본은 Dalamud가 관리하므로 스스로 업데이트할 수 없음."
     },
     {
       "de": "Diese Nummer gibt es hier nicht.",
@@ -904,6 +1004,11 @@
       "ko": "내가 말하기"
     },
     {
+      "de": "Du sitzt auf keinem Reittier.",
+      "en": "You are not on a mount.",
+      "ko": "탈것에 타고 있지 않음."
+    },
+    {
       "de": "Du stehst drin, {AoeSeconds(seconds)}.",
       "en": "You are in it, {AoeSeconds(seconds)}.",
       "ko": "장판 안에 있음, {AoeSeconds(seconds)}."
@@ -939,54 +1044,34 @@
       "ko": "던전"
     },
     {
-      "de": "dunkelblond",
-      "en": "dark blond",
-      "ko": "어두운 금발"
+      "de": "Dungeon",
+      "en": "Dungeon",
+      "ko": "던전"
     },
     {
-      "de": "dunkelbraun",
-      "en": "dark brown",
-      "ko": "어두운 갈색"
+      "de": "Dungeon-Wege",
+      "en": "Dungeon routes",
+      "ko": "던전 경로"
     },
     {
-      "de": "dunkelgrau",
-      "en": "dark grey",
-      "ko": "어두운 회색"
+      "de": "Dungeon-Wege konnten nicht geladen werden. Sieh ins Log.",
+      "en": "Dungeon routes could not be downloaded. Check the log.",
+      "ko": "던전 경로 다운로드 실패. 로그 확인 필요."
     },
     {
-      "de": "dunkles",
-      "en": "dark",
-      "ko": "어두운"
+      "de": "Dungeon-Wege werden geladen.",
+      "en": "Downloading dungeon routes.",
+      "ko": "던전 경로 다운로드 중."
     },
     {
-      "de": "dunkles Aschgrau",
-      "en": "dark ashen",
-      "ko": "어두운 잿빛"
+      "de": "Dungeon-Wege, {files} geladen",
+      "en": "Dungeon routes, {files} loaded",
+      "ko": "던전 경로, {files}개 있음"
     },
     {
-      "de": "dunkles Blaugrau",
-      "en": "dark blue grey",
-      "ko": "어두운 청회색"
-    },
-    {
-      "de": "dunkles Braun",
-      "en": "dark brown",
-      "ko": "어두운 갈색"
-    },
-    {
-      "de": "dunkles Rotbraun",
-      "en": "dark auburn",
-      "ko": "어두운 적갈색"
-    },
-    {
-      "de": "dunkles Seegrün",
-      "en": "dark sea green",
-      "ko": "어두운 바다 초록"
-    },
-    {
-      "de": "dunkles Weinrot",
-      "en": "dark wine red",
-      "ko": "어두운 포도줏빛 빨강"
+      "de": "Dungeon: {total} Stationen, weiter bei {next}.",
+      "en": "Dungeon: {total} stations, continuing at {next}.",
+      "ko": "던전 지점 {total}개. 지금 {next}번."
     },
     {
       "de": "Ebene",
@@ -1044,9 +1129,9 @@
       "ko": "{name} 설정을 열 수 없음."
     },
     {
-      "de": "eisblasses Weiß",
-      "en": "ice pale white",
-      "ko": "얼음빛 흰색"
+      "de": "Einstimmung",
+      "en": "attunement",
+      "ko": "속성"
     },
     {
       "de": "Elfenbein",
@@ -1099,11 +1184,6 @@
       "ko": "개발용 플러그인"
     },
     {
-      "de": "erdbeerblond",
-      "en": "strawberry blond",
-      "ko": "딸기빛 금발"
-    },
-    {
       "de": "Erfahrung",
       "en": "EXP",
       "ko": "경험치"
@@ -1119,19 +1199,24 @@
       "ko": "설명: {help}"
     },
     {
+      "de": "Erlernt {learned.Trim()}.",
+      "en": "Learned {learned.Trim()}.",
+      "ko": "체득 {learned.Trim()}."
+    },
+    {
+      "de": "Erlernt.",
+      "en": "Learned.",
+      "ko": "체득함."
+    },
+    {
+      "de": "Es fehlt kein Blaumagie-Zauber.",
+      "en": "No blue magic spells missing.",
+      "ko": "미체득 청마법 기술 없음."
+    },
+    {
       "de": "Etwas schneller",
       "en": "Slightly faster",
       "ko": "조금 빠름"
-    },
-    {
-      "de": "fast schwarz",
-      "en": "near black",
-      "ko": "거의 검정"
-    },
-    {
-      "de": "fast schwarzes Braun",
-      "en": "near black brown",
-      "ko": "거의 검은 갈색"
     },
     {
       "de": "FATEs",
@@ -1152,6 +1237,31 @@
       "de": "FC",
       "en": "FC",
       "ko": "자유부대"
+    },
+    {
+      "de": "FF14 Accessibility Version {version.Replace(\".\", \" Punkt \")} bereit.",
+      "en": "FF14 Accessibility version {version.Replace(\".\", \" point \")} ready.",
+      "ko": "FF14 접근성 {version.Replace(\".\", \" 점 \")} 버전 준비됨."
+    },
+    {
+      "de": "Fassung {version} eingespielt. Das Plugin lädt sich jetzt neu.",
+      "en": "Version {version} installed. The plugin is reloading now.",
+      "ko": "버전 {version} 설치됨. 플러그인을 다시 불러오는 중."
+    },
+    {
+      "de": "Fassung {version} ist die neueste.",
+      "en": "Version {version} is the latest.",
+      "ko": "버전 {version}이 최신임."
+    },
+    {
+      "de": "Fassung {version} ist verfügbar.",
+      "en": "Version {version} is available.",
+      "ko": "버전 {version} 사용 가능."
+    },
+    {
+      "de": "Fassung {version} jetzt einspielen",
+      "en": "Install version {version} now",
+      "ko": "버전 {version} 지금 설치"
     },
     {
       "de": "Favoriten.",
@@ -1197,6 +1307,36 @@
       "de": "Fertig mit {value}",
       "en": "Progress needed {value}",
       "ko": "필요 작업량 {value}"
+    },
+    {
+      "de": "Fliege zu {name}.",
+      "en": "Flying to {name}.",
+      "ko": "{name}까지 비행 중."
+    },
+    {
+      "de": "Fliegen beim Auto-Lauf aus. Es wird immer gelaufen.",
+      "en": "Flying during auto-walk off. It will always walk.",
+      "ko": "자동 이동 중 비행 꺼짐. 항상 걸어서 이동함."
+    },
+    {
+      "de": "Fliegen beim Auto-Lauf ein. Ruf dein Reittier und heb selbst ab, dann fliegt der Auto-Lauf.",
+      "en": "Flying during auto-walk on. Summon a mount and take off yourself, then auto-walk flies.",
+      "ko": "자동 이동 중 비행 켜짐. 탈것을 부르고 직접 떠오르면 자동 이동이 비행으로 진행됨."
+    },
+    {
+      "de": "Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt höher.",
+      "en": "Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is higher up.",
+      "ko": "비행 종료 후 착륙함. {direction} 방향으로 {MetersRemaining(distance)} 남음, 목적지가 더 높은 곳에 있음."
+    },
+    {
+      "de": "Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt tiefer.",
+      "en": "Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is further down.",
+      "ko": "비행 종료 후 착륙함. {direction} 방향으로 {MetersRemaining(distance)} 남음, 목적지가 더 낮은 곳에 있음."
+    },
+    {
+      "de": "Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}.",
+      "en": "Flight ended and landed. {MetersRemaining(distance)} to the {direction}.",
+      "ko": "비행 종료 후 착륙함. {direction} 방향으로 {MetersRemaining(distance)} 남음."
     },
     {
       "de": "Flächenwarnung an.",
@@ -1324,6 +1464,16 @@
       "ko": "기술 준비됨 안내 꺼짐."
     },
     {
+      "de": "Für diesen Job gibt es keine Anzeige.",
+      "en": "This job has no gauge.",
+      "ko": "이 직업은 게이지 없음."
+    },
+    {
+      "de": "Für diesen Ort ist kein Weg hinterlegt.",
+      "en": "No route is stored for this place.",
+      "ko": "해당 던전 경로 파일 없음."
+    },
+    {
       "de": "Für {monster} ist kein Ort bekannt.",
       "en": "No location known for {monster}.",
       "ko": "{monster} 서식 장소 정보 없음."
@@ -1344,19 +1494,9 @@
       "ko": "채널 묶음 전체 읽어 주기"
     },
     {
-      "de": "gebräunt",
-      "en": "tan",
-      "ko": "황갈색"
-    },
-    {
-      "de": "gedecktes",
-      "en": "deep",
-      "ko": "짙은"
-    },
-    {
-      "de": "gedämpftes",
-      "en": "muted",
-      "ko": "차분한"
+      "de": "Garuda bereit",
+      "en": "Garuda ready",
+      "ko": "가루다 준비됨"
     },
     {
       "de": "Gefahr",
@@ -1444,6 +1584,11 @@
       "ko": "집사"
     },
     {
+      "de": "Gelandet.",
+      "en": "Landed.",
+      "ko": "착륙함."
+    },
+    {
       "de": "Gelb",
       "en": "yellow",
       "ko": "노랑"
@@ -1479,16 +1624,6 @@
       "ko": "황금색"
     },
     {
-      "de": "goldblond",
-      "en": "golden blond",
-      "ko": "황금 금발"
-    },
-    {
-      "de": "grau",
-      "en": "grey",
-      "ko": "회색"
-    },
-    {
       "de": "Graugrün",
       "en": "sage",
       "ko": "회녹색"
@@ -1499,11 +1634,6 @@
       "ko": "파티"
     },
     {
-      "de": "gräuliches",
-      "en": "greyish",
-      "ko": "회색빛"
-    },
-    {
       "de": "Grün",
       "en": "green",
       "ko": "초록"
@@ -1512,11 +1642,6 @@
       "de": "Gürtel",
       "en": "Waist",
       "ko": "허리"
-    },
-    {
-      "de": "hellgrau",
-      "en": "light grey",
-      "ko": "밝은 회색"
     },
     {
       "de": "HP {hp} von {hpMax}, MP {Percent(mp, mpMax)} Prozent.",
@@ -1574,49 +1699,9 @@
       "ko": "주 메뉴"
     },
     {
-      "de": "hell",
-      "en": "fair",
-      "ko": "밝은 살빛"
-    },
-    {
       "de": "Hell (bisheriger Klang)",
       "en": "Bright (previous sound)",
       "ko": "맑은 소리 (이전 소리)"
-    },
-    {
-      "de": "hellbraun",
-      "en": "light brown",
-      "ko": "밝은 갈색"
-    },
-    {
-      "de": "helles",
-      "en": "light",
-      "ko": "밝은"
-    },
-    {
-      "de": "helles Aschgrau",
-      "en": "pale ashen",
-      "ko": "옅은 잿빛"
-    },
-    {
-      "de": "helles Beige",
-      "en": "light beige",
-      "ko": "밝은 베이지"
-    },
-    {
-      "de": "helles Blaugrau",
-      "en": "pale blue grey",
-      "ko": "옅은 청회색"
-    },
-    {
-      "de": "helles Rosé",
-      "en": "pale rose",
-      "ko": "옅은 장밋빛"
-    },
-    {
-      "de": "helles Seegrün",
-      "en": "pale sea green",
-      "ko": "옅은 바다 초록"
     },
     {
       "de": "Herstellbar {value}",
@@ -1632,6 +1717,21 @@
       "de": "Hier endet der begehbare Weg. Noch {MetersRemaining(distance)} nach {direction}, ich führe ab jetzt in Luftlinie.",
       "en": "This is where the walkable path ends. {MetersRemaining(distance)} to the {direction}; guiding in a straight line from here.",
       "ko": "걸어갈 수 있는 길이 여기서 끝남. {direction} 방향으로 {MetersRemaining(distance)} 남음. 여기부터는 직선으로 안내함."
+    },
+    {
+      "de": "Hier gibt es Flugstrecken.",
+      "en": "There are air routes here.",
+      "ko": "여기에 비행 경로 있음."
+    },
+    {
+      "de": "Hier kann nicht geflogen werden. In Städten, Dungeons und Innenräumen gibt es keine Flugstrecken.",
+      "en": "Flying is not possible here. Cities, dungeons and interiors have no air routes.",
+      "ko": "여기서는 비행할 수 없음. 도시, 던전, 실내에는 비행 경로가 없음."
+    },
+    {
+      "de": "Hier sind keine Reittiere erlaubt, also wird auch nicht geflogen.",
+      "en": "Mounts are not allowed here, so there is no flying either.",
+      "ko": "여기서는 탈것을 쓸 수 없으므로 비행도 안 됨."
     },
     {
       "de": "Himbeerrot",
@@ -1672,11 +1772,6 @@
       "de": "Hinweismeldungen",
       "en": "Notice messages",
       "ko": "알림 메시지"
-    },
-    {
-      "de": "honigblond",
-      "en": "honey blond",
-      "ko": "꿀빛 금발"
     },
     {
       "de": "Hände",
@@ -1724,6 +1819,11 @@
       "ko": "길이 막혀 더 못 감. 목적지까지 {MetersRemaining(distance)} 남기고 자동 이동 종료."
     },
     {
+      "de": "Ifrit bereit",
+      "en": "Ifrit ready",
+      "ko": "이프리트 준비됨"
+    },
+    {
       "de": "Im Beutel {value}",
       "en": "In bag {value}",
       "ko": "소지품에 {value}"
@@ -1749,6 +1849,11 @@
       "ko": "임무 입구"
     },
     {
+      "de": "Installiert: Fassung {version}",
+      "en": "Installed: version {version}",
+      "ko": "설치됨: 버전 {version}"
+    },
+    {
       "de": "Inventar ist leer.",
       "en": "Inventory is empty.",
       "ko": "소지품이 비어 있음."
@@ -1769,6 +1874,11 @@
       "ko": "토벌 대상"
     },
     {
+      "de": "Jagdziele der Gesellschaft",
+      "en": "Grand company targets",
+      "ko": "총사령부 토벌 대상"
+    },
+    {
       "de": "Jagdziele: {total} offen, keines in diesem Gebiet.",
       "en": "Hunting targets: {total} open, none in this area.",
       "ko": "토벌 대상, 남은 것 {total}종, 이 지역 없음"
@@ -1782,6 +1892,16 @@
       "de": "Japanisch",
       "en": "Japanese",
       "ko": "일본어"
+    },
+    {
+      "de": "Jetzt herunterladen",
+      "en": "Download now",
+      "ko": "지금 다운로드"
+    },
+    {
+      "de": "Job-Anzeige wieder verfügbar",
+      "en": "Job gauge back up",
+      "ko": "직업 게이지 복구됨"
     },
     {
       "de": "Job: ",
@@ -1834,11 +1954,6 @@
       "ko": "카드 대결이 열려 있지 않음."
     },
     {
-      "de": "kastanienbraun",
-      "en": "auburn",
-      "ko": "적갈색"
-    },
-    {
       "de": "Kategorie {name}.",
       "en": "Category {name}.",
       "ko": "분류 {name}."
@@ -1882,6 +1997,11 @@
       "de": "Kein Fenster fokussiert. {visibleCount} Fenster sichtbar, Liste im Log.",
       "en": "No window focused. {visibleCount} windows visible, list written to log.",
       "ko": "초점 받은 창 없음. 보이는 창 {visibleCount}개, 전체 목록은 로그에."
+    },
+    {
+      "de": "Kein Flugweg gefunden, ich laufe.",
+      "en": "No flight route found, walking instead.",
+      "ko": "비행 경로 없음. 걸어서 이동함."
     },
     {
       "de": "Kein Flüster-Partner zum Antworten.",
@@ -2159,6 +2279,11 @@
       "ko": "열린 알림 없음."
     },
     {
+      "de": "Keine offenen Jagdziele der Gesellschaft in diesem Rang.",
+      "en": "No open grand company targets in this rank.",
+      "ko": "이 단계에 남은 총사령부 토벌 대상 없음."
+    },
+    {
       "de": "Keine offenen Jagdziele in diesem Rang.",
       "en": "No open hunting targets in this rank.",
       "ko": "이 단계에 남은 토벌 대상 없음."
@@ -2239,19 +2364,19 @@
       "ko": "크리스탈, {needed}개 필요, 소지품에 {owned}개"
     },
     {
-      "de": "kräftiges",
-      "en": "vivid",
-      "ko": "선명한"
-    },
-    {
-      "de": "kupferrot",
-      "en": "copper red",
-      "ko": "구릿빛 빨강"
+      "de": "Lade Fassung {version}. Einen Moment.",
+      "en": "Downloading version {version}. One moment.",
+      "ko": "버전 {version} 내려받는 중. 잠시 대기."
     },
     {
       "de": "Laden",
       "en": "shop",
       "ko": "상점"
+    },
+    {
+      "de": "Lande.",
+      "en": "Landing.",
+      "ko": "착륙 중."
     },
     {
       "de": "Langsam",
@@ -2267,6 +2392,11 @@
       "de": "Laufe zu {name}.",
       "en": "Walking to {name}.",
       "ko": "{name}까지 이동 중."
+    },
+    {
+      "de": "Laut Spielstand fehlen dir hier noch Ätherströme.",
+      "en": "According to your progress you are still missing aether currents here.",
+      "ko": "진행 상황상 이 지역의 풍맥의 샘이 아직 부족함."
     },
     {
       "de": "Lautstärke AoE-Warnung",
@@ -2312,6 +2442,11 @@
       "de": "Leiste {bar}, Taste {key}",
       "en": "bar {bar}, key {key}",
       "ko": "{bar}번 단축바, {key} 키"
+    },
+    {
+      "de": "Letzte Station des Wegs.",
+      "en": "Last station of the route.",
+      "ko": "경로의 마지막 지점."
     },
     {
       "de": "Leuchten",
@@ -2399,11 +2534,6 @@
       "ko": "특징"
     },
     {
-      "de": "mittelgrau",
-      "en": "medium grey",
-      "ko": "중간 회색"
-    },
-    {
       "de": "NPC",
       "en": "NPC",
       "ko": "NPC"
@@ -2412,6 +2542,11 @@
       "de": "NPCs",
       "en": "NPCs",
       "ko": "NPC"
+    },
+    {
+      "de": "Nach Aktualisierung suchen",
+      "en": "Check for update",
+      "ko": "업데이트 확인"
     },
     {
       "de": "Nachlese",
@@ -2454,6 +2589,21 @@
       "ko": "접속 안 됨."
     },
     {
+      "de": "Nicht im Kampf oder während einer Laufstrecke. Bitte danach noch einmal.",
+      "en": "Not during combat or while a walk is running. Please try again afterwards.",
+      "ko": "전투 중이거나 자동 이동 중에는 안 됨. 끝난 뒤 다시 시도 필요."
+    },
+    {
+      "de": "Nichts bereit.",
+      "en": "Nothing ready.",
+      "ko": "준비된 것 없음."
+    },
+    {
+      "de": "Noch nicht erlernt.",
+      "en": "Not learned yet.",
+      "ko": "아직 체득 안 함."
+    },
+    {
       "de": "Noch {MetersRemaining(distance)}.",
       "en": "{MetersRemaining(distance)} remaining.",
       "ko": "{MetersRemaining(distance)} 남음."
@@ -2467,6 +2617,21 @@
       "de": "Norden",
       "en": "north",
       "ko": "북"
+    },
+    {
+      "de": "Norden",
+      "en": "North",
+      "ko": "북"
+    },
+    {
+      "de": "Nordosten",
+      "en": "Northeast",
+      "ko": "북동"
+    },
+    {
+      "de": "Nordwesten",
+      "en": "Northwest",
+      "ko": "북서"
     },
     {
       "de": "Normal",
@@ -2509,9 +2674,29 @@
       "ko": "확인"
     },
     {
+      "de": "Oliv",
+      "en": "olive",
+      "ko": "올리브"
+    },
+    {
+      "de": "Olivbraun",
+      "en": "olive brown",
+      "ko": "올리브 갈색"
+    },
+    {
       "de": "Online-Fenster. {rest}",
       "en": "Online window. {rest}",
       "ko": "온라인 창. {rest}"
+    },
+    {
+      "de": "Orange",
+      "en": "orange",
+      "ko": "주황"
+    },
+    {
+      "de": "Orangerot",
+      "en": "orange red",
+      "ko": "주황빛 빨강"
     },
     {
       "de": "Ort",
@@ -2521,6 +2706,11 @@
     {
       "de": "Osten",
       "en": "east",
+      "ko": "동"
+    },
+    {
+      "de": "Osten",
+      "en": "East",
       "ko": "동"
     },
     {
@@ -2547,6 +2737,26 @@
       "de": "Pfeile hoch und runter wechseln Option. Links und rechts ändern Wert oder Tab. Enter speichert, Escape verwirft, Strg+F1 für Hilfe.",
       "en": "Up and down arrows move between options. Left and right change value or tab. Enter saves, Escape discards, Ctrl+F1 for help.",
       "ko": "위아래 화살표는 항목 이동, 좌우 화살표는 값이나 탭 변경, 엔터는 저장, 이스케이프는 취소, 컨트롤 F1은 도움말."
+    },
+    {
+      "de": "Pfirsich",
+      "en": "peach",
+      "ko": "살구색"
+    },
+    {
+      "de": "Pink",
+      "en": "pink",
+      "ko": "분홍"
+    },
+    {
+      "de": "Platz {slot}, leer.",
+      "en": "Slot {slot}, empty.",
+      "ko": "{slot}번 칸, 비어 있음."
+    },
+    {
+      "de": "Platz {slot}, {name}, Nr. {number}.",
+      "en": "Slot {slot}, {name}, no. {number}.",
+      "ko": "{slot}번 칸, {name}, {number}번."
     },
     {
       "de": "Plugin-Liste nicht verfügbar.",
@@ -2719,6 +2929,26 @@
       "ko": "반지"
     },
     {
+      "de": "Rosébeige",
+      "en": "rosy beige",
+      "ko": "장밋빛 베이지"
+    },
+    {
+      "de": "Rot",
+      "en": "red",
+      "ko": "빨강"
+    },
+    {
+      "de": "Rotbraun",
+      "en": "reddish brown",
+      "ko": "붉은 갈색"
+    },
+    {
+      "de": "Rubin",
+      "en": "Ruby",
+      "ko": "루비"
+    },
+    {
       "de": "Rufen",
       "en": "Shout",
       "ko": "외치기"
@@ -2799,6 +3029,11 @@
       "ko": "보물상자"
     },
     {
+      "de": "Schatztruhe",
+      "en": "treasure coffer",
+      "ko": "보물상자"
+    },
+    {
       "de": "Schließen-Knopf reagiert nicht.",
       "en": "Close button not responding.",
       "ko": "닫기 버튼 응답 없음."
@@ -2824,6 +3059,11 @@
       "ko": "보물상자"
     },
     {
+      "de": "Seegrün",
+      "en": "sea green",
+      "ko": "바다 초록"
+    },
+    {
       "de": "Sehr langsam",
       "en": "Very slow",
       "ko": "매우 느림"
@@ -2832,6 +3072,11 @@
       "de": "Sehr schnell",
       "en": "Very fast",
       "ko": "매우 빠름"
+    },
+    {
+      "de": "Seite {page}",
+      "en": "Page {page}",
+      "ko": "{page}페이지"
     },
     {
       "de": "Seite {page}.",
@@ -2857,6 +3102,16 @@
       "de": "Slot {slot}",
       "en": "slot {slot}",
       "ko": "{slot}번 칸"
+    },
+    {
+      "de": "Smaragd",
+      "en": "emerald green",
+      "ko": "에메랄드 초록"
+    },
+    {
+      "de": "Smaragd",
+      "en": "Emerald",
+      "ko": "에메랄드"
     },
     {
       "de": "Sonde braucht Taste 12 der ersten Leiste frei.",
@@ -3009,9 +3264,29 @@
       "ko": "레벨 {level}. 다음 레벨까지 경험치 {left}."
     },
     {
+      "de": "Suche den Flugweg.",
+      "en": "Searching for a flight route.",
+      "ko": "비행 경로 탐색 중."
+    },
+    {
+      "de": "Suche nach einer neuen Fassung.",
+      "en": "Checking for a new version.",
+      "ko": "새 버전 확인 중."
+    },
+    {
       "de": "Suche.",
       "en": "Search.",
       "ko": "검색."
+    },
+    {
+      "de": "Suchpunkt {index} von {count}, {distance}, {direction}.",
+      "en": "search point {index} of {count}, {distance}, {direction}.",
+      "ko": "탐색 지점 {count}개 중 {index}번째, {distance}, {direction}."
+    },
+    {
+      "de": "Suchpunkt {index} von {count}, {spotName}, {distance}, {direction}.",
+      "en": "search point {index} of {count}, {spotName}, {distance}, {direction}.",
+      "ko": "탐색 지점 {count}개 중 {index}번째, {spotName}, {distance}, {direction}."
     },
     {
       "de": "System",
@@ -3027,6 +3302,21 @@
       "de": "Süden",
       "en": "south",
       "ko": "남"
+    },
+    {
+      "de": "Süden",
+      "en": "South",
+      "ko": "남"
+    },
+    {
+      "de": "Südosten",
+      "en": "Southeast",
+      "ko": "남동"
+    },
+    {
+      "de": "Südwesten",
+      "en": "Southwest",
+      "ko": "남서"
     },
     {
       "de": "Tasche {label}",
@@ -3079,6 +3369,11 @@
       "ko": "딥 던전"
     },
     {
+      "de": "Titan bereit",
+      "en": "Titan ready",
+      "ko": "타이탄 준비됨"
+    },
+    {
       "de": "Titelbildschirm",
       "en": "Title screen",
       "ko": "타이틀 화면"
@@ -3087,6 +3382,11 @@
       "de": "Ton-Beacon nicht verfügbar.",
       "en": "Audio beacon not available.",
       "ko": "알림음을 사용할 수 없음."
+    },
+    {
+      "de": "Topas",
+      "en": "Topaz",
+      "ko": "토파즈"
     },
     {
       "de": "Truhe {name}",
@@ -3102,6 +3402,11 @@
       "de": "Töne für Leben und Mana",
       "en": "Health and mana tones",
       "ko": "HP MP 신호음"
+    },
+    {
+      "de": "Türkis",
+      "en": "teal",
+      "ko": "청록"
     },
     {
       "de": "UI Dump auf Desktop gespeichert. {addonCount} Fenster, {nodeCount} Nodes.",
@@ -3154,6 +3459,11 @@
       "ko": "{name} 추적 중."
     },
     {
+      "de": "Verlosung: {name}{(count > 1 ? $\" mal {count}\" : \"\")}. {options}",
+      "en": "Loot roll: {name}{(count > 1 ? $\" times {count}\" : \"\")}. {options}",
+      "ko": "전리품 입찰: {name}{(count > 1 ? $\" {count}개\" : \"\")}. {options}"
+    },
+    {
       "de": "Verlosungs-Fenster im Fokus. Mit dem Nummernblock auswählen.",
       "en": "Loot roll window focused. Use the numpad to choose.",
       "ko": "전리품 입찰 창이 초점 받음. 숫자패드는 선택."
@@ -3174,6 +3484,11 @@
       "ko": "공격 주기 {seconds:0.0}초"
     },
     {
+      "de": "Violett",
+      "en": "violet",
+      "ko": "청보라"
+    },
+    {
       "de": "Von hier aus führt kein Weg zur Übergangsstelle.",
       "en": "No route to the crossing point from here.",
       "ko": "여기서 건너는 지점까지 가는 길이 없음."
@@ -3187,6 +3502,11 @@
       "de": "Waffe",
       "en": "Weapon",
       "ko": "주 무기"
+    },
+    {
+      "de": "Warmbraun",
+      "en": "warm brown",
+      "ko": "따뜻한 갈색"
     },
     {
       "de": "Warnstimme {value}.",
@@ -3254,6 +3574,11 @@
       "ko": "경로 찾기가 이미 진행 중. 잠시 뒤 다시 시도 필요."
     },
     {
+      "de": "Wegpunkt",
+      "en": "waypoint",
+      "ko": "경로 지점"
+    },
+    {
       "de": "Wegpunkt- und Ankunftston",
       "en": "Waypoint and arrival cues",
       "ko": "경유지와 도착 알림음"
@@ -3279,6 +3604,11 @@
       "ko": "부드러운 소리"
     },
     {
+      "de": "Weiter",
+      "en": "Next",
+      "ko": "다음"
+    },
+    {
       "de": "Weiter komme ich nicht, hier endet der begehbare Weg. Noch {MetersRemaining(distance)} nach {direction}.",
       "en": "This is as far as the walkable path goes. {MetersRemaining(distance)} to the {direction}.",
       "ko": "걸어갈 수 있는 길이 여기서 끝남. {direction} 방향으로 {MetersRemaining(distance)} 남음."
@@ -3299,9 +3629,29 @@
       "ko": "서"
     },
     {
+      "de": "Westen",
+      "en": "West",
+      "ko": "서"
+    },
+    {
       "de": "Wohngebiet. Wegenetz wird neu gebaut, damit die Häuser darin stehen.",
       "en": "Housing ward. Rebuilding the navigation mesh so it includes the houses.",
       "ko": "하우징 구역. 집이 포함되도록 길 정보를 다시 만드는 중."
+    },
+    {
+      "de": "Zauberbuch der Blaumagie, Reiter {tab} von {tabCount}.",
+      "en": "Blue magic spellbook, tab {tab} of {tabCount}.",
+      "ko": "청마도서, 탭 {tabCount}개 중 {tab}번째."
+    },
+    {
+      "de": "Zauberfeld {position}.",
+      "en": "Spell tile {position}.",
+      "ko": "기술 칸 {position}."
+    },
+    {
+      "de": "Ziegelrot",
+      "en": "brick red",
+      "ko": "벽돌빛 빨강"
     },
     {
       "de": "Ziel",
@@ -3332,6 +3682,11 @@
       "de": "Ziel-Lebenspunkte",
       "en": "Target health",
       "ko": "대상 HP"
+    },
+    {
+      "de": "Ziel-Leiste {bar}, {filled} von {total} belegt{(anyKey ? \"\" : \", keine Tasten zugewiesen\")}.",
+      "en": "Target bar {bar}, {filled} of {total} filled{(anyKey ? \"\" : \", no keys assigned\")}.",
+      "ko": "{bar}번 대상 단축바, {total} 중 {filled}칸 채워짐{(anyKey ? \"\" : \", 키 없음\")}."
     },
     {
       "de": "Ziel-{slotLabel}: {current}",
@@ -3384,6 +3739,16 @@
       "ko": "{target} 입구"
     },
     {
+      "de": "Zuletzt geladen: nie",
+      "en": "Last downloaded: never",
+      "ko": "마지막 다운로드: 없음"
+    },
+    {
+      "de": "Zuletzt geladen: {date}",
+      "en": "Last downloaded: {date}",
+      "ko": "마지막 다운로드: {date}"
+    },
+    {
       "de": "Zurzeit wird nichts verlost.",
       "en": "Nothing is being rolled for.",
       "ko": "지금 입찰 중인 것 없음."
@@ -3429,6 +3794,16 @@
       "ko": "다른 클래스가 필요"
     },
     {
+      "de": "anthrazit",
+      "en": "charcoal",
+      "ko": "짙은 잿빛"
+    },
+    {
+      "de": "aschblond",
+      "en": "ash blond",
+      "ko": "잿빛 금발"
+    },
+    {
       "de": "aus",
       "en": "off",
       "ko": "꺼짐"
@@ -3442,6 +3817,16 @@
       "de": "ausgewählt",
       "en": "selected",
       "ko": "선택됨"
+    },
+    {
+      "de": "benutzen",
+      "en": "interact",
+      "ko": "조작"
+    },
+    {
+      "de": "blasses",
+      "en": "pale",
+      "ko": "옅은"
     },
     {
       "de": "deine",
@@ -3474,6 +3859,56 @@
       "ko": "포기함"
     },
     {
+      "de": "dunkelblond",
+      "en": "dark blond",
+      "ko": "어두운 금발"
+    },
+    {
+      "de": "dunkelbraun",
+      "en": "dark brown",
+      "ko": "어두운 갈색"
+    },
+    {
+      "de": "dunkelgrau",
+      "en": "dark grey",
+      "ko": "어두운 회색"
+    },
+    {
+      "de": "dunkles",
+      "en": "dark",
+      "ko": "어두운"
+    },
+    {
+      "de": "dunkles Aschgrau",
+      "en": "dark ashen",
+      "ko": "어두운 잿빛"
+    },
+    {
+      "de": "dunkles Blaugrau",
+      "en": "dark blue grey",
+      "ko": "어두운 청회색"
+    },
+    {
+      "de": "dunkles Braun",
+      "en": "dark brown",
+      "ko": "어두운 갈색"
+    },
+    {
+      "de": "dunkles Rotbraun",
+      "en": "dark auburn",
+      "ko": "어두운 적갈색"
+    },
+    {
+      "de": "dunkles Seegrün",
+      "en": "dark sea green",
+      "ko": "어두운 바다 초록"
+    },
+    {
+      "de": "dunkles Weinrot",
+      "en": "dark wine red",
+      "ko": "어두운 포도줏빛 빨강"
+    },
+    {
       "de": "ein festes Hindernis",
       "en": "solid scenery",
       "ko": "단단한 장애물"
@@ -3487,6 +3922,41 @@
       "de": "eine unsichtbare Absperrung",
       "en": "an invisible barrier",
       "ko": "보이지 않는 차단막"
+    },
+    {
+      "de": "eisblasses Weiß",
+      "en": "ice pale white",
+      "ko": "얼음빛 흰색"
+    },
+    {
+      "de": "erdbeerblond",
+      "en": "strawberry blond",
+      "ko": "딸기빛 금발"
+    },
+    {
+      "de": "fast schwarz",
+      "en": "near black",
+      "ko": "거의 검정"
+    },
+    {
+      "de": "fast schwarzes Braun",
+      "en": "near black brown",
+      "ko": "거의 검은 갈색"
+    },
+    {
+      "de": "gebräunt",
+      "en": "tan",
+      "ko": "황갈색"
+    },
+    {
+      "de": "gedecktes",
+      "en": "deep",
+      "ko": "짙은"
+    },
+    {
+      "de": "gedämpftes",
+      "en": "muted",
+      "ko": "차분한"
     },
     {
       "de": "gegnerische",
@@ -3519,14 +3989,79 @@
       "ko": "기존, 고정 채널"
     },
     {
+      "de": "goldblond",
+      "en": "golden blond",
+      "ko": "황금 금발"
+    },
+    {
+      "de": "grau",
+      "en": "grey",
+      "ko": "회색"
+    },
+    {
+      "de": "gräuliches",
+      "en": "greyish",
+      "ko": "회색빛"
+    },
+    {
       "de": "hat Einstellungen",
       "en": "has settings",
       "ko": "설정 있음"
     },
     {
+      "de": "hell",
+      "en": "fair",
+      "ko": "밝은 살빛"
+    },
+    {
+      "de": "hellbraun",
+      "en": "light brown",
+      "ko": "밝은 갈색"
+    },
+    {
+      "de": "helles",
+      "en": "light",
+      "ko": "밝은"
+    },
+    {
+      "de": "helles Aschgrau",
+      "en": "pale ashen",
+      "ko": "옅은 잿빛"
+    },
+    {
+      "de": "helles Beige",
+      "en": "light beige",
+      "ko": "밝은 베이지"
+    },
+    {
+      "de": "helles Blaugrau",
+      "en": "pale blue grey",
+      "ko": "옅은 청회색"
+    },
+    {
+      "de": "helles Rosé",
+      "en": "pale rose",
+      "ko": "옅은 장밋빛"
+    },
+    {
+      "de": "helles Seegrün",
+      "en": "pale sea green",
+      "ko": "옅은 바다 초록"
+    },
+    {
+      "de": "hellgrau",
+      "en": "light grey",
+      "ko": "밝은 회색"
+    },
+    {
       "de": "hier",
       "en": "you are here",
       "ko": "현재 위치"
+    },
+    {
+      "de": "hier in diesem Gebiet. Das Spiel nennt keine genauere Stelle, such den Träger über die Kategorie Gegner.",
+      "en": "here in this area. The game names no closer spot; find the carrier via the enemy category.",
+      "ko": "이 지역에 있음. 게임이 더 정확한 위치를 알려주지 않으므로 적 분류에서 보유 몬스터를 찾아야 함."
     },
     {
       "de": "hinter links",
@@ -3539,9 +4074,29 @@
       "ko": "오른쪽 뒤"
     },
     {
+      "de": "honigblond",
+      "en": "honey blond",
+      "ko": "꿀빛 금발"
+    },
+    {
+      "de": "im Gebiet {zone}, {hops} Gebietswechsel entfernt.",
+      "en": "in the area {zone}, {hops} transition away.",
+      "ko": "{zone} 지역, 지역 이동 {hops}회 거리."
+    },
+    {
+      "de": "im Gebiet {zone}, {hops} Gebietswechsel entfernt.",
+      "en": "in the area {zone}, {hops} transitions away.",
+      "ko": "{zone} 지역, 지역 이동 {hops}회 거리."
+    },
+    {
       "de": "im Gebiet {zone}.",
       "en": "in the area {zone}.",
       "ko": "{zone} 지역."
+    },
+    {
+      "de": "in der Instanz {duty}.",
+      "en": "in the duty {duty}.",
+      "ko": "{duty} 임무에 있음."
     },
     {
       "de": "in der Nähe",
@@ -3554,6 +4109,16 @@
       "ko": "다른 지역."
     },
     {
+      "de": "kastanienbraun",
+      "en": "auburn",
+      "ko": "적갈색"
+    },
+    {
+      "de": "kein Fundort in der Welt, Belohnung aus dem Maskierten Karneval oder Startzauber.",
+      "en": "no location in the world; a Masked Carnivale reward or the starting spell.",
+      "ko": "세계에 위치 없음. Masked Carnivale 보상이거나 처음부터 체득하는 기술."
+    },
+    {
       "de": "kein Laufweg dorthin.",
       "en": "no walking route there.",
       "ko": "걸어갈 경로 없음."
@@ -3562,6 +4127,16 @@
       "de": "kein Weg bekannt",
       "en": "no route known",
       "ko": "아는 길 없음"
+    },
+    {
+      "de": "kräftiges",
+      "en": "vivid",
+      "ko": "선명한"
+    },
+    {
+      "de": "kupferrot",
+      "en": "copper red",
+      "ko": "구릿빛 빨강"
     },
     {
       "de": "lebt in {area}",
@@ -3597,6 +4172,11 @@
       "de": "links",
       "en": "left",
       "ko": "왼쪽"
+    },
+    {
+      "de": "mittelgrau",
+      "en": "medium grey",
+      "ko": "중간 회색"
     },
     {
       "de": "männlich",
@@ -3644,21 +4224,6 @@
       "ko": "{seconds}초 남음"
     },
     {
-      "de": "Norden",
-      "en": "North",
-      "ko": "북"
-    },
-    {
-      "de": "Nordosten",
-      "en": "Northeast",
-      "ko": "북동"
-    },
-    {
-      "de": "Nordwesten",
-      "en": "Northwest",
-      "ko": "북서"
-    },
-    {
       "de": "nordwestlich",
       "en": "northwest",
       "ko": "북서"
@@ -3694,44 +4259,9 @@
       "ko": "위 {up}, 오른쪽 {right}, 아래 {down}, 왼쪽 {left}"
     },
     {
-      "de": "Oliv",
-      "en": "olive",
-      "ko": "올리브"
-    },
-    {
       "de": "oliv ",
       "en": "olive ",
       "ko": "올리브빛 "
-    },
-    {
-      "de": "Olivbraun",
-      "en": "olive brown",
-      "ko": "올리브 갈색"
-    },
-    {
-      "de": "Orange",
-      "en": "orange",
-      "ko": "주황"
-    },
-    {
-      "de": "Orangerot",
-      "en": "orange red",
-      "ko": "주황빛 빨강"
-    },
-    {
-      "de": "Osten",
-      "en": "East",
-      "ko": "동"
-    },
-    {
-      "de": "Pfirsich",
-      "en": "peach",
-      "ko": "살구색"
-    },
-    {
-      "de": "Pink",
-      "en": "pink",
-      "ko": "분홍"
     },
     {
       "de": "platinblond",
@@ -3764,24 +4294,9 @@
       "ko": "장밋빛 "
     },
     {
-      "de": "Rosébeige",
-      "en": "rosy beige",
-      "ko": "장밋빛 베이지"
-    },
-    {
-      "de": "Rot",
-      "en": "red",
-      "ko": "빨강"
-    },
-    {
       "de": "rot",
       "en": "red",
       "ko": "빨강"
-    },
-    {
-      "de": "Rotbraun",
-      "en": "reddish brown",
-      "ko": "붉은 갈색"
     },
     {
       "de": "schokobraun",
@@ -3797,11 +4312,6 @@
       "de": "schwarz",
       "en": "black",
       "ko": "검정"
-    },
-    {
-      "de": "Seegrün",
-      "en": "sea green",
-      "ko": "바다 초록"
     },
     {
       "de": "sehr blasses",
@@ -3854,34 +4364,19 @@
       "ko": "은회색"
     },
     {
-      "de": "Smaragd",
-      "en": "emerald green",
-      "ko": "에메랄드 초록"
-    },
-    {
       "de": "sofort",
       "en": "now",
       "ko": "지금"
     },
     {
-      "de": "Süden",
-      "en": "South",
-      "ko": "남"
+      "de": "springen",
+      "en": "jump",
+      "ko": "점프"
     },
     {
       "de": "südlich",
       "en": "south",
       "ko": "남"
-    },
-    {
-      "de": "Südosten",
-      "en": "Southeast",
-      "ko": "남동"
-    },
-    {
-      "de": "Südwesten",
-      "en": "Southwest",
-      "ko": "남서"
     },
     {
       "de": "südwestlich",
@@ -3892,11 +4387,6 @@
       "de": "südöstlich",
       "en": "southeast",
       "ko": "남동"
-    },
-    {
-      "de": "Türkis",
-      "en": "teal",
-      "ko": "청록"
     },
     {
       "de": "unverändert",
@@ -3914,19 +4404,9 @@
       "ko": "숨겨짐"
     },
     {
-      "de": "Violett",
-      "en": "violet",
-      "ko": "청보라"
-    },
-    {
       "de": "vom Spiel geändert",
       "en": "changed by the game",
       "ko": "게임이 바꿈"
-    },
-    {
-      "de": "Warmbraun",
-      "en": "warm brown",
-      "ko": "따뜻한 갈색"
     },
     {
       "de": "warmes Beige",
@@ -3944,29 +4424,19 @@
       "ko": "여성"
     },
     {
-      "de": "weiß",
-      "en": "white",
-      "ko": "흰색"
-    },
-    {
       "de": "weitere Vergütung",
       "en": "further reward",
       "ko": "추가 보상"
     },
     {
-      "de": "Westen",
-      "en": "West",
-      "ko": "서"
+      "de": "weiß",
+      "en": "white",
+      "ko": "흰색"
     },
     {
       "de": "westlich",
       "en": "west",
       "ko": "서"
-    },
-    {
-      "de": "Ziegelrot",
-      "en": "brick red",
-      "ko": "벽돌빛 빨강"
     },
     {
       "de": "{(int)MathF.Round(volume * 100)} Prozent",
@@ -3999,9 +4469,19 @@
       "ko": "{category}, 비어 있음"
     },
     {
+      "de": "{category}, {count} {(count == 1 ? \"Nachricht\" : \"Nachrichten\")}",
+      "en": "{category}, {count} {(count == 1 ? \"message\" : \"messages\")}",
+      "ko": "{category}, 메시지 {count}개{(count == 1 ? \"\" : \"\")}"
+    },
+    {
       "de": "{confirm} oder {cancel}? Links und rechts wechseln, Enter wählt aus.",
       "en": "{confirm} or {cancel}? Left and right to switch, Enter to select.",
       "ko": "{confirm} 또는 {cancel}? 좌우 방향키는 선택, 엔터는 확정."
+    },
+    {
+      "de": "{conflictCount} Tastenkonflikte.",
+      "en": "{conflictCount} key conflicts.",
+      "ko": "키 충돌 {conflictCount}개."
     },
     {
       "de": "{count} Angelplätze: {joined}.",
@@ -4064,9 +4544,24 @@
       "ko": "{enemy}, {action} 시전."
     },
     {
+      "de": "{files} Dungeon-Wege geladen.",
+      "en": "{files} dungeon routes loaded.",
+      "ko": "던전 경로 {files}개 다운로드됨."
+    },
+    {
       "de": "{group}, {index} von {count}",
       "en": "{group}, {index} of {count}",
       "ko": "{group}, {count} 중 {index}"
+    },
+    {
+      "de": "{heading}, {count} {(count == 1 ? \"Einstellung\" : \"Einstellungen\")}",
+      "en": "{heading}, {count} {(count == 1 ? \"setting\" : \"settings\")}",
+      "ko": "{heading}, 설정 {count}개{(count == 1 ? \"\" : \"\")}"
+    },
+    {
+      "de": "{head}, ausgewählt.",
+      "en": "{head}, selected.",
+      "ko": "{head}, 선택됨."
     },
     {
       "de": "{head}{body}Auswahl unbekannt",
@@ -4082,6 +4577,11 @@
       "de": "{head}{colour}, {pos}Gruppe {group} Ton {shade}",
       "en": "{head}{colour}, {pos}group {group} shade {shade}",
       "ko": "{head}{colour}, {pos}{group}번 묶음 {shade}번 색조"
+    },
+    {
+      "de": "{items.Count} passende Gegenstände: {string.Join(\", \", items)}. Auswählen und dann Übergeben drücken.",
+      "en": "{items.Count} matching items: {string.Join(\", \", items)}. Select one, then press Hand Over.",
+      "ko": "맞는 아이템 {items.Count}개: {string.Join(\", \", items)}. 선택한 다음 건네주기 누르기."
     },
     {
       "de": "{item}, {index} von {count}",
@@ -4102,6 +4602,16 @@
       "de": "{label} bleibt auf {index} von {count}.",
       "en": "{label} stays at {index} of {count}.",
       "ko": "{label} 그대로, {count} 중 {index}."
+    },
+    {
+      "de": "{label} {number}, {(on ? \"an\" : \"aus\")}",
+      "en": "{label} {number}, {(on ? \"on\" : \"off\")}",
+      "ko": "{label} {number}, {(on ? \"켜짐\" : \"꺼짐\")}"
+    },
+    {
+      "de": "{label} {number}, {what}, {(on ? \"an\" : \"aus\")}",
+      "en": "{label} {number}, {what}, {(on ? \"on\" : \"off\")}",
+      "ko": "{label} {number}, {what}, {(on ? \"켜짐\" : \"꺼짐\")}"
     },
     {
       "de": "{label}, Auswahlliste, {value}.",
@@ -4134,6 +4644,11 @@
       "ko": "{label}, 탭 {count} 중 {index}"
     },
     {
+      "de": "{label}, Taste {string.Join(\", \", keys)}",
+      "en": "{label}, key {string.Join(\", \", keys)}",
+      "ko": "{label}, 키 {string.Join(\", \", keys)}"
+    },
+    {
       "de": "{label}, jetzt {index} von {count}.",
       "en": "{label}, now {index} of {count}.",
       "ko": "{label}, 지금 {count} 중 {index}."
@@ -4142,6 +4657,11 @@
       "de": "{label}, keine Taste",
       "en": "{label}, no key",
       "ko": "{label}, 키 없음"
+    },
+    {
+      "de": "{label}, nicht verfügbar",
+      "en": "{label}, unavailable",
+      "ko": "{label}, 사용 불가"
     },
     {
       "de": "{label}, {count} Einträge",
@@ -4184,6 +4704,16 @@
       "ko": "{label}, {here}"
     },
     {
+      "de": "{label}: {total} offen, keines in diesem Gebiet.",
+      "en": "{label}: {total} open, none in this area.",
+      "ko": "{label}: {total}개 남음, 이 지역에는 없음."
+    },
+    {
+      "de": "{label}: {total} offen, {here} in diesem Gebiet.",
+      "en": "{label}: {total} open, {here} in this area.",
+      "ko": "{label}: {total}개 남음, 이 지역에 {here}개."
+    },
+    {
       "de": "{level}, nicht tragbar, {reason}",
       "en": "{level}, not wearable, {reason}",
       "ko": "{level}, 착용 불가, {reason}"
@@ -4192,6 +4722,11 @@
       "de": "{level}, tragbar",
       "en": "{level}, wearable",
       "ko": "{level}, 착용 가능"
+    },
+    {
+      "de": "{monster} in Reichweite, {distance}, {direction}.",
+      "en": "{monster} in range, {distance}, {direction}.",
+      "ko": "{monster} 범위 안, {distance}, {direction}."
     },
     {
       "de": "{monster} lebt in {area}. Dieses Gebiet ist auf der Karte nicht verzeichnet.",
@@ -4264,14 +4799,39 @@
       "ko": "{name} {quantity}개{hqSuffix}"
     },
     {
+      "de": "{name} {(on ? \"an\" : \"aus\")}.",
+      "en": "{name} {(on ? \"on\" : \"off\")}.",
+      "ko": "{name} {(on ? \"켜짐\" : \"꺼짐\")}."
+    },
+    {
+      "de": "{name} {(v < 0 ? \"minus\" : \"plus\")} {Math.Abs(v)}",
+      "en": "{name} {(v < 0 ? \"minus\" : \"plus\")} {Math.Abs(v)}",
+      "ko": "{name} {(v < 0 ? \"마이너스\" : \"플러스\")} {Math.Abs(v)}"
+    },
+    {
+      "de": "{name}, Nr. {number}",
+      "en": "{name}, no. {number}",
+      "ko": "{name}, {number}번"
+    },
+    {
       "de": "{name}, Stufe {level}",
       "en": "{name}, level {level}",
       "ko": "{name}, 레벨 {level}"
     },
     {
+      "de": "{name}, Stufe {level}, {(preparing ? \"startet gleich\" : $\"{progress} Prozent\")}",
+      "en": "{name}, level {level}, {(preparing ? \"starting soon\" : $\"{progress} percent\")}",
+      "ko": "{name}, 레벨 {level}, {(preparing ? \"곧 시작\" : $\"{progress} 퍼센트\")}"
+    },
+    {
       "de": "{name}, Stufe {level}, {distance:F0} Meter {compass}",
       "en": "{name}, level {level}, {distance:F0} meters {compass}",
       "ko": "{name}, 레벨 {level}, {compass} 방향 {distance:F0}미터"
+    },
+    {
+      "de": "{name}, Stufe {level}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "en": "{name}, level {level}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
+      "ko": "{name}, 레벨 {level}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
     },
     {
       "de": "{name}, aus",
@@ -4284,6 +4844,11 @@
       "ko": "{name}, {(int)MathF.Round(volume * 100)} 퍼센트"
     },
     {
+      "de": "{name}, {(on ? \"an\" : \"aus\")}",
+      "en": "{name}, {(on ? \"on\" : \"off\")}",
+      "ko": "{name}, {(on ? \"켜짐\" : \"꺼짐\")}"
+    },
+    {
       "de": "{name}, {needed} benötigt, {nq} NQ, {hq} HQ",
       "en": "{name}, {needed} needed, {nq} NQ, {hq} HQ",
       "ko": "{name}, {needed} 필요, NQ {nq}, HQ {hq}"
@@ -4294,9 +4859,49 @@
       "ko": "{name}, 군표 {price}, 보유 {owned}"
     },
     {
+      "de": "{name}, {quantity} Stück{(castTime > 0 ? $\", Wirkzeit {castTime} Sekunden\" : \"\")}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "en": "{name}, {quantity}{(castTime > 0 ? $\", cast time {castTime} seconds\" : \"\")}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
+      "ko": "{name}, {quantity}{(castTime > 0 ? $\", 시전 시간 {castTime}초\" : \"\")}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+    },
+    {
       "de": "{name}, {value}",
       "en": "{name}, {value}",
       "ko": "{name}, {value}"
+    },
+    {
+      "de": "{name}{(command.Length > 0 ? $\", Befehl {command}\" : \"\")}, {index} von {count}",
+      "en": "{name}{(command.Length > 0 ? $\", command {command}\" : \"\")}, {index} of {count}",
+      "ko": "{name}{(command.Length > 0 ? $\", 명령어 {command}\" : \"\")}, {count} 중 {index}"
+    },
+    {
+      "de": "{name}{(count > 1 ? $\" mal {count}\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}",
+      "en": "{name}{(count > 1 ? $\" times {count}\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}",
+      "ko": "{name}{(count > 1 ? $\" {count}개\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}"
+    },
+    {
+      "de": "{name}{(isHq ? HighQuality : \"\")}, {quantity} Stück{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "en": "{name}{(isHq ? HighQuality : \"\")}, {quantity}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
+      "ko": "{name}{(isHq ? HighQuality : \"\")}, {quantity}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+    },
+    {
+      "de": "{name}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "en": "{name}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
+      "ko": "{name}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+    },
+    {
+      "de": "{number} von {total}",
+      "en": "{number} of {total}",
+      "ko": "{number}번 {total}개 중"
+    },
+    {
+      "de": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"in beide Richtungen\" : \"nur in Laufrichtung\")}.",
+      "en": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"both ways\" : \"one way only\")}.",
+      "ko": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"양방향\" : \"걸어간 방향으로만\")}."
+    },
+    {
+      "de": "{n} Materia-Slots",
+      "en": "{n} materia slots",
+      "ko": "마테리아 {n}칸"
     },
     {
       "de": "{n} gesperrt",
@@ -4312,6 +4917,11 @@
       "de": "{n} veraltet",
       "en": "{n} outdated",
       "ko": "{n}개 구버전"
+    },
+    {
+      "de": "{option}, {index} von {count}{(selected ? \", ausgewählt\" : \"\")}",
+      "en": "{option}, {index} of {count}{(selected ? \", selected\" : \"\")}",
+      "ko": "{option}, {count} 중 {index}{(selected ? \", 선택됨\" : \"\")}"
     },
     {
       "de": "{owner}: derzeit {now}, danach {after}.",
@@ -4374,6 +4984,21 @@
       "ko": "{slot}: {action}"
     },
     {
+      "de": "{spell} gibt es in {duty}. Zu diesem Eingang ist kein Ort hinterlegt.",
+      "en": "{spell} is found in {duty}. No location is recorded for that entrance.",
+      "ko": "{spell}, {duty} 임무에 있음. 그 입구의 위치는 기록되어 있지 않음."
+    },
+    {
+      "de": "{spell} gibt es in {zone}. Dorthin führt kein Weg über Gebietsübergänge.",
+      "en": "{spell} is found in {zone}. No route there over zone transitions.",
+      "ko": "{spell}, {zone}에 있음. 지역 이동으로 가는 길 없음."
+    },
+    {
+      "de": "{spell}, Nr. {number}",
+      "en": "{spell}, no. {number}",
+      "ko": "{spell}, {number}번"
+    },
+    {
       "de": "{tabName}, alles",
       "en": "{tabName}, all",
       "ko": "{tabName}, 전체"
@@ -4399,6 +5024,11 @@
       "ko": "{type}, 레벨 {level}"
     },
     {
+      "de": "{what}, {(on ? \"an\" : \"aus\")}",
+      "en": "{what}, {(on ? \"on\" : \"off\")}",
+      "ko": "{what}, {(on ? \"켜짐\" : \"꺼짐\")}"
+    },
+    {
       "de": "{whole} Sekunden",
       "en": "{whole} seconds",
       "ko": "{whole}초"
@@ -4407,6 +5037,11 @@
       "de": "Änderungen verworfen",
       "en": "Changes discarded",
       "ko": "변경 취소됨"
+    },
+    {
+      "de": "Ätherfluss bereit",
+      "en": "Aetherflow ready",
+      "ko": "에테르 순환 준비됨"
     },
     {
       "de": "Ätheryt",
@@ -4457,326 +5092,6 @@
       "de": "Übung gestartet.",
       "en": "Exercise started.",
       "ko": "훈련 시작됨."
-    },
-    {
-      "de": "Dungeon: {total} Stationen, weiter bei {next}.",
-      "en": "Dungeon: {total} stations, continuing at {next}.",
-      "ko": "던전 지점 {total}개. 지금 {next}번."
-    },
-    {
-      "de": "Für diesen Ort ist kein Weg hinterlegt.",
-      "en": "No route is stored for this place.",
-      "ko": "해당 던전 경로 파일 없음."
-    },
-    {
-      "de": "Wegpunkt",
-      "en": "waypoint",
-      "ko": "경로 지점"
-    },
-    {
-      "de": "benutzen",
-      "en": "interact",
-      "ko": "조작"
-    },
-    {
-      "de": "Boss",
-      "en": "boss",
-      "ko": "보스"
-    },
-    {
-      "de": "Schatztruhe",
-      "en": "treasure coffer",
-      "ko": "보물상자"
-    },
-    {
-      "de": "springen",
-      "en": "jump",
-      "ko": "점프"
-    },
-    {
-      "de": "{number} von {total}",
-      "en": "{number} of {total}",
-      "ko": "{number}번 {total}개 중"
-    },
-    {
-      "de": "Letzte Station des Wegs.",
-      "en": "Last station of the route.",
-      "ko": "경로의 마지막 지점."
-    },
-    {
-      "de": " Dabei {up:F0} Meter aufwärts und {down:F0} Meter abwärts.",
-      "en": " Along the way {up:F0} meters up and {down:F0} meters down.",
-      "ko": " 오르막 {up:F0}미터, 내리막 {down:F0}미터."
-    },
-    {
-      "de": " Dabei {up:F0} Meter aufwärts.",
-      "en": " Along the way {up:F0} meters up.",
-      "ko": " 오르막 {up:F0}미터."
-    },
-    {
-      "de": " Dabei {down:F0} Meter abwärts.",
-      "en": " Along the way {down:F0} meters down.",
-      "ko": " 내리막 {down:F0}미터."
-    },
-    {
-      "de": "Dungeon",
-      "en": "Dungeon",
-      "ko": "던전"
-    },
-    {
-      "de": "Dungeon-Wege, {files} geladen",
-      "en": "Dungeon routes, {files} loaded",
-      "ko": "던전 경로, {files}개 있음"
-    },
-    {
-      "de": "Dungeon-Wege",
-      "en": "Dungeon routes",
-      "ko": "던전 경로"
-    },
-    {
-      "de": "Jetzt herunterladen",
-      "en": "Download now",
-      "ko": "지금 다운로드"
-    },
-    {
-      "de": "Automatisch herunterladen",
-      "en": "Download automatically",
-      "ko": "자동 다운로드"
-    },
-    {
-      "de": "Dungeon-Wege werden geladen.",
-      "en": "Downloading dungeon routes.",
-      "ko": "던전 경로 다운로드 중."
-    },
-    {
-      "de": "{files} Dungeon-Wege geladen.",
-      "en": "{files} dungeon routes loaded.",
-      "ko": "던전 경로 {files}개 다운로드됨."
-    },
-    {
-      "de": "Dungeon-Wege konnten nicht geladen werden. Sieh ins Log.",
-      "en": "Dungeon routes could not be downloaded. Check the log.",
-      "ko": "던전 경로 다운로드 실패. 로그 확인 필요."
-    },
-    {
-      "de": "Zuletzt geladen: nie",
-      "en": "Last downloaded: never",
-      "ko": "마지막 다운로드: 없음"
-    },
-    {
-      "de": "Zuletzt geladen: {date}",
-      "en": "Last downloaded: {date}",
-      "ko": "마지막 다운로드: {date}"
-    },
-    {
-      "de": "Nichts bereit.",
-      "en": "Nothing ready.",
-      "ko": "준비된 것 없음."
-    },
-    {
-      "de": "{name}, {(on ? \"an\" : \"aus\")}",
-      "en": "{name}, {(on ? \"on\" : \"off\")}",
-      "ko": "{name}, {(on ? \"켜짐\" : \"꺼짐\")}"
-    },
-    {
-      "de": "{name} {(on ? \"an\" : \"aus\")}.",
-      "en": "{name} {(on ? \"on\" : \"off\")}.",
-      "ko": "{name} {(on ? \"켜짐\" : \"꺼짐\")}."
-    },
-    {
-      "de": "Job-Anzeige wieder verfügbar",
-      "en": "Job gauge back up",
-      "ko": "직업 게이지 복구됨"
-    },
-    {
-      "de": "1 Tastenkonflikt.",
-      "en": "1 key conflict.",
-      "ko": "키 충돌 1개."
-    },
-    {
-      "de": "{conflictCount} Tastenkonflikte.",
-      "en": "{conflictCount} key conflicts.",
-      "ko": "키 충돌 {conflictCount}개."
-    },
-    {
-      "de": "{name}, Stufe {level}, {(preparing ? \"startet gleich\" : $\"{progress} Prozent\")}",
-      "en": "{name}, level {level}, {(preparing ? \"starting soon\" : $\"{progress} percent\")}",
-      "ko": "{name}, 레벨 {level}, {(preparing ? \"곧 시작\" : $\"{progress} 퍼센트\")}"
-    },
-    {
-      "de": ", {count} Einträge{(selection.Length > 0 ? $\": {selection}\" : string.Empty)}",
-      "en": ", {count} entries{(selection.Length > 0 ? $\": {selection}\" : string.Empty)}",
-      "ko": ", 항목 {count}개{(selection.Length > 0 ? $\": {selection}\" : string.Empty)}"
-    },
-    {
-      "de": "{items.Count} passende Gegenstände: {string.Join(\", \", items)}. Auswählen und dann Übergeben drücken.",
-      "en": "{items.Count} matching items: {string.Join(\", \", items)}. Select one, then press Hand Over.",
-      "ko": "맞는 아이템 {items.Count}개: {string.Join(\", \", items)}. 선택한 다음 건네주기 누르기."
-    },
-    {
-      "de": "{heading}, {count} {(count == 1 ? \"Einstellung\" : \"Einstellungen\")}",
-      "en": "{heading}, {count} {(count == 1 ? \"setting\" : \"settings\")}",
-      "ko": "{heading}, 설정 {count}개{(count == 1 ? \"\" : \"\")}"
-    },
-    {
-      "de": " Gegenstand: ",
-      "en": " item: ",
-      "ko": " 아이템: "
-    },
-    {
-      "de": " Gegenstände: ",
-      "en": " items: ",
-      "ko": " 아이템: "
-    },
-    {
-      "de": "{option}, {index} von {count}{(selected ? \", ausgewählt\" : \"\")}",
-      "en": "{option}, {index} of {count}{(selected ? \", selected\" : \"\")}",
-      "ko": "{option}, {count} 중 {index}{(selected ? \", 선택됨\" : \"\")}"
-    },
-    {
-      "de": "{label}, Taste {string.Join(\", \", keys)}",
-      "en": "{label}, key {string.Join(\", \", keys)}",
-      "ko": "{label}, 키 {string.Join(\", \", keys)}"
-    },
-    {
-      "de": ", für deine Klasse {classes}",
-      "en": ", for your {classes}",
-      "ko": ", 내 {classes}용"
-    },
-    {
-      "de": ", für deine Klassen {classes}",
-      "en": ", for your classes {classes}",
-      "ko": ", 내 {classes}용"
-    },
-    {
-      "de": "{name} {(v < 0 ? \"minus\" : \"plus\")} {Math.Abs(v)}",
-      "en": "{name} {(v < 0 ? \"minus\" : \"plus\")} {Math.Abs(v)}",
-      "ko": "{name} {(v < 0 ? \"마이너스\" : \"플러스\")} {Math.Abs(v)}"
-    },
-    {
-      "de": "1 Materia-Slot",
-      "en": "1 materia slot",
-      "ko": "마테리아 1칸"
-    },
-    {
-      "de": "{n} Materia-Slots",
-      "en": "{n} materia slots",
-      "ko": "마테리아 {n}칸"
-    },
-    {
-      "de": "FF14 Accessibility Version {version.Replace(\".\", \" Punkt \")} bereit.",
-      "en": "FF14 Accessibility version {version.Replace(\".\", \" point \")} ready.",
-      "ko": "FF14 접근성 {version.Replace(\".\", \" 점 \")} 버전 준비됨."
-    },
-    {
-      "de": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"in beide Richtungen\" : \"nur in Laufrichtung\")}.",
-      "en": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"both ways\" : \"one way only\")}.",
-      "ko": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"양방향\" : \"걸어간 방향으로만\")}."
-    },
-    {
-      "de": "Ziel-Leiste {bar}, {filled} von {total} belegt{(anyKey ? \"\" : \", keine Tasten zugewiesen\")}.",
-      "en": "Target bar {bar}, {filled} of {total} filled{(anyKey ? \"\" : \", no keys assigned\")}.",
-      "ko": "{bar}번 대상 단축바, {total} 중 {filled}칸 채워짐{(anyKey ? \"\" : \", 키 없음\")}."
-    },
-    {
-      "de": "{name}, Stufe {level}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
-      "en": "{name}, level {level}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
-      "ko": "{name}, 레벨 {level}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
-    },
-    {
-      "de": "{name}{(isHq ? HighQuality : \"\")}, {quantity} Stück{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
-      "en": "{name}{(isHq ? HighQuality : \"\")}, {quantity}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
-      "ko": "{name}{(isHq ? HighQuality : \"\")}, {quantity}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
-    },
-    {
-      "de": "{name}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
-      "en": "{name}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
-      "ko": "{name}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
-    },
-    {
-      "de": "{name}, {quantity} Stück{(castTime > 0 ? $\", Wirkzeit {castTime} Sekunden\" : \"\")}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
-      "en": "{name}, {quantity}{(castTime > 0 ? $\", cast time {castTime} seconds\" : \"\")}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
-      "ko": "{name}, {quantity}{(castTime > 0 ? $\", 시전 시간 {castTime}초\" : \"\")}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
-    },
-    {
-      "de": "Ifrit bereit",
-      "en": "Ifrit ready",
-      "ko": "이프리트 준비됨"
-    },
-    {
-      "de": "Titan bereit",
-      "en": "Titan ready",
-      "ko": "타이탄 준비됨"
-    },
-    {
-      "de": "Garuda bereit",
-      "en": "Garuda ready",
-      "ko": "가루다 준비됨"
-    },
-    {
-      "de": "Ätherfluss bereit",
-      "en": "Aetherflow ready",
-      "ko": "에테르 순환 준비됨"
-    },
-    {
-      "de": "Rubin",
-      "en": "Ruby",
-      "ko": "루비"
-    },
-    {
-      "de": "Topas",
-      "en": "Topaz",
-      "ko": "토파즈"
-    },
-    {
-      "de": "Smaragd",
-      "en": "Emerald",
-      "ko": "에메랄드"
-    },
-    {
-      "de": "Einstimmung",
-      "en": "attunement",
-      "ko": "속성"
-    },
-    {
-      "de": "Für diesen Job gibt es keine Anzeige.",
-      "en": "This job has no gauge.",
-      "ko": "이 직업은 게이지 없음."
-    },
-    {
-      "de": "{name}{(command.Length > 0 ? $\", Befehl {command}\" : \"\")}, {index} von {count}",
-      "en": "{name}{(command.Length > 0 ? $\", command {command}\" : \"\")}, {index} of {count}",
-      "ko": "{name}{(command.Length > 0 ? $\", 명령어 {command}\" : \"\")}, {count} 중 {index}"
-    },
-    {
-      "de": "Verlosung: {name}{(count > 1 ? $\" mal {count}\" : \"\")}. {options}",
-      "en": "Loot roll: {name}{(count > 1 ? $\" times {count}\" : \"\")}. {options}",
-      "ko": "전리품 입찰: {name}{(count > 1 ? $\" {count}개\" : \"\")}. {options}"
-    },
-    {
-      "de": "{name}{(count > 1 ? $\" mal {count}\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}",
-      "en": "{name}{(count > 1 ? $\" times {count}\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}",
-      "ko": "{name}{(count > 1 ? $\" {count}개\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}"
-    },
-    {
-      "de": "{category}, {count} {(count == 1 ? \"Nachricht\" : \"Nachrichten\")}",
-      "en": "{category}, {count} {(count == 1 ? \"message\" : \"messages\")}",
-      "ko": "{category}, 메시지 {count}개{(count == 1 ? \"\" : \"\")}"
-    },
-    {
-      "de": "{label} {number}, {(on ? \"an\" : \"aus\")}",
-      "en": "{label} {number}, {(on ? \"on\" : \"off\")}",
-      "ko": "{label} {number}, {(on ? \"켜짐\" : \"꺼짐\")}"
-    },
-    {
-      "de": "{label} {number}, {what}, {(on ? \"an\" : \"aus\")}",
-      "en": "{label} {number}, {what}, {(on ? \"on\" : \"off\")}",
-      "ko": "{label} {number}, {what}, {(on ? \"켜짐\" : \"꺼짐\")}"
-    },
-    {
-      "de": "{what}, {(on ? \"an\" : \"aus\")}",
-      "en": "{what}, {(on ? \"on\" : \"off\")}",
-      "ko": "{what}, {(on ? \"켜짐\" : \"꺼짐\")}"
     },
     {
       "de": "östlich",
