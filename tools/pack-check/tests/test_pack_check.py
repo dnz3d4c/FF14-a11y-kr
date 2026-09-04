@@ -682,3 +682,55 @@ def test_스테이징한_기록을_먼저_읽는다(저장소):
     _git("add", "upstream", cwd=저장소)
 
     assert not [p for p in pack_check.source_gate_problems(저장소) if "기록과 다른 커밋" in p]
+
+
+# ── .NET SDK 찾기 ──────────────────────────────────────────────────────────
+
+
+def test_스쿠프에_있으면_그것을_쓴다(tmp_path, monkeypatch):
+    """개발 머신의 자리다. PATH의 dotnet은 런타임뿐이라 SDK에 안 닿는다."""
+    sdk = tmp_path / "apps" / "dotnet-sdk" / "current" / "dotnet.exe"
+    sdk.parent.mkdir(parents=True)
+    sdk.write_text("", encoding="utf-8")
+    monkeypatch.setenv("SCOOP", str(tmp_path))
+
+    assert pack_check.dotnet_path() == sdk
+
+
+def test_스쿠프에_없으면_PATH의_SDK를_쓴다(tmp_path, monkeypatch):
+    """러너의 자리다. `actions/setup-dotnet`이 깐 것은 PATH에 있고 SDK다.
+
+    경로를 이 머신 사정으로 못 박아 두면 발행이 러너에서 돌 수가 없다 -
+    2026-09-04에 첫 CI 발행이 정확히 그것으로 죽었다(runneradmin의 scoop을
+    찾았다). **SDK인지 짐작하지 않고 `--list-sdks`로 묻는다.**
+    """
+    monkeypatch.setenv("SCOOP", str(tmp_path / "없다"))
+    found = tmp_path / "dotnet.exe"
+    found.write_text("", encoding="utf-8")
+    monkeypatch.setattr(pack_check.shutil, "which", lambda name: str(found))
+    monkeypatch.setattr(
+        pack_check.subprocess,
+        "run",
+        lambda *a, **k: subprocess.CompletedProcess(a[0], 0, "10.0.302 [C:\sdk]\n", ""),
+    )
+
+    assert pack_check.dotnet_path() == found
+
+
+def test_PATH의_dotnet이_런타임뿐이면_안_쓴다(tmp_path, monkeypatch):
+    """SDK가 없으면 `--list-sdks`가 아무것도 안 낸다. 그때는 스쿠프 자리를 돌려준다.
+
+    없는 경로를 돌려주는 것이 맞다 - 부르는 쪽이 그 이름을 대고 멈춘다.
+    """
+    scoop = tmp_path / "scoop"
+    monkeypatch.setenv("SCOOP", str(scoop))
+    found = tmp_path / "dotnet.exe"
+    found.write_text("", encoding="utf-8")
+    monkeypatch.setattr(pack_check.shutil, "which", lambda name: str(found))
+    monkeypatch.setattr(
+        pack_check.subprocess,
+        "run",
+        lambda *a, **k: subprocess.CompletedProcess(a[0], 0, "", ""),
+    )
+
+    assert pack_check.dotnet_path() == scoop / "apps" / "dotnet-sdk" / "current" / "dotnet.exe"

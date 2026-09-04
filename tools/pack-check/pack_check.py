@@ -805,8 +805,48 @@ def kr_dalamud_dir() -> Path | None:
 
 
 def dotnet_path() -> Path:
+    """빌드에 쓸 .NET SDK. 개발 머신은 scoop, 러너는 PATH다.
+
+    **개발 머신에서 PATH의 `dotnet`은 런타임뿐이다.** `C:\\Program Files\\dotnet`에
+    SDK가 없어서 `dotnet build`가 "No .NET SDKs were found"로 죽고, scoop이 shim을
+    안 깔아서 PATH로는 SDK에 닿을 길이 없다. 그래서 scoop 자리를 먼저 본다.
+
+    **러너는 반대다.** `actions/setup-dotnet`이 깐 것이 PATH에 있고 그것이 SDK다.
+    scoop 자리를 못 박아 두면 발행이 러너에서 돌 수가 없다 - 2026-09-04에 첫 CI
+    발행이 정확히 그것으로 죽었다(`runneradmin`의 scoop을 찾았다).
+
+    **SDK인지 짐작하지 않고 `--list-sdks`로 묻는다.** 이름이 같아도 런타임뿐인
+    것이 이 머신에 실제로 있으므로, 있다는 것만으로 고르면 같은 사고가 반대
+    방향으로 난다.
+    """
     scoop = Path(os.environ.get("SCOOP", str(Path.home() / "scoop")))
-    return scoop / "apps" / "dotnet-sdk" / "current" / "dotnet.exe"
+    in_scoop = scoop / "apps" / "dotnet-sdk" / "current" / "dotnet.exe"
+    if in_scoop.is_file():
+        return in_scoop
+
+    found = shutil.which("dotnet")
+    if found and _lists_sdks(Path(found)):
+        return Path(found)
+
+    # 못 찾았다. **scoop 자리를 그대로 돌려준다** - 부르는 쪽이 그 이름을 대고
+    # 멈추므로, 개발 머신에서 무엇이 없는지가 메시지에 그대로 나온다.
+    return in_scoop
+
+
+def _lists_sdks(dotnet: Path) -> bool:
+    """그 `dotnet`이 SDK를 하나라도 갖고 있나. 못 물어보면 False."""
+    try:
+        done = subprocess.run(
+            [str(dotnet), "--list-sdks"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=60,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return done.returncode == 0 and bool(done.stdout.strip())
 
 
 def check_kr_binding(
