@@ -2,6 +2,7 @@
   "note": "한국어 문장에 그대로 남은 영어. 여기 있는 것은 영어로 있어야 맞다고 사람이 확인한 것이다 - 게임 표기(HP·NPC), 사용자가 그대로 쳐야 하는 명령어(/acc help), 고유명사(Dalamud·vnavmesh), 키 이름(F1). 늘어날 때 왜인지 커밋 본문에 적는다.",
   "source": "korean/strings.json (보간 자리를 지운 뒤)",
   "words": [
+    "Carnivale",
     "Dalamud",
     "F",
     "FF",
@@ -10,6 +11,7 @@
     "HQ",
     "ID",
     "MP",
+    "Masked",
     "NPC",
     "NQ",
     "TitleDCWorldMap",

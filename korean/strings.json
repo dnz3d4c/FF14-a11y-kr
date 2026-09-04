@@ -1324,6 +1324,16 @@
       "ko": "자동 이동 중 비행 켜짐. 탈것을 부르고 직접 떠오르면 자동 이동이 비행으로 진행됨."
     },
     {
+      "de": "Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt höher.",
+      "en": "Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is higher up.",
+      "ko": "비행 종료 후 착륙함. {direction} 방향으로 {MetersRemaining(distance)} 남음, 목적지가 더 높은 곳에 있음."
+    },
+    {
+      "de": "Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt tiefer.",
+      "en": "Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is further down.",
+      "ko": "비행 종료 후 착륙함. {direction} 방향으로 {MetersRemaining(distance)} 남음, 목적지가 더 낮은 곳에 있음."
+    },
+    {
       "de": "Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}.",
       "en": "Flight ended and landed. {MetersRemaining(distance)} to the {direction}.",
       "ko": "비행 종료 후 착륙함. {direction} 방향으로 {MetersRemaining(distance)} 남음."
@@ -4069,6 +4079,16 @@
       "ko": "꿀빛 금발"
     },
     {
+      "de": "im Gebiet {zone}, {hops} Gebietswechsel entfernt.",
+      "en": "in the area {zone}, {hops} transition away.",
+      "ko": "{zone} 지역, 지역 이동 {hops}회 거리."
+    },
+    {
+      "de": "im Gebiet {zone}, {hops} Gebietswechsel entfernt.",
+      "en": "in the area {zone}, {hops} transitions away.",
+      "ko": "{zone} 지역, 지역 이동 {hops}회 거리."
+    },
+    {
       "de": "im Gebiet {zone}.",
       "en": "in the area {zone}.",
       "ko": "{zone} 지역."
@@ -4092,6 +4112,11 @@
       "de": "kastanienbraun",
       "en": "auburn",
       "ko": "적갈색"
+    },
+    {
+      "de": "kein Fundort in der Welt, Belohnung aus dem Maskierten Karneval oder Startzauber.",
+      "en": "no location in the world; a Masked Carnivale reward or the starting spell.",
+      "ko": "세계에 위치 없음. Masked Carnivale 보상이거나 처음부터 체득하는 기술."
     },
     {
       "de": "kein Laufweg dorthin.",

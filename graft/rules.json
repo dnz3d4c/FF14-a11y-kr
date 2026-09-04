@@ -329,6 +329,52 @@
       ]
     },
     {
+      "name": "strings-flight-ended-remaining-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "높낮이가 5미터를 넘는 갈래가 이어붙이기에 삼항까지 품고 있어 파서 손 밖이었다. 그래서 그 갈래만 영어로 나가는데 미적용에도 안 잡힌다 - 2026-09-04 교차 리뷰가 짚었다. 삼항을 문장 밖으로 빼면 갈래 셋이 전부 맨 리터럴이 되어 대장이 읽는다. 방위 낱말을 원소별로 편 것과 같은 수법이다.",
+      "phase": "before",
+      "find": [
+        "        MathF.Abs(rise) >= 5f",
+        "            ? (IsGerman",
+        "                ? $\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, \" +",
+        "                  $\"{(rise > 0 ? \"das Ziel liegt höher\" : \"das Ziel liegt tiefer\")}.\"",
+        "                : $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, \" +",
+        "                  $\"{(rise > 0 ? \"the target is higher up\" : \"the target is further down\")}.\")"
+      ],
+      "replace": [
+        "        MathF.Abs(rise) >= 5f",
+        "            ? (rise > 0",
+        "                ? (IsGerman",
+        "                    ? $\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt höher.\"",
+        "                    : $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is higher up.\")",
+        "                : (IsGerman",
+        "                    ? $\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt tiefer.\"",
+        "                    : $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is further down.\"))"
+      ]
+    },
+    {
+      "name": "strings-in-area-with-hops-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "영어가 단복수를 문장 안에서 삼항으로 고른다. 한국어에는 그 구분이 없어서 그 자리를 그대로 두면 한국어 문장에서 transition이 발화된다. 단복수를 갈래 밖으로 빼면 영어 문장 둘이 각각 맨 리터럴이 되고, 독일어는 원래 한 꼴이라 양쪽에 같은 것을 쓴다 - 대장의 열쇠가 (독일어, 영어) 쌍이라 부딪히지 않는다.",
+      "phase": "before",
+      "find": [
+        "            : (IsGerman",
+        "                // \"Gebietswechsel\" ist im Deutschen in Ein- und Mehrzahl gleich.",
+        "                ? $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\"",
+        "                : $\"in the area {zone}, {hops} {(hops == 1 ? \"transition\" : \"transitions\")} away.\");"
+      ],
+      "replace": [
+        "            : (hops == 1",
+        "                // \"Gebietswechsel\" ist im Deutschen in Ein- und Mehrzahl gleich.",
+        "                ? (IsGerman",
+        "                    ? $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\"",
+        "                    : $\"in the area {zone}, {hops} transition away.\")",
+        "                : (IsGerman",
+        "                    ? $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\"",
+        "                    : $\"in the area {zone}, {hops} transitions away.\"));"
+      ]
+    },
+    {
       "name": "strings-update-needs-installer-flatten",
       "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
       "why": "이어붙인 리터럴이라 파서가 갈림길로 못 읽고, 그러면 대장과 만나지 못해 영어로 나가면서 미적용에도 안 잡힌다. 한 줄로 펴면 Pick이 되어 대장이 읽는다. 우리 사용자가 실제로 듣는 문장이다 - 정식 자리에 깐 설치는 스스로 못 갈아 끼우므로 이 안내로 떨어진다.",
