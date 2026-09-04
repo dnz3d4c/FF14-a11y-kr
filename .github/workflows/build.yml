@@ -105,6 +105,47 @@ jobs:
           dotnet build -c Release -warnaserror \
             build/FF14Accessibility/FF14Accessibility.csproj
 
+      # 설치 프로그램의 한국어. 대장의 그물 밖이라 이 검사가 없으면 그 문장들은
+      # 고아 검출도 미번역 로그도 못 받고, 키가 빠지면 조용히 영어로 떨어진다.
+      # 조립 뒤에 도는 까닭은 소스 아홉 파일이 네 군데로 흩어져 있어서다 -
+      # 판정 대상은 실제로 나갈 트리다.
+      - name: 설치 프로그램 한국어
+        shell: bash
+        run: uv run python tools/loc-check/loc_check.py
+
+      # 플러그인이 참조하는 멤버가 한국판 달라무드의 어셈블리에 실제로 있는지.
+      # 한국판은 FFXIVClientStructs를 7.51로 낮춰 싣고, 글로벌용으로 빌드된
+      # 플러그인은 그 차이로 적재는 되는데 호출 시점에 죽는다.
+      - name: 어셈블리 참조
+        shell: bash
+        env:
+          DALAMUD_HOME: ${{ steps.refs.outputs.home }}
+        run: |
+          dotnet run -c Release --project tools/asmref-check -- \
+            build/FF14Accessibility/bin/Release/net10.0-windows/FF14Accessibility.dll \
+            "$DALAMUD_HOME"
+
+      # 이번 판 노트가 있으면 잰다. 발행 직전 한 번만 돌리면 늦다 - 노트가 여러
+      # 커밋에 걸쳐 고쳐지는 동안 한 번도 안 도는 판이 실제로 있었다.
+      #
+      # 원본 노트는 여기서 안 받는다. 커버리지 검사(N21~N23)가 그만큼 안 도는데,
+      # 검사기가 건너뛴 것을 화면에 남기므로 다 옮긴 판과 안 본 판이 같아 보이지는
+      # 않는다. 그 셋은 발행할 때 tools/pack/release.py가 원본을 받아 다시 잰다.
+      - name: 릴리스 노트
+        shell: bash
+        run: |
+          version=$(uv run python -c "
+          import json
+          report = json.load(open('build/assemble-report.json', encoding='utf-8'))
+          print(report['versions']['FF14Accessibility/FF14Accessibility.csproj'])
+          ")
+          notes="docs/release-notes/$version.md"
+          if [ -f "$notes" ]; then
+            uv run python tools/notes-check/notes_check.py --version "$version" "$notes"
+          else
+            echo "이번 판($version) 노트가 아직 없다. 발행 전에 쓴다."
+          fi
+
       # 실패 사유 3. 이 인벤토리가 없으면 무엇이 영어로 나가는지 아무도 못 본다.
       - name: 미번역 인벤토리
         uses: actions/upload-artifact@v4
