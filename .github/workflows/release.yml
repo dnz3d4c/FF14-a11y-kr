@@ -1,0 +1,212 @@
+name: 발행
+
+# 배포물을 짓고 릴리스로 올린다.
+#
+# 손으로만 돈다. 태그 푸시로 걸지 않는 까닭은 **되돌릴 길이 없어서**다 - `gh`가
+# 한 번 돌면 바깥에 자산이 남고, 받는 쪽이 이미 겪은 것은 못 되돌린다. 실수 한
+# 번이 그대로 나가는 트리거는 이 저장소에 두지 않는다.
+#
+# 러너를 windows-latest로 두는 까닭은 build.yml 맨 위에 적어 두었다.
+#
+# ## 러너가 못 재는 것 둘 - 숨기지 않는다
+#
+# 발행 게이트 가운데 둘은 **개발 머신에서만 실물로 돌 수 있다.** 그래서 사람이
+# 로컬에서 통과시킨 다음 그 사실을 입력으로 선언한다. 게이트가 없어지는 것이
+# 아니라 재는 자리가 옮겨갈 뿐이고, 무엇을 여기서 안 쟀는지는 아래 요약이
+# 이름을 대고 적는다. 초록이 "다 쟀다"로 읽히면 안 된다.
+#
+#   낱말 대조   게임 텍스트 덤프를 읽는다. 그것은 스퀘어에닉스 데이터라
+#               재배포하지 않기로 하고 .gitignore에 넣었다 - 러너에 영영 없다
+#   설치 실증   pack.py의 마지막 단계이고 한국 클라이언트 달라무드를 요구한다
+#
+# 노트 승인도 입력으로 받는다. 그것은 러너의 한계가 아니라 **사람이 본문을 읽고
+# 판단하는 일**이라 기계가 대신할 자리가 없다.
+
+on:
+  workflow_dispatch:
+    inputs:
+      notes_approved:
+        description: "릴리스 노트 본문을 사용자에게 보이고 승인받았다"
+        required: true
+        type: boolean
+        default: false
+      words_checked:
+        description: "개발 머신에서 ko_words --require-dump 를 통과시켰다"
+        required: true
+        type: boolean
+        default: false
+      e2e_checked:
+        description: "개발 머신에서 pack_check --e2e 로 설치까지 돌려 봤다"
+        required: true
+        type: boolean
+        default: false
+
+permissions: {}
+
+# 우리 도구는 한국어로 보고한다. 윈도 러너의 파이썬 stdout은 cp1252라서 그대로
+# 두면 첫 한국어 출력에서 UnicodeEncodeError로 죽는다.
+env:
+  PYTHONIOENCODING: utf-8
+  PYTHONUTF8: "1"
+
+jobs:
+  # 입력 셋을 먼저 본다. 짓는 데 몇 분이 드는데, 승인이 없어 마지막에 서는 것은
+  # 그 시간을 통째로 버리는 것이다.
+  gate:
+    name: 사람이 잰 것 확인
+    runs-on: windows-latest
+    permissions: {}
+    steps:
+      - name: 선언 셋이 다 있나
+        shell: bash
+        env:
+          NOTES: ${{ inputs.notes_approved }}
+          WORDS: ${{ inputs.words_checked }}
+          E2E: ${{ inputs.e2e_checked }}
+        run: |
+          set -euo pipefail
+          missing=""
+          [ "$NOTES" = "true" ] || missing="$missing 노트-승인"
+          [ "$WORDS" = "true" ] || missing="$missing 낱말-대조"
+          [ "$E2E" = "true" ] || missing="$missing 설치-실증"
+          if [ -n "$missing" ]; then
+            echo "::error::선언이 빠졌다:$missing. 개발 머신에서 먼저 통과시킨다."
+            exit 1
+          fi
+          echo "선언 셋을 다 받았다."
+
+  # 짓는 잡은 **원본이 쓴 코드를 실행한다.** 원본 csproj에 커스텀 MSBuild 타깃이
+  # 있고 그것이 빌드 중에 돈다. 그래서 읽기 권한만 갖고, 쓰기를 갖는 아래 잡은
+  # 원본을 아예 받지 않는다. 둘 사이는 아티팩트로만 이어진다.
+  build:
+    name: 배포물 짓기
+    needs: gate
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Dalamud 참조
+        id: refs
+        uses: ./.github/actions/dalamud-refs
+        with:
+          token: ${{ github.token }}
+
+      # `pack.py`의 마지막 단계인 설치 실증만 여기서 못 돈다. 그 단계는 사람이
+      # 로컬에서 이미 돌렸고 위 잡이 그 선언을 받았다. 나머지는 전부 여기서 돈다 -
+      # 조립, 플러그인 빌드, 런처, 설치 프로그램, 자산 모으기, 매니페스트 둘.
+      - name: 짓기
+        shell: bash
+        env:
+          DALAMUD_HOME: ${{ steps.refs.outputs.home }}
+        run: uv run python tools/pack/pack.py | tee pack.log
+
+      - name: 배포물 넘기기
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: error
+
+      - name: 잡 요약
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## 배포물"
+            echo
+            echo '```'
+            cat pack.log 2>/dev/null || echo "짓기가 결과를 못 남겼다."
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # 쓰기 권한은 여기에만 있다. 이 잡은 **원본 코드를 한 줄도 실행하지 않는다** -
+  # 서브모듈을 받지 않고, 조립도 빌드도 안 하고, 앞 잡이 넘긴 자산과 우리 도구만
+  # 쓴다.
+  publish:
+    name: 릴리스로 올리기
+    needs: build
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      # 서브모듈을 안 받는다. `release.py`가 쓰는 것은 우리 `tools/`뿐이다.
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      # `gh`를 부르는 자리이고 원본 릴리스 노트도 받는다. 남의 호스트가 멈추면
+      # 잡 제한까지 붙잡히므로 단계에 시간을 건다.
+      - name: 발행
+        id: publish
+        timeout-minutes: 20
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FF14_NOTES_APPROVED: "1"
+          FF14_WORDS_CHECKED: "1"
+        run: uv run python tools/pack/release.py | tee release.log
+
+      # **올린 것을 도로 받아 잰다.** `release.py`는 올리고 끝나지 자산이 제대로
+      # 올라갔는지 다시 보지 않는다. 업로드가 반만 돼도 `gh`는 0으로 끝나고,
+      # 받는 쪽에는 오류가 아니라 "새 판이 없다"로 보인다.
+      - name: 되받아 재기
+        id: verify
+        timeout-minutes: 15
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=$(uv run python tools/release-manifest/release_manifest.py --print-version)
+          echo "tag=v$tag" >> "$GITHUB_OUTPUT"
+          uv run python tools/release-manifest/release_manifest.py --release "v$tag" | tee verify.log
+
+      - name: 잡 요약
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## 발행"
+            echo
+            echo "### 여기서 안 잰 것"
+            echo
+            echo "아래 둘은 개발 머신에서만 실물로 돌고, 사람이 통과시켰다고 선언해서 지나갔다."
+            echo "**이 잡의 초록을 '다 쟀다'로 읽으면 안 된다.**"
+            echo
+            echo "| 게이트 | 왜 여기서 못 재나 |"
+            echo "|--------|-------------------|"
+            echo "| 낱말 대조 | 게임 텍스트 덤프를 읽는다. 재배포하지 않기로 한 데이터라 러너에 없다 |"
+            echo "| 설치 실증 | 한국 클라이언트 달라무드를 요구한다 |"
+            echo "| 노트 승인 | 사람이 본문을 읽고 판단하는 일이다 |"
+            echo
+            echo "### 발행"
+            echo
+            echo '```'
+            cat release.log 2>/dev/null || echo "발행이 결과를 못 남겼다."
+            echo '```'
+            echo
+            echo "### 되받아 잰 것"
+            echo
+            echo '```'
+            cat verify.log 2>/dev/null || echo "되받아 재기가 결과를 못 남겼다."
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
