@@ -329,6 +329,43 @@
       ]
     },
     {
+      "name": "update-service-kr-repo",
+      "file": "FF14Accessibility/Services/UpdateService.cs",
+      "why": "자기 갱신이 우리 릴리스를 봐야 한다. 원본 주소를 그대로 두면 옵션 메뉴의 갱신 검사가 글로벌 판의 새 릴리스를 우리 것으로 안내한다 - 오류가 아니라 잘못된 안내라 화면에 아무 이상도 안 남는다. 게다가 원본은 하루 1.4개꼴로 판을 내므로 우리 사용자는 늘 뒤처진 것처럼 듣는다. 값의 원천은 tools/release-manifest의 GH_REPO다.",
+      "find": [
+        "    private const string RepoOwner = \"derbruedi\";",
+        "    private const string RepoName  = \"ff14-accessibility\";"
+      ],
+      "replace": [
+        "    // KOREAN BUILD LOOKS AT THE KOREAN RELEASES. Leaving the upstream address here",
+        "    // makes the update check offer the global build as if it were ours - not an",
+        "    // error, just a wrong answer, and nothing on screen says so.",
+        "    // Single source of these two: tools/release-manifest (GH_REPO).",
+        "    private const string RepoOwner = \"dnz3d4c\";",
+        "    private const string RepoName  = \"FF14-a11y-kr\";"
+      ]
+    },
+    {
+      "name": "update-service-kr-asset",
+      "file": "FF14Accessibility/Services/UpdateService.cs",
+      "why": "원본은 판마다 이름이 바뀌는 FF14Accessibility-v<버전>.zip을 내지만 우리 자산 이름은 FF14Accessibility.zip 하나로 고정이다 - repo.json과 installer.json이 releases/latest/download의 고정 주소를 가리켜야 하기 때문이다. 접두를 안 맞추면 FindAssetUrl이 우리 자산을 못 찾고 검사가 '맞는 파일이 없는 릴리스'로 실패한다. 주석까지 앵커에 넣은 것은 원본이 이 상수의 뜻을 바꾸면 조립이 멈춰 다시 보게 하려는 것이다. 값의 원천은 tools/release-manifest의 ZIP_NAME이다.",
+      "find": [
+        "    /// <summary>Release asset carrying the plugin, named",
+        "    /// \"FF14Accessibility-v&lt;version&gt;.zip\" - same asset the installer picks",
+        "    /// (InstallerService.UpdateAccessibilityPluginAsync).</summary>",
+        "    private const string AssetPrefix = \"FF14Accessibility-v\";"
+      ],
+      "replace": [
+        "    /// <summary>Release asset carrying the plugin. The Korean release names it",
+        "    /// \"FF14Accessibility.zip\" with NO version in it, because repo.json and",
+        "    /// installer.json point at the fixed releases/latest/download address.",
+        "    /// FindAssetUrl selects by StartsWith plus EndsWith(\".zip\"), and that pair",
+        "    /// matches exactly one asset of ours. Single source: tools/release-manifest",
+        "    /// (ZIP_NAME).</summary>",
+        "    private const string AssetPrefix = \"FF14Accessibility.zip\";"
+      ]
+    },
+    {
       "name": "installer-mainform-owner-updated",
       "file": "Installer/MainForm.cs",
       "why": "소유자 없는 대화 상자는 남의 창 뒤로 숨는다. 스스로 업데이트한 뒤 다시 뜨는 자리라 사용자가 이 안내를 못 들으면 재시작이 고장으로 들린다. MessageBox.Show( 한 줄만으로는 이 파일 네 곳에서 잡히므로 다음 줄까지 묶어 유일하게 만든다.",
