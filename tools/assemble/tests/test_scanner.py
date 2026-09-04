@@ -107,6 +107,65 @@ def test_보간_자리에_삼항이_있는_실제_모양을_자리로_잡는다(
     assert sites[0].en_raw == '$"{name}, {(on ? "on" : "off")}"'
 
 
+def test_중첩된_자리도_통째로_하나로_읽는다() -> None:
+    """정규식은 안쪽 `{location}`만 잡고 바깥 자리를 통째로 놓친다."""
+    text = '{name}{(location != null ? $", on {location}" : "")}'
+
+    assert scanner.holes(text) == ["name", '(location != null ? $", on {location}" : "")']
+
+
+def test_자리를_셀_때_중괄호_둘은_글자다() -> None:
+    text = "{{ {name} }}"
+
+    assert scanner.holes(text) == ["name"]
+
+
+def test_자리_안의_따옴표_속_중괄호는_깊이를_안_흔든다() -> None:
+    """자리 안의 문자열은 통째로 건너뛴다. 안 그러면 그 안의 `}`가 자리를 일찍 닫는다."""
+    text = '{(on ? "}" : "{")}'
+
+    assert scanner.holes(text) == ['(on ? "}" : "{")']
+
+
+def test_자리의_순서를_바꾸는_것은_통과한다() -> None:
+    """한국어는 어순이 달라서 자리를 그대로 두면 말이 안 된다."""
+    ko = "{count}개 중 {index}번째"
+
+    assert scanner.references("{index} of {count}") == scanner.references(ko)
+
+
+def test_서식_지정자가_바뀌면_다른_자리다() -> None:
+    """`{distance:F0}`를 `{distance}`로 적으면 소수 자릿수가 달라진 채로 나간다."""
+    assert scanner.references("{distance:F0}") != scanner.references("{distance}")
+
+
+def test_자리_안의_문장을_옮겨도_같은_자리다() -> None:
+    """자리 안의 문장도 사용자가 듣는 말이라 번역 대상이다. 리터럴을 걷어내고 견준다."""
+    assert scanner.references('{(on ? "on" : "off")}') == scanner.references('{(on ? "켬" : "끔")}')
+
+
+def test_자리_안의_식이_바뀌면_다른_자리다() -> None:
+    ko = '{(off ? "켬" : "끔")}'
+
+    assert scanner.references('{(on ? "on" : "off")}') != scanner.references(ko)
+
+
+def test_멀쩡한_값에는_까닭이_없다() -> None:
+    assert scanner.body_fault('{name}, {(on ? "켬" : "끔")}') is None
+    assert scanner.body_fault("중괄호 둘 {{ 은 글자다") is None
+
+
+def test_중괄호_짝이_안_맞으면_까닭을_돌려준다() -> None:
+    """C#이 컴파일을 거부한다. 대장은 사람이 손으로 고치는 파일이라 여기서 막는다."""
+    assert scanner.body_fault("{name 준비됨") is not None
+    assert scanner.body_fault("name} 준비됨") is not None
+
+
+def test_자리_안에서_따옴표가_안_닫히면_까닭을_돌려준다() -> None:
+    """안 닫힌 따옴표는 뒤따르는 코드를 통째로 문자열로 만든다."""
+    assert scanner.body_fault('{(on ? "켬 : "끔")}') is not None
+
+
 def test_삼항_자리를_찾는다() -> None:
     text = 'public static string A => IsGerman ? "Hallo" : "Hello";\n'
     sites = scanner.find_sites(text)
@@ -190,6 +249,41 @@ def test_보간_자리가_안_맞으면_한국어를_안_넣고_보고한다() -
     assert result.applied == []
     assert len(result.bad_slots) == 1
     assert "보간 자리" in result.bad_slots[0]
+    assert "item" in result.bad_slots[0]
+    assert "name" in result.bad_slots[0]
+
+
+def test_자리의_순서를_바꾼_한국어가_들어간다() -> None:
+    """`{index} of {count}`를 한국어 어순으로 옮기면 자리의 순서가 뒤집힌다."""
+    text = "    public static string A(int index, int count) =>\n"
+    text += '        IsGerman ? $"{index} von {count}" : $"{index} of {count}";\n'
+    result = scanner.rewrite(
+        text, {("{index} von {count}", "{index} of {count}"): "{count}개 중 {index}번째"}
+    )
+
+    assert '$"{count}개 중 {index}번째"' in result.text
+    assert result.bad_slots == []
+
+
+def test_서식_지정자를_뺀_한국어는_안_들어간다() -> None:
+    """`{distance:F0}`를 `{distance}`로 적으면 소수 자릿수가 달라진 채로 나간다."""
+    text = 'var s = IsGerman ? $"{d:F0} m" : $"{d:F0} m";\n'
+    result = scanner.rewrite(text, {("{d:F0} m", "{d:F0} m"): "{d}미터"})
+
+    assert "미터" not in result.text
+    assert len(result.bad_slots) == 1
+
+
+def test_자리_안의_문장을_옮긴_한국어가_들어간다() -> None:
+    """이 모양이 이번에 열린 24곳이다. 자리 안은 식이라 따옴표가 escape 없이 들어간다."""
+    text = '    var s = IsGerman ? $"{n}, {(on ? "an" : "aus")}" : $"{n}, {(on ? "on" : "off")}";\n'
+    result = scanner.rewrite(
+        text,
+        {('{n}, {(on ? "an" : "aus")}', '{n}, {(on ? "on" : "off")}'): '{n}, {(on ? "켬" : "끔")}'},
+    )
+
+    assert '$"{n}, {(on ? "켬" : "끔")}"' in result.text
+    assert result.bad_slots == []
 
 
 def test_못_읽은_갈림길을_행_번호로_센다() -> None:

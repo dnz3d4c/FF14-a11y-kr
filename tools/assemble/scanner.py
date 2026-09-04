@@ -28,9 +28,6 @@ PICK = "Pick("
 #: 한 줄이 이 칸을 넘으면 인자마다 줄을 나눈다. 원본 소스의 폭에 맞췄다.
 WIDTH = 100
 
-#: 보간 자리. `{{`는 중괄호 자체라 자리가 아니다.
-SLOT = re.compile(r"(?<!\{)\{([^{}]+)\}")
-
 #: 멤버 선언의 이름. `[CallerMemberName]`이 런타임에 넘기는 것과 같은 이름을
 #: 정적으로 뽑기 위한 것이라, 보고의 이름과 로그의 이름이 서로 맞는다.
 MEMBER = re.compile(
@@ -347,13 +344,112 @@ def member_name(text: str, offset: int) -> str:
     return name
 
 
-def _slots(text: str) -> set[str]:
-    return set(SLOT.findall(text))
+def _hole_spans(text: str) -> tuple[list[tuple[int, int]], str | None]:
+    """최상위 보간 자리의 (내용 시작, 내용 끝) 목록과, 모양이 깨졌으면 그 까닭.
+
+    자리를 정규식으로 잡으면 중첩된 자리를 못 읽는다. `[^{}]+`는 안쪽 `{location}`만
+    잡고 그것을 감싼 바깥 자리를 통째로 놓친다. 그래서 중괄호 깊이를 센다.
+
+    자리 안의 문자열 리터럴은 통째로 건너뛴다. 자리 안은 식이라 그 안의 문자열에 든
+    중괄호가 깊이를 흔들면 안 된다. `{{`와 `}}`는 자리가 아니라 중괄호 글자다.
+
+    까닭을 같이 돌려주는 것은 세는 쪽과 검사하는 쪽이 **같은 걸음**을 걷게 하기
+    위해서다. 검사기가 따로 걸으면 둘이 다르게 읽는 값이 생기고, 그때 검사를 통과한
+    값이 조립에서 다르게 잘린다.
+    """
+    spans: list[tuple[int, int]] = []
+    i, depth, start = 0, 0, 0
+    while i < len(text):
+        ch = text[i]
+        if depth == 0 and ch in "{}" and text[i + 1 : i + 2] == ch:
+            i += 2  # `{{`와 `}}`는 중괄호 글자 자체다
+            continue
+        if ch == "{":
+            if depth == 0:
+                start = i + 1
+            depth += 1
+        elif ch == "}":
+            if depth == 0:
+                return spans, "닫는 중괄호가 짝 없이 있다"
+            depth -= 1
+            if depth == 0:
+                spans.append((start, i))
+        elif depth > 0 and ch == '"':
+            # 앞 글자가 `$`이면 그 자리에서 부른다. 안쪽이 또 보간일 수 있다.
+            at = i - 1 if text[i - 1] == "$" else i
+            value, _, end = read_literal(text, at)
+            if value is None:
+                return spans, "보간 자리 안의 따옴표가 안 닫혔다"
+            i = end
+            continue
+        i += 1
+    if depth > 0:
+        return spans, "여는 중괄호가 안 닫혔다"
+    return spans, None
+
+
+def holes(text: str) -> list[str]:
+    """보간 문자열에서 최상위 자리들의 내용을 순서대로."""
+    return [text[start:end] for start, end in _hole_spans(text)[0]]
+
+
+def references(text: str) -> set[str]:
+    """자리마다 **문자열 리터럴을 걷어낸 나머지**의 집합.
+
+    대장의 한국어가 그 자리에서 실제로 컴파일되는지 대조하는 열쇠다. 집합이라 순서를
+    안 보는데, 그래야 `{index} of {count}`를 `{count}개 중 {index}번째`로 옮길 수
+    있다. 한국어는 어순이 달라서 자리를 그대로 두면 말이 안 된다.
+
+    리터럴을 걷어내는 까닭은 **자리 안의 문장도 사용자가 듣는 말**이라서다. 걷어내지
+    않으면 `{(on ? "on" : "off")}`를 옮기는 순간 대조가 거부한다.
+
+    서식 지정자는 남긴다. `{distance:F0}`를 `{distance}`로 적으면 소수 자릿수가
+    달라진 채로 나가는데, 그것은 걸려야 한다.
+    """
+    return {_reference(hole) for hole in holes(text)}
+
+
+def _reference(hole: str) -> str:
+    out: list[str] = []
+    i = 0
+    while i < len(hole):
+        if hole[i] == '"' or (hole[i] == "$" and hole[i + 1 : i + 2] == '"'):
+            _, _, end = read_literal(hole, i)
+            i = max(end, i + 1)
+            continue
+        out.append(hole[i])
+        i += 1
+    # 연속 공백을 하나로. 자리 안의 띄어쓰기가 달라진 것을 다른 자리로 세지 않는다.
+    return " ".join("".join(out).split())
+
+
+def body_fault(ko: str) -> str | None:
+    """대장의 값 자체가 깨진 모양이면 까닭을, 멀쩡하면 None.
+
+    이번 단계가 지는 새 위험이 여기 있다. 지금까지 대장의 값은 컴파일을 깨뜨릴 수
+    없었는데, 자리 안에 escape 안 된 따옴표가 들어가면서 깨뜨릴 수 있게 됐다. 짝이 안
+    맞는 중괄호는 C#이 거부하고, 자리 안에서 안 닫힌 따옴표는 뒤따르는 코드를 통째로
+    문자열로 만든다.
+    """
+    return _hole_spans(ko)[1]
+
+
+def outside_holes(text: str) -> str:
+    """보간 자리의 **내용**을 같은 길이의 공백으로 지운다.
+
+    리터럴 규약을 보는 쪽이 자리 안까지 같은 잣대로 보면 멀쩡한 값을 거부한다. 자리
+    안은 식이라 따옴표가 escape 없이 들어가기 때문이다. 길이를 유지하는 이유는 남은
+    글자의 위치가 원문과 1대1로 맞아야 해서다.
+    """
+    out = list(text)
+    for start, end in _hole_spans(text)[0]:
+        out[start:end] = " " * (end - start)
+    return "".join(out)
 
 
 def _literal(ko: str) -> str:
     """한국어를 C# 리터럴로. 보간 자리가 있으면 `$`를 붙인다."""
-    return ('$"' if SLOT.search(ko) else '"') + ko + '"'
+    return ('$"' if holes(ko) else '"') + ko + '"'
 
 
 def _render(site: Site, ko: str | None, text: str) -> str:
@@ -400,12 +496,15 @@ def rewrite(text: str, catalog: dict[tuple[str, str], str]) -> Result:
         result.seen.append(key)
 
         wanted = catalog.get(key)
-        if wanted is not None and _slots(wanted) != _slots(site.en):
-            result.bad_slots.append(
-                f"{site.line}행: 보간 자리가 안 맞아 한국어를 안 넣는다 - "
-                f"영어 {sorted(_slots(site.en))} 대 한국어 {sorted(_slots(wanted))}"
-            )
-            wanted = None
+        if wanted is not None:
+            missing = sorted(references(site.en) - references(wanted))
+            extra = sorted(references(wanted) - references(site.en))
+            if missing or extra:
+                result.bad_slots.append(
+                    f"{site.line}행: 보간 자리가 안 맞아 한국어를 안 넣는다 - "
+                    f"한국어에 빠진 것 {missing}, 영어에 없는 것 {extra}"
+                )
+                wanted = None
 
         if wanted is None:
             if site.ternary:

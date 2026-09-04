@@ -323,6 +323,36 @@ def test_escape한_따옴표는_통과한다(tmp_path: Path) -> None:
     assert assemble.assemble(repo).problems == []
 
 
+def test_보간_자리_안의_따옴표는_통과한다(tmp_path: Path) -> None:
+    """자리 안은 식이라 `\\"`가 C# 문법 오류다. 자리 안의 따옴표는 escape 없이 들어간다."""
+    catalog = {"strings": [{"de": "Hallo", "en": "Hello", "ko": '{(on ? "켬" : "끔")}'}]}
+    repo = _repo(tmp_path, catalog=catalog)
+
+    assert assemble.assemble(repo).problems == []
+
+
+def test_대장의_중괄호_짝이_안_맞으면_실패한다(tmp_path: Path) -> None:
+    """이제 대장의 값이 컴파일을 깨뜨릴 수 있다. 깨진 C#을 내는 것보다 여기서 멈춘다."""
+    catalog = {"strings": [{"de": "Hallo", "en": "Hello", "ko": "{name 안녕"}]}
+    repo = _repo(tmp_path, catalog=catalog)
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "중괄호" in report.problems[0]
+
+
+def test_대장의_자리_안에서_따옴표가_안_닫히면_실패한다(tmp_path: Path) -> None:
+    """안 닫힌 따옴표는 뒤따르는 코드를 통째로 문자열로 만든다."""
+    catalog = {"strings": [{"de": "Hallo", "en": "Hello", "ko": '{(on ? "켬 : "끔")}'}]}
+    repo = _repo(tmp_path, catalog=catalog)
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "따옴표" in report.problems[0]
+
+
 def test_대장의_한국어에_줄바꿈이_있으면_실패한다(tmp_path: Path) -> None:
     catalog = {"strings": [{"de": "Hallo", "en": "Hello", "ko": "안녕\n세계"}]}
     repo = _repo(tmp_path, catalog=catalog)

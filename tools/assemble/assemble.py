@@ -113,17 +113,24 @@ def literal_fault(ko: str) -> str | None:
     규약을 어긴 값은 여기서 막는다. 대장은 사람이 손으로 고치는 파일이라 언젠가
     escape 안 된 따옴표가 들어오고, 그때 조용히 깨진 C#을 내는 것보다 그 행을 지목하고
     멈추는 편이 낫다.
+
+    ## 보간 자리 안은 잣대가 다르다
+
+    자리 안은 식이라 그 안의 따옴표는 escape하면 안 된다. `\\"`는 C# 문법 오류다. 그래서
+    자리 안은 빼고 본다. 자리 밖의 escape 안 된 따옴표는 여전히 리터럴을 그 자리에서
+    끝내 버리므로 지금처럼 막는다. 자리의 모양 자체는 `scanner.body_fault`가 본다.
     """
     if "\n" in ko or "\r" in ko:
         return "줄바꿈이 그대로 들어 있다"
+    outside = scanner.outside_holes(ko)
     i = 0
-    while i < len(ko):
-        if ko[i] == "\\":
-            if i + 1 >= len(ko) or ko[i + 1] not in ESCAPES:
+    while i < len(outside):
+        if outside[i] == "\\":
+            if i + 1 >= len(outside) or outside[i + 1] not in ESCAPES:
                 return f"C#이 모르는 이스케이프다: {ko[i : i + 2]}"
             i += 2
             continue
-        if ko[i] == '"':
+        if outside[i] == '"':
             return "escape 안 된 큰따옴표가 있다"
         i += 1
     return None
@@ -143,7 +150,9 @@ def load_catalog(path: Path) -> dict[tuple[str, str], str]:
             raise ValueError(f"한국어가 비어 있다: {row['en'][:60]}")
         if key in catalog:
             raise ValueError(f"같은 쌍이 중복이다: {row['en'][:60]}")
-        fault = literal_fault(row["ko"])
+        # 모양을 먼저 본다. 자리의 짝이 깨져 있으면 어디까지가 자리인지가 안 정해지고,
+        # 그러면 리터럴 규약을 자리 밖에서만 보는 판단도 믿을 수 없다.
+        fault = scanner.body_fault(row["ko"]) or literal_fault(row["ko"])
         if fault is not None:
             raise ValueError(f"{fault}: {row['en'][:60]}")
         catalog[key] = row["ko"]
