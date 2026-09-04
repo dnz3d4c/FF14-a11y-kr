@@ -185,6 +185,45 @@ def test_Loc_표기를_그대로_되쓴다() -> None:
     assert text[sites[0].start :].startswith("Loc.IsGerman")
 
 
+def test_별칭_De로_갈리는_자리도_찾는다() -> None:
+    """`ColorNamer.cs`가 `private static bool De => Loc.IsGerman;`을 두고 이것으로 갈린다."""
+    text = '        < 0.06 => De ? "schwarz" : "black",\n'
+    sites = scanner.find_sites(text)
+
+    assert len(sites) == 1
+    assert (sites[0].de, sites[0].en) == ("schwarz", "black")
+    assert sites[0].qualifier == ""
+
+
+def test_표식이_다른_이름의_꼬리면_자리가_아니다() -> None:
+    """`De`는 두 글자라 남의 이름 안에 그대로 들어 있다. 앞 글자를 안 보면 오탐이 된다."""
+    text = 'var s = ModeDe ? "a" : "b";\n'
+
+    assert scanner.scan(text) == ([], [])
+
+
+def test_표식이_다른_이름의_머리면_자리가_아니다() -> None:
+    text = 'var s = Detail ? "a" : "b";\n'
+
+    assert scanner.scan(text) == ([], [])
+
+
+def test_튜플_필드_접근은_자리가_아니다() -> None:
+    """`CharaMakeIconText.cs`의 `t.De`가 이 모양이다. 우리가 두는 별칭이 아니다."""
+    text = "var s = t.De ? t.X : t.Y;\n"
+
+    assert scanner.scan(text) == ([], [])
+
+
+def test_점_뒤라도_Loc_한정자면_자리다() -> None:
+    """`.` 뒤를 통째로 막으면 `Loc.IsGerman`을 쓰는 파일이 통째로 안 잡힌다."""
+    text = 'var s = Loc.IsGerman ? "Hallo" : "Hello";\n'
+    sites = scanner.find_sites(text)
+
+    assert len(sites) == 1
+    assert sites[0].qualifier == "Loc."
+
+
 def test_이미_옮긴_Pick도_자리로_잡힌다() -> None:
     text = 'public static string A => Pick("Hallo", "Hello", "안녕");\n'
     sites = scanner.find_sites(text)
@@ -339,6 +378,22 @@ def test_중첩_갈림길을_평평한_둘로_편다() -> None:
     assert scanner.unnest(text) == (
         '    var s = n == 1 ? (IsGerman ? "Slot" : "slot") : (IsGerman ? "Slots" : "slots");\n'
     )
+
+
+def test_편_자리는_그_자리가_쓰던_표식을_되쓴다() -> None:
+    """`De`로 갈리던 자리를 `IsGerman`으로 되쓰면 그 파일에 없는 이름이 들어가 컴파일이 깨진다."""
+    text = '    var s = De ? (n == 1 ? "Slot" : "Slots") : (n == 1 ? "slot" : "slots");\n'
+
+    assert scanner.unnest(text) == (
+        '    var s = n == 1 ? (De ? "Slot" : "slot") : (De ? "Slots" : "slots");\n'
+    )
+
+
+def test_이름의_한_조각인_표식은_안_편다() -> None:
+    """펴는 걸음도 표식을 같은 잣대로 봐야 한다. 안 그러면 남의 이름을 갈림길로 뒤집는다."""
+    text = 'var s = ModeDe ? (n == 1 ? "1" : "2") : (n == 1 ? "3" : "4");\n'
+
+    assert scanner.unnest(text) == text
 
 
 def test_괄호가_없어도_갈래의_끝을_찾는다() -> None:

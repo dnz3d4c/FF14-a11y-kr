@@ -14,9 +14,9 @@
 
 ## 표식으로 못 보는 것
 
-갈림길을 알아보는 표식은 `IsGerman`과 `Pick` 둘뿐이다. 별칭을 따로 정의하고 그
-별칭으로 갈라지는 자리(`ColorNamer.cs`의 `De`)는 여기서 한 건도 안 잡힌다.
-그러므로 미적용 0건은 "다 옮겼다"가 아니다.
+갈림길을 알아보는 표식은 `MARKERS`에 적어 둔 이름과 `Pick` 뿐이다. 여기 없는 별칭을
+새로 정의하고 그 별칭으로 갈라지는 자리는 한 건도 안 잡힌다. 안 잡히면 미적용에도
+못 읽음에도 안 나타나므로, 미적용 0건은 그 자체로 "다 옮겼다"가 아니다.
 """
 
 from __future__ import annotations
@@ -24,9 +24,14 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-#: 갈림길을 알아보는 표식.
-MARKER = "IsGerman"
+#: 갈림길을 알아보는 표식. `De`는 `ColorNamer.cs`가 `Loc.IsGerman`에 붙인 별칭이고,
+#: 그 파일의 104곳이 이것으로 갈린다. 표식을 늘리면 되쓸 때 **그 자리가 쓰던 이름**을
+#: 되써야 한다 - `De`로 갈리던 자리에 `IsGerman`을 넣으면 그 파일에 없는 이름이 된다.
+MARKERS = ("IsGerman", "De")
 PICK = "Pick("
+
+#: 표식 앞에 붙을 수 있는 한정자. 파일마다 관례가 달라 통일하지 않는다.
+QUALIFIER = "Loc."
 
 #: 한 줄이 이 칸을 넘으면 인자마다 줄을 나눈다. 원본 소스의 폭에 맞췄다.
 WIDTH = 100
@@ -225,10 +230,53 @@ def _qualified(text: str, found: int) -> tuple[int, str]:
     다른 파일은 `Loc.IsGerman`을 그대로 쓴다. 한쪽으로 통일하면 그 파일이 안 쓰던
     표기가 섞여 들어간다.
     """
-    prefix = "Loc."
-    if text[max(0, found - len(prefix)) : found] == prefix:
-        return found - len(prefix), prefix
+    if text[max(0, found - len(QUALIFIER)) : found] == QUALIFIER:
+        return found - len(QUALIFIER), QUALIFIER
     return found, ""
+
+
+def _standalone(text: str, found: int, marker: str) -> bool:
+    """그 자리의 표식이 낱말 하나인가.
+
+    `IsGerman`은 이름이 특이해서 검사 없이도 문제가 안 났지만, 별칭 `De`는 두 글자라
+    남의 이름 안에 그대로 들어 있다. `ModeDe`의 꼬리와 `Detail`의 머리를 갈림길로 읽으면
+    엉뚱한 자리를 `Pick`으로 바꾼다.
+
+    `.` 뒤는 막되 `Loc.` 한정자만 통과시킨다. `CharaMakeIconText.cs`의 `t.De`는 튜플의
+    필드라 우리 표식이 아니고, 그렇다고 `.` 뒤를 통째로 막으면 `Loc.IsGerman`을 쓰는
+    파일이 통째로 안 잡힌다.
+    """
+    if text[found + len(marker) : found + len(marker) + 1] in _IDENT:
+        return False
+    if found == 0:
+        return True
+    before = text[found - 1]
+    if before in _IDENT:
+        return False
+    if before == ".":
+        return text[max(0, found - len(QUALIFIER)) : found] == QUALIFIER
+    return True
+
+
+def _next_marker(text: str, start: int) -> tuple[int, str] | None:
+    """`start` 이후 가장 앞선 표식의 (자리, 그 자리가 쓴 표식). 없으면 None.
+
+    표식이 여럿이라 각각 따로 찾아 위치순으로 고른다. 표식을 찾는 걸음이 `unnest`와
+    `_ternary_sites` 둘에 있어서, 둘이 같은 판단을 쓰도록 여기 하나로 둔다.
+    """
+    best: tuple[int, str] | None = None
+    for marker in MARKERS:
+        at = start
+        while True:
+            found = text.find(marker, at)
+            if found < 0:
+                break
+            if _standalone(text, found, marker):
+                if best is None or found < best[0]:
+                    best = (found, marker)
+                break
+            at = found + 1
+    return best
 
 
 #: 조건에 있으면 안 펴는 부작용. 편 뒤에는 조건이 두 번 적히므로 두 번 일어난다.
@@ -443,10 +491,11 @@ def unnest(text: str) -> str:
     edits: list[tuple[int, int, str]] = []
     at = 0
     while True:
-        found = stripped.find(MARKER, at)
-        if found < 0:
+        spot = _next_marker(stripped, at)
+        if spot is None:
             break
-        at = found + len(MARKER)
+        found, marker = spot
+        at = found + len(marker)
 
         question = _skip(stripped, at)
         if stripped[question : question + 1] != "?":
@@ -454,7 +503,7 @@ def unnest(text: str) -> str:
         if stripped[question + 1 : question + 2] in ("?", "."):
             continue
 
-        edit = _flatten(stripped, text, found, question)
+        edit = _flatten(stripped, text, found, question, marker)
         if edit is not None:
             edits.append(edit)
             at = edit[1]  # 편 자리 안을 다시 훑지 않는다
@@ -464,8 +513,14 @@ def unnest(text: str) -> str:
     return text
 
 
-def _flatten(stripped: str, text: str, found: int, question: int) -> tuple[int, int, str] | None:
-    """갈림길 하나를 편다. (시작, 끝, 그 자리에 놓을 글). 못 펴면 None."""
+def _flatten(
+    stripped: str, text: str, found: int, question: int, marker: str
+) -> tuple[int, int, str] | None:
+    """갈림길 하나를 편다. (시작, 끝, 그 자리에 놓을 글). 못 펴면 None.
+
+    `marker`는 **그 자리에서 찾은 표식**이다. 편 자리에 표식을 두 번 다시 적으므로,
+    한쪽으로 통일하면 `De`로 갈리던 파일에 없는 이름이 들어가 컴파일이 깨진다.
+    """
     stop = _branch(stripped, question + 1, len(stripped), ":,;", pending=1)
     if stop < 0:
         return None
@@ -497,9 +552,9 @@ def _flatten(stripped: str, text: str, found: int, question: int) -> tuple[int, 
         return None  # 줄을 걸친 조각은 다시 놓으면 들여쓰기가 무너진다
 
     condition, de_true, de_false, en_true, en_false = pieces
-    marker = qualifier + MARKER
-    first = f"{marker} ? {de_true} : {en_true}"
-    second = f"{marker} ? {de_false} : {en_false}"
+    token = qualifier + marker
+    first = f"{token} ? {de_true} : {en_true}"
+    second = f"{token} ? {de_false} : {en_false}"
 
     line_start = text.rfind(_NEWLINE, 0, span) + 1
     single = f"{condition} ? ({first}) : ({second})"
@@ -541,10 +596,11 @@ def _ternary_sites(stripped: str, text: str, unreadable: list[Blind]) -> list[Si
     sites: list[Site] = []
     start = 0
     while True:
-        found = stripped.find(MARKER, start)
-        if found < 0:
+        spot = _next_marker(stripped, start)
+        if spot is None:
             return sites
-        start = found + len(MARKER)
+        found, marker = spot
+        start = found + len(marker)
 
         question = _skip(stripped, start)
         if question >= len(stripped) or stripped[question] != "?":
