@@ -1,6 +1,9 @@
 {
   "note": "replace/의 사본이 어느 원본 판을 보고 쓰였는지. 조립할 때 원본의 그 파일을 다시 재서 여기와 다르면 알린다. replace는 원본의 개선을 조용히 덮어쓸 수 있는 부류라, 우리 사본을 다시 볼 때가 됐는지 알려면 이 지문이 필요하다. 사본을 새 원본에 맞춰 손본 다음에는 여기 값도 같이 옮긴다.",
   "files": {
-    "FF14Accessibility/Loc.cs": "221ce38579393eef156b8092a55ec14d132651bddde79ddffe816dfa0898cb1e"
+    "FF14Accessibility/Loc.cs": "221ce38579393eef156b8092a55ec14d132651bddde79ddffe816dfa0898cb1e",
+    "Installer/InstallerService.cs": "226c788c4fb2ea9c89a43b45ea858cad7261d9c044a77cc2cddb58c559a73bda",
+    "Installer/LanguageDialog.cs": "f7ad43ce1604566abccb58ac7ad569f871d4534b5ea11fb906fad0d7f55cb8d7",
+    "Installer/Loc.cs": "4ee40babaa70b32b788c51ebc62059647577f2bc313d8bbf9f679479e8c82e62"
   }
 }

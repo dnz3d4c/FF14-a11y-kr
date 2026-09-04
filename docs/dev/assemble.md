@@ -113,7 +113,7 @@
 ## 이번 단계의 범위 밖
 
 - **`CharaMakeIconText.cs`(1,928) + `CharaMakeShapeText.cs`(1,095) = 3,023건.** 삼항이 아니라 `(De, En, BriefDe, BriefEn)` 튜플 사전이라 이 도구가 보지 않는다. 개수만 세어 보고에 낸다.
-- **`Installer/`와 `Launcher/`.** 설치 프로그램은 별도 단계로 다룬다. 지금 조립 대상은 모드 본체(`FF14Accessibility/`)뿐이다.
+- **`Installer/`와 `Launcher/`의 문장.** 두 디렉토리는 조립이 얹기는 하지만(`docs/dev/installer.md`) 한국어 문장은 대장을 안 거친다. 자체 사전(`Installer/Loc.cs`)이 독일어와 영어와 한국어를 셋 다 들고 있어서, 위 네 숫자는 모드 본체(`FF14Accessibility/`)만 센다.
 
 ## 빌드는 반드시 Release로 한다
 

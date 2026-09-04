@@ -45,7 +45,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "common"))
 
 import console  # noqa: E402 - 위에서 경로를 넣어야 찾는다
 
-#: 조립 대상. 설치 프로그램과 런처는 이 단계의 범위 밖이다.
+#: 한국어 주입과 잔량 세기의 대상. `Installer/`와 `Launcher/`도 조립이 얹지만
+#: 그쪽은 자체 사전(`Installer/Loc.cs`)이 세 언어를 들고 있어 대장을 안 거친다.
 SOURCE_NAME = "FF14Accessibility"
 
 #: 삼항이 아니라 `(De, En, BriefDe, BriefEn)` 튜플 사전이라 이 도구가 못 보는 파일.

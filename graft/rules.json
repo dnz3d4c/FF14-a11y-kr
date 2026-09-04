@@ -334,6 +334,165 @@
       "why": "달라무드는 AssemblyVersion을 네 자리로 비교하는데 원본의 Version은 세 자리다. 값이 판마다 바뀌므로 고정 문자열로 적으면 다음 판에서 앵커가 깨진다.",
       "regex": "<Version>(\\d+\\.\\d+\\.\\d+)</Version>",
       "replace": "<Version>\\1.0</Version>"
+    },
+    {
+      "name": "installer-mainform-owner-updated",
+      "file": "Installer/MainForm.cs",
+      "why": "소유자 없는 대화 상자는 남의 창 뒤로 숨는다. 스스로 업데이트한 뒤 다시 뜨는 자리라 사용자가 이 안내를 못 들으면 재시작이 고장으로 들린다. MessageBox.Show( 한 줄만으로는 이 파일 네 곳에서 잡히므로 다음 줄까지 묶어 유일하게 만든다.",
+      "find": [
+        "            MessageBox.Show(",
+        "                Loc.Get(\"InstallerUpdatedMessage\", ownVersion),"
+      ],
+      "replace": [
+        "            MessageBox.Show(",
+        "                this,",
+        "                Loc.Get(\"InstallerUpdatedMessage\", ownVersion),"
+      ]
+    },
+    {
+      "name": "installer-mainform-owner-question",
+      "file": "Installer/MainForm.cs",
+      "why": "이것이 예/아니오를 묻는 유일한 자리다. KR 업데이터가 시작하면서 앞으로 나오는 바람에 물음이 그 뒤로 숨어, 사용자에게는 설치가 멈춘 것으로 들렸다. 원본 주석이 소유자 없이도 안전하다고 말하는 자리라 그 밑에 왜 소유자를 붙였는지 덧붙인다.",
+      "find": [
+        "        var result = MessageBox.Show(",
+        "            question,"
+      ],
+      "replace": [
+        "        //",
+        "        // Owner, weil ein Dialog ohne Besitzer hinter fremden Fenstern landet:",
+        "        // der KR-Updater nimmt beim Start den Vordergrund, und die Rueckfrage",
+        "        // verschwand dahinter (2026-08-20, W-61).",
+        "        var result = MessageBox.Show(",
+        "            this,",
+        "            question,"
+      ]
+    },
+    {
+      "name": "installer-mainform-owner-completed",
+      "file": "Installer/MainForm.cs",
+      "why": "설치가 끝났다는 마지막 안내다. 이것이 숨으면 설치가 끝났는지 아닌지를 알 방법이 남지 않는다.",
+      "find": [
+        "            MessageBox.Show(",
+        "                Loc.Get(\"OperationCompleted\"),"
+      ],
+      "replace": [
+        "            MessageBox.Show(",
+        "                this,",
+        "                Loc.Get(\"OperationCompleted\"),"
+      ]
+    },
+    {
+      "name": "installer-mainform-owner-error",
+      "file": "Installer/MainForm.cs",
+      "why": "오류 안내가 숨으면 설치가 조용히 실패한 것과 구분이 안 된다. 네 자리 중 이것이 가장 나쁜 경우다.",
+      "find": [
+        "            MessageBox.Show(",
+        "                Loc.Get(\"UnexpectedError\", ex.Message),"
+      ],
+      "replace": [
+        "            MessageBox.Show(",
+        "                this,",
+        "                Loc.Get(\"UnexpectedError\", ex.Message),"
+      ]
+    },
+    {
+      "name": "installer-program-kr-cli-modes",
+      "file": "Installer/Program.cs",
+      "why": "창을 안 띄우는 갈래 셋. --check는 설치 프로그램이 무엇을 찾았는지 적고, --bootstrap은 없는 프로필 조각까지 만들고, --install은 GUI와 같은 절차를 창 없이 돌리고 종료 코드를 남긴다. 창은 마우스와 화면 없이 검사할 방법이 없는데 이 갈래들은 있다. KrCheck는 kr/Installer/KrCheck.cs가 들고 온다.",
+      "find": [
+        "        var args = Environment.GetCommandLineArgs();"
+      ],
+      "replace": [
+        "        var args = Environment.GetCommandLineArgs();",
+        "",
+        "        // --check sagt nur, was der Installer vorfindet; --bootstrap legt zusaetzlich",
+        "        // die fehlenden Profilteile an. Beide beenden sich danach. Die GUI kann man",
+        "        // nicht ohne Maus/Bildschirm pruefen, diese Aufloesung schon - und sie ist",
+        "        // genau das, was bei \"es passiert nichts\" fehlt.",
+        "        var check = Array.IndexOf(args, \"--check\") >= 0;",
+        "        var bootstrap = Array.IndexOf(args, \"--bootstrap\") >= 0;",
+        "        if (check || bootstrap)",
+        "        {",
+        "            KrCheck.Run(bootstrap);",
+        "            return;",
+        "        }",
+        "",
+        "        // --install laeuft denselben Ablauf wie die GUI, nur ohne Fenster, und",
+        "        // setzt einen Exit-Code. Damit ist der Installationsweg automatisch",
+        "        // pruefbar (tools/pack-check) - die GUI selbst ist es nicht.",
+        "        if (Array.IndexOf(args, \"--install\") >= 0)",
+        "        {",
+        "            Loc.Current = Loc.LoadSavedLanguage() ?? DefaultLanguage();",
+        "            Environment.ExitCode = KrCheck.RunInstall(Array.IndexOf(args, \"--skip-vnavmesh\") >= 0);",
+        "            return;",
+        "        }"
+      ]
+    },
+    {
+      "name": "installer-program-default-korean",
+      "file": "Installer/Program.cs",
+      "why": "언어 대화 상자의 선택 기본값이다. 원본은 독일어가 아니면 영어로 떨어지는데, 이 판을 쓰는 사람은 한국 클라이언트로 게임을 하므로 한국어로 떨어지는 편이 맞다. 플러그인 쪽 configuration-default-korean과 같은 판단을 설치 프로그램에서 한 것이다.",
+      "find": [
+        "    private static string DefaultLanguage()",
+        "        => Loc.SystemLanguageIsGerman() ? Loc.German : Loc.English;"
+      ],
+      "replace": [
+        "    /// <summary>",
+        "    /// Vorauswahl im Sprachdialog. Der KR-Build faellt auf Koreanisch zurueck,",
+        "    /// nicht auf Englisch - wer ihn benutzt, spielt auf dem koreanischen Client.",
+        "    /// </summary>",
+        "    private static string DefaultLanguage()",
+        "        => Loc.SystemLanguageIsGerman() ? Loc.German : Loc.Korean;"
+      ]
+    },
+    {
+      "name": "installer-csproj-assembly-name-kr",
+      "file": "Installer/FF14AccessibilityInstaller.csproj",
+      "why": "한국어판 EXE의 이름이다. 원본과 같은 이름으로 내면 릴리스 자산 이름이 겹치고, 스스로 업데이트할 때 InstallerService가 찾는 자산 이름(FF14AccessibilityInstaller-KR.exe)과도 어긋난다.",
+      "find": [
+        "    <AssemblyName>FF14AccessibilityInstaller</AssemblyName>"
+      ],
+      "replace": [
+        "    <AssemblyName>FF14AccessibilityInstaller-KR</AssemblyName>"
+      ]
+    },
+    {
+      "name": "installer-csproj-version-four-parts",
+      "file": "Installer/FF14AccessibilityInstaller.csproj",
+      "why": "네 번째 자리가 한국어판 개정 번호다. 원본의 Version은 세 자리이고 그 값이 판마다 바뀌므로 고정 문자열로 적으면 다음 판에서 앵커가 깨진다. 플러그인 csproj의 같은 이름 규칙과 짝이다.",
+      "regex": "<Version>(\\d+\\.\\d+\\.\\d+)</Version>",
+      "replace": "<Version>\\1.0</Version>"
+    },
+    {
+      "name": "installer-csproj-launcher-resource",
+      "file": "Installer/FF14AccessibilityInstaller.csproj",
+      "why": "런처 EXE를 설치 프로그램 안에 넣어 설치할 때 꺼내 놓는다. 조건을 일부러 안 걸었다 - 런처가 없으면 빌드가 여기서 서야 한다. 선택으로 만들면 끝까지 도는데 바로 가기만 조용히 안 놓이는 설치 프로그램이 나온다. 앵커에 PackageReference 줄을 묶는 까닭은 </ItemGroup>이 새 ItemGroup을 더한 뒤 두 곳이 되기 때문이다.",
+      "find": [
+        "    <PackageReference Include=\"Newtonsoft.Json\" Version=\"13.0.3\" />",
+        "  </ItemGroup>"
+      ],
+      "replace": [
+        "    <PackageReference Include=\"Newtonsoft.Json\" Version=\"13.0.3\" />",
+        "  </ItemGroup>",
+        "",
+        "  <ItemGroup>",
+        "    <!-- KR fork: the launcher that starts the game and the Korean updater",
+        "         together, carried inside this EXE and written out during the install.",
+        "",
+        "         Deliberately NOT conditional on the file existing. A missing launcher",
+        "         has to break the build here, at the one moment somebody is looking at",
+        "         it; made optional, it produces an installer that runs to completion and",
+        "         quietly puts down no shortcut. The launcher is published before this",
+        "         project for exactly that reason.",
+        "",
+        "         The published file, not the built one: the launcher is",
+        "         framework-dependent, so its build output is an exe plus a dll plus a",
+        "         runtimeconfig, and only the single-file publish is one file to embed. -->",
+        "    <EmbeddedResource",
+        "      Include=\"..\\Launcher\\bin\\Release\\net10.0-windows\\win-x64\\publish\\FF14AccessibilityPlay.exe\"",
+        "      LogicalName=\"FF14AccessibilityPlay.exe\" />",
+        "  </ItemGroup>"
+      ]
     }
   ]
 }

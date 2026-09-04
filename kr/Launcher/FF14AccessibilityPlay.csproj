@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>FF14AccessibilityPlay</AssemblyName>
+    <RootNamespace>FF14AccessibilityInstaller</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- KR fork: fourth field is the Korean revision, same rule as the plugin
+         and installer csproj (docs/dev/release.md section 5). -->
+    <Version>1.1.1.2</Version>
+    <AssemblyVersion>1.1.1.2</AssemblyVersion>
+    <FileVersion>1.1.1.2</FileVersion>
+    <!-- Framework-dependent, NOT self-contained: the installer guarantees the
+         .NET 10 desktop runtime before it puts this file anywhere, so bundling
+         a second copy of the runtime would add ~70 MB to buy nothing.
+
+         Single file all the same. A framework-dependent build is an .exe, a
+         .dll and a .runtimeconfig.json, and the installer extracts ONE file
+         from its resources - the other two would simply be missing, and the
+         launcher would fail to start with a message nobody can act on. -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Compiled in rather than referenced. KrProfile is an internal class, so
+         a project reference would not see it at all; more to the point, the
+         paths in it must not exist twice. KeyNames and Plugin.KeyNameToVK are
+         what a second copy looks like after a while - two tables, silently
+         disagreeing, three key bindings dead (status.md W-04).
+
+         Loc comes along so the launcher's two failure messages arrive in the
+         language the installer already saved. -->
+    <Compile Include="..\Installer\KrProfile.cs" Link="KrProfile.cs" />
+    <Compile Include="..\Installer\Loc.cs" Link="Loc.cs" />
+  </ItemGroup>
+
+</Project>
