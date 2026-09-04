@@ -255,6 +255,80 @@
       ]
     },
     {
+      "name": "strings-compass-words-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "언어별 배열을 통째로 고르는 자리라 파서가 배열 이름 둘만 보고 낱말은 못 본다. 원소별 삼항으로 펴면 여덟 낱말이 저마다 갈림길이 되어 대장이 연다. 한국어를 여기 박지 않는 까닭은 대장이 단일 원천이어야 해서다 - 편 자리에 주입이 들어와야 하므로 주입 앞에 돈다. 차례가 곧 뜻이다: RouteService가 CompassWords[SectorOf(...)]로 색인 접근하므로 어긋나면 컴파일은 되고 엉뚱한 방향을 말한다. CompassDe와 CompassEn 선언까지 같이 걷어내는 것은 펴고 나면 아무도 안 쓰게 되고 -warnaserror가 죽은 필드를 잡기 때문이다.",
+      "phase": "before",
+      "find": [
+        "    private static readonly string[] CompassDe =",
+        "        { \"Norden\", \"Nordosten\", \"Osten\", \"Südosten\", \"Süden\", \"Südwesten\", \"Westen\", \"Nordwesten\" };",
+        "    private static readonly string[] CompassEn =",
+        "        { \"North\", \"Northeast\", \"East\", \"Southeast\", \"South\", \"Southwest\", \"West\", \"Northwest\" };",
+        "",
+        "    public static string[] CompassWords => IsGerman ? CompassDe : CompassEn;"
+      ],
+      "replace": [
+        "    // ORDER IS MEANING: index 0 = North .. 7 = Northwest, read by",
+        "    // RouteService.SectorOf. Reordering compiles and then speaks the wrong way.",
+        "    public static string[] CompassWords => new[]",
+        "    {",
+        "        IsGerman ? \"Norden\" : \"North\",",
+        "        IsGerman ? \"Nordosten\" : \"Northeast\",",
+        "        IsGerman ? \"Osten\" : \"East\",",
+        "        IsGerman ? \"Südosten\" : \"Southeast\",",
+        "        IsGerman ? \"Süden\" : \"South\",",
+        "        IsGerman ? \"Südwesten\" : \"Southwest\",",
+        "        IsGerman ? \"Westen\" : \"West\",",
+        "        IsGerman ? \"Nordwesten\" : \"Northwest\",",
+        "    };"
+      ]
+    },
+    {
+      "name": "strings-compass-adjectives-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "명사형과 같은 이유로 편다. 한국어는 두 배열이 같은 낱말을 쓰지만 배열을 합치지는 않는다 - 독일어와 영어는 형태가 달라서 합치면 그 둘이 깨진다.",
+      "phase": "before",
+      "find": [
+        "    private static readonly string[] CompassAdjDe =",
+        "        { \"nördlich\", \"nordöstlich\", \"östlich\", \"südöstlich\", \"südlich\", \"südwestlich\", \"westlich\", \"nordwestlich\" };",
+        "    private static readonly string[] CompassAdjEn =",
+        "        { \"north\", \"northeast\", \"east\", \"southeast\", \"south\", \"southwest\", \"west\", \"northwest\" };",
+        "    public static string[] CompassAdjectives => IsGerman ? CompassAdjDe : CompassAdjEn;"
+      ],
+      "replace": [
+        "    // ORDER IS MEANING, same index as CompassWords.",
+        "    public static string[] CompassAdjectives => new[]",
+        "    {",
+        "        IsGerman ? \"nördlich\" : \"north\",",
+        "        IsGerman ? \"nordöstlich\" : \"northeast\",",
+        "        IsGerman ? \"östlich\" : \"east\",",
+        "        IsGerman ? \"südöstlich\" : \"southeast\",",
+        "        IsGerman ? \"südlich\" : \"south\",",
+        "        IsGerman ? \"südwestlich\" : \"southwest\",",
+        "        IsGerman ? \"westlich\" : \"west\",",
+        "        IsGerman ? \"nordwestlich\" : \"northwest\",",
+        "    };"
+      ]
+    },
+    {
+      "name": "strings-reward-currency-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "같은 모양이다. 차례가 뜻인 것도 같다 - UIReaderService가 자리로 화폐를 가른다. 게임 한국어판은 경험치가 Addon 720행, 길이 830행이다.",
+      "phase": "before",
+      "find": [
+        "    public static string[] RewardCurrencyLabels =>",
+        "        IsGerman ? new[] { \"Erfahrung\", \"Gil\" } : new[] { \"EXP\", \"Gil\" };"
+      ],
+      "replace": [
+        "    // ORDER IS MEANING: the currency type is only a UI image, so position decides.",
+        "    public static string[] RewardCurrencyLabels => new[]",
+        "    {",
+        "        IsGerman ? \"Erfahrung\" : \"EXP\",",
+        "        IsGerman ? \"Gil\" : \"Gil\",",
+        "    };"
+      ]
+    },
+    {
       "name": "csproj-version-four-parts",
       "file": "FF14Accessibility/FF14Accessibility.csproj",
       "why": "달라무드는 AssemblyVersion을 네 자리로 비교하는데 원본의 Version은 세 자리다. 값이 판마다 바뀌므로 고정 문자열로 적으면 다음 판에서 앵커가 깨진다.",
