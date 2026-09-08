@@ -354,6 +354,17 @@ def load_revision(path: Path) -> int:
     return value
 
 
+def normalise_head(head: str) -> str:
+    """`6.08.8`을 `6.8.8`로. 마디마다 앞자리 0을 지운다.
+
+    .NET이 매니페스트에 내는 `Version.ToString()`과 같은 모양이다. 원본은 자기
+    사정으로 `<Version>6.08.8</Version>`이라 적는데, 그대로 찍으면 csproj는
+    `6.08.8.0`을 말하고 빌드 산출물은 `6.8.8.0`을 말한다. 설치 프로그램이 릴리스
+    태그와 매니페스트 값을 **문자열로** 맞대어 재므로 그 갈림이 곧 발행 중단이다.
+    """
+    return ".".join(str(int(part)) for part in head.split("."))
+
+
 def stamp_versions(build: Path, revision: int, report: Report) -> None:
     """csproj 셋의 버전 태그를 `<그 파일의 앞 세 마디>.<개정>`으로 맞춘다.
 
@@ -391,10 +402,13 @@ def stamp_versions(build: Path, revision: int, report: Report) -> None:
             report.problems.append(f"버전 마디가 숫자가 아니다 - {name}의 {broken[0]}")
             continue
 
-        heads = {match.group(1) for _, match in parsed if match is not None}
+        # 앞자리 0을 지우고 나서 잰다. `6.08.8`과 `6.8.8`은 갈린 것이 아니라 같은
+        # 값을 두 모양으로 적은 것이다.
+        heads = {normalise_head(match.group(1)) for _, match in parsed if match is not None}
         if len(heads) > 1:
             report.problems.append(
-                f"한 파일 안에서 앞 세 마디가 갈렸다 - {name}의 {sorted(heads)}. "
+                f"한 파일 안에서 앞 세 마디가 갈렸다 - {name}의 "
+                f"{sorted(value for value, _ in parsed)}. "
                 "어느 태그를 따를지 우리가 정할 일이 아니다"
             )
             continue

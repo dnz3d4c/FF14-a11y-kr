@@ -316,39 +316,132 @@ def approval(ctx: Context) -> int:
     return 1
 
 
-def upstream_tag(version: str) -> str:
-    """우리 판에 붙는 원본 태그. 앞 두 마디가 같다.
+def git_at(path: Path, args: list[str]) -> str | None:
+    """`git -C path <args>`의 표준 출력. 실패하면 `None`.
 
-    우리 `5.95.0.0`에 원본 `v5.95`가 붙고, 우리 개정판(`5.91.0.1`)은 원본이 안
-    바뀌었으므로 같은 `v5.91`을 본다.
+    조회 전용이다. 여기서 실패하는 것은 대개 "없다"는 뜻이라(태그가 안 붙었다,
+    얕은 체크아웃이라 옛 커밋에 못 닿는다) 예외가 아니라 값으로 돌려준다.
     """
-    major, minor = version.split(".")[:2]
-    return f"v{major}.{minor}"
+    result = subprocess.run(
+        ["git", "-C", str(path), *args],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=120,
+    )
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip() or None
 
 
-def upstream_notes(ctx: Context) -> str | None:
-    """원본 릴리스 노트 본문. 못 받으면 `None`.
+def git_upstream(repo: Path, args: list[str]) -> str | None:
+    """서브모듈 안에서 git을 부른다."""
+    return git_at(repo / "upstream", args)
 
-    커버리지 검사(N21~N23)가 이것을 본다. 없이 돌면 그 검사가 통째로 꺼진다.
+
+def upstream_tag(repo: Path) -> str | None:
+    """지금 핀에 붙은 원본 태그. 안 붙어 있으면 `None`.
+
+    **우리 버전에서 역산하지 않는다.** 원본이 `v6.08.8`처럼 세 마디에 앞자리 0을
+    붙여 적기 시작해서, 우리 `6.8.8.0`에서는 그 이름을 만들 길이 아예 없다 -
+    앞 두 마디로 만들면 `v6.8`이 되어 있지도 않은 태그를 찾는다. 서브모듈에서
+    직접 읽는다. `sync.yml`이 이미 그렇게 한다.
     """
+    return git_upstream(repo, ["describe", "--tags", "--exact-match", "HEAD"])
+
+
+def latest_upstream_pin(ctx: Context) -> str | None:
+    """직전 릴리스 시점의 원본 핀. 못 찾으면 `None`.
+
+    우리 릴리스 태그의 gitlink를 읽는다. 첫 판이거나 얕은 체크아웃이라 그 태그에
+    못 닿으면 없다.
+
+    **로컬에 없으면 그 태그 하나만 받아 온다.** CI가 발행한 태그는 원격에만 있고,
+    개발 머신은 받은 적이 없다 - `v5.96.0.0`이 실제로 그랬다. 받아 오지 않으면
+    옛 핀이 없는 것으로 보여 원본 노트를 한 판만 받는데, 오류가 아니라 **재는
+    폭이 좁아지는 것**이라 화면에 아무것도 안 뜬다.
+    """
+    previous = latest_tag(ctx)
+    if not previous:
+        return None
+
+    read = lambda: git_at(ctx.repo, ["rev-parse", f"{previous}:upstream"])  # noqa: E731
+    pin = read()
+    if pin is not None:
+        return pin
+
+    # 태그 하나만 받는다. `--no-tags`가 딸려 오는 것을 막아 로컬 상태를 안 흔든다.
+    git_at(ctx.repo, ["fetch", "--quiet", "origin", "tag", previous, "--no-tags"])
+    return read()
+
+
+@functools.cache
+def upstream_tags(ctx: Context) -> list[str]:
+    """이번 판이 데려온 원본 태그를 옛 것부터 차례로.
+
+    **한 번에 여러 판을 얹으면 원본 노트도 여럿이다.** v5.96에서 v6.08.8로 건너뛴
+    판이 태그 넷을 데려왔고, 하나만 받으면 나머지 셋이 더한 기능은 커버리지
+    검사가 아예 안 본다.
+
+    옛 핀에 못 닿으면 지금 태그 하나로 간다. 이 도구가 옛 저장소에서 하던 것과
+    같은 폭이라 새로 잃는 것이 없다.
+    """
+    tag = upstream_tag(ctx.repo)
+    if tag is None:
+        return []
+
+    pin = latest_upstream_pin(ctx)
+    if pin is None:
+        return [tag]
+
+    listed = ["tag", "--list", "v*", "--sort=v:refname", "--merged"]
+    now = (git_upstream(ctx.repo, [*listed, "HEAD"]) or "").split()
+    then = set((git_upstream(ctx.repo, [*listed, pin]) or "").split())
+    fresh = [name for name in now if name not in then]
+    return fresh or [tag]
+
+
+def named_pin(ctx: Context) -> str:
+    """화면에 적을 원본 태그 이름. 여럿이면 다 적는다.
+
+    **몇 판을 대조했는지가 화면에 보여야 한다.** 넷을 얹고 하나만 잰 판과 넷을
+    다 잰 판이 요약에서 같아 보이면 안 된다.
+    """
+    tags = upstream_tags(ctx)
+    return ", ".join(tags) if tags else "원본 핀에 태그가 없다"
+
+
+def fetch_release_body(tag: str) -> str | None:
+    """원본 릴리스 한 판의 노트 본문. 못 받으면 `None`."""
     try:
         body = gh(
-            [
-                "release",
-                "view",
-                upstream_tag(ctx.version),
-                "--repo",
-                UPSTREAM_REPO,
-                "--json",
-                "body",
-                "-q",
-                ".body",
-            ],
+            ["release", "view", tag, "--repo", UPSTREAM_REPO, "--json", "body", "-q", ".body"],
             capture=True,
         )
     except (ReleaseError, OSError, subprocess.SubprocessError):
         return None
     return body if body.strip() else None
+
+
+def upstream_notes(ctx: Context) -> str | None:
+    """이번 판이 데려온 원본 노트 전부를 이어 붙인다. 하나도 못 받으면 `None`.
+
+    커버리지 검사(N21~N23)가 이것을 본다. 없이 돌면 그 검사가 통째로 꺼진다.
+    """
+    parts: list[str] = []
+    missing: list[str] = []
+    for tag in upstream_tags(ctx):
+        body = fetch_release_body(tag)
+        if body is None:
+            missing.append(tag)
+            continue
+        parts.append(f"# {tag}\n\n{body}")
+
+    if missing:
+        # 태그는 붙었는데 릴리스가 없는 판이 있다. **넘어간 것은 화면에 남긴다.**
+        print(f"[경고] 원본 노트를 못 받은 판이 있다: {', '.join(missing)}", file=sys.stderr)
+    return "\n\n".join(parts) if parts else None
 
 
 def latest_tag(ctx: Context) -> str | None:
@@ -390,9 +483,7 @@ def check_notes(ctx: Context) -> int:
 
     if body is None:
         if not os.environ.get(UPSTREAM_UNREACHABLE_VARIABLE, "").strip():
-            print(
-                f"[실패] 원본 릴리스 노트를 못 받았다: {upstream_tag(ctx.version)}", file=sys.stderr
-            )
+            print(f"[실패] 원본 릴리스 노트를 못 받았다: {named_pin(ctx)}", file=sys.stderr)
             print("  커버리지 검사를 못 돌린 채로는 내지 않는다.", file=sys.stderr)
             print(
                 f"  gh 인증을 확인하거나, 정말 못 받는 상태면 "
@@ -401,8 +492,7 @@ def check_notes(ctx: Context) -> int:
             )
             return 1
         # 사람이 못 받는 것을 확인하고 일부러 넘긴 갈래다. 넘어간 것을 화면에 남긴다.
-        tag = upstream_tag(ctx.version)
-        print(f"[경고] 원본 릴리스 노트를 못 받았다: {tag}. 사람이 명시로 넘겼다")
+        print(f"[경고] 원본 릴리스 노트를 못 받았다: {named_pin(ctx)}. 사람이 명시로 넘겼다")
         return run_notes_check(ctx, argv)
 
     workdir = Path(tempfile.mkdtemp(prefix="ff14acc-upnotes-"))
@@ -542,8 +632,7 @@ def steps(ctx: Context) -> list[Step]:
             "노트가 규칙에 맞나",
             functools.partial(check_notes, ctx),
             (
-                f"원본 노트를 받는다: gh release view {upstream_tag(ctx.version)}"
-                f" --repo {UPSTREAM_REPO}",
+                f"원본 노트를 받는다: gh release view {named_pin(ctx)} --repo {UPSTREAM_REPO}",
                 f"notes_check --version {ctx.version} {ctx.notes_source}",
                 f"못 받으면 선다 ({UPSTREAM_UNREACHABLE_VARIABLE} 로만 넘어간다)",
             ),

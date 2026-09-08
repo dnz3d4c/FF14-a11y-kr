@@ -173,6 +173,45 @@ def test_버전_세_태그가_같은_값이_된다(tmp_path: Path) -> None:
         assert _versions(repo, name) == ["5.95.0.0", "5.95.0.0", "5.95.0.0"]
 
 
+def test_앞자리_0을_뺀_마디로_찍는다(tmp_path: Path) -> None:
+    """원본이 `6.08.8`처럼 적어도 우리는 `6.8.8`로 찍는다.
+
+    .NET은 매니페스트에 `Version.ToString()`을 내는데 그것이 앞자리 0을 지운다.
+    csproj에 `6.08.8.0`이 적히면 매니페스트에는 `6.8.8.0`이 나오고, 설치
+    프로그램이 둘을 문자열로 맞대어 재므로 발행이 "버전이 빌드 설정과 다르다"로
+    선다. 오류가 아니라 **불일치**라 조립에서는 아무것도 안 드러난다.
+    """
+    repo = _repo(tmp_path)
+    padded = CSPROJ.replace("5.95.0", "6.08.8")
+    (repo / "upstream" / "FF14Accessibility" / "FF14Accessibility.csproj").write_text(
+        padded, encoding="utf-8"
+    )
+
+    report = assemble.assemble(repo)
+
+    assert report.problems == []
+    assert report.versions["FF14Accessibility/FF14Accessibility.csproj"] == "6.8.8.0"
+    assert _versions(repo, "FF14Accessibility/FF14Accessibility.csproj") == ["6.8.8.0"] * 3
+
+
+def test_앞자리_0을_뺀_뒤에_갈린_것만_실패한다(tmp_path: Path) -> None:
+    """`6.08.8`과 `6.8.8`은 같은 값이다. 0을 지우기 전에 재면 헛울린다.
+
+    원본이 `Version`에만 0을 붙이고 `AssemblyVersion`에는 안 붙이는 판이 실제로
+    나올 수 있다. 그 파일은 갈린 것이 아니라 같은 값을 두 모양으로 적은 것이다.
+    """
+    repo = _repo(tmp_path)
+    mixed = CSPROJ.replace("<Version>5.95.0</Version>", "<Version>5.095.0</Version>")
+    (repo / "upstream" / "FF14Accessibility" / "FF14Accessibility.csproj").write_text(
+        mixed, encoding="utf-8"
+    )
+
+    report = assemble.assemble(repo)
+
+    assert report.problems == []
+    assert _versions(repo, "FF14Accessibility/FF14Accessibility.csproj") == ["5.95.0.0"] * 3
+
+
 def test_저장소의_개정_마디를_읽는다(tmp_path: Path) -> None:
     repo = _repo(tmp_path)
     (repo / "korean" / "version.json").write_text(json.dumps({"kr_revision": 2}), encoding="utf-8")

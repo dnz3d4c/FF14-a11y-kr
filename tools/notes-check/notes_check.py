@@ -491,8 +491,13 @@ def _section_mark_problem(body: list[str]) -> str | None:
     return None
 
 
-def check(text: str, version: str) -> list[Violation]:
-    """어긴 것 목록. 비어 있으면 통과."""
+def check(text: str, version: str, upstream: str = "") -> list[Violation]:
+    """어긴 것 목록. 비어 있으면 통과.
+
+    `upstream`은 원본 릴리스 노트 본문이다. **N5가 이것을 본다** - 원본이 자기
+    판 번호(`v6.08.8`)를 적고 우리가 그것을 옮겨 적을 수 있어야 하는데, 그 번호는
+    우리 판 번호가 아니라 N5에 잡힌다. 안 주면 그 면제 없이 잰다.
+    """
     version = release_manifest.normalize_version(version)
     want_sections = sections_of(version)
     parts = split_sections(text)
@@ -546,7 +551,11 @@ def check(text: str, version: str) -> list[Violation]:
         )
 
     # N5 - 지난 판을 복사해 한 자리를 안 고치는 것.
-    stale = sorted({v for v in _VERSION.findall(text) if v != f"v{version}"})
+    #
+    # 원본이 이름을 댄 판 번호는 면제한다. **원본 노트에 실제로 나온 것만** 봐주므로
+    # 지난 우리 판(`v5.96.0.0`)이 남는 것은 그대로 걸린다 - 그것이 이 규칙의 목적이다.
+    known = {f"v{version}", *_VERSION.findall(upstream)}
+    stale = sorted({v for v in _VERSION.findall(text) if v not in known})
     if stale:
         violations.append(
             Violation(
@@ -1027,8 +1036,13 @@ def main(argv: list[str]) -> int:
         return 1
 
     text, violations = decode(args.path.read_bytes())
+    # 원본 본문은 커버리지(N21~N23)와 N5가 함께 본다. **여기서 한 번만 읽는다** -
+    # 두 자리가 따로 읽으면 한쪽만 받은 채로 도는 판이 생긴다.
+    upstream = ""
+    if args.upstream_notes is not None and args.upstream_notes.is_file():
+        upstream = args.upstream_notes.read_text(encoding="utf-8")
     if text:
-        violations += check(text, args.version)
+        violations += check(text, args.version, upstream)
 
     # **건너뛴 것을 말한다.** 조용히 넘기면 원본을 안 본 판과 다 옮긴 판이
     # 화면에서 같아진다.
@@ -1054,7 +1068,7 @@ def main(argv: list[str]) -> int:
         print(f"원본 릴리스 노트가 없다: {args.upstream_notes}", file=sys.stderr)
         return 1
     elif text:
-        found = coverage(text, args.upstream_notes.read_text(encoding="utf-8"), args.version)
+        found = coverage(text, upstream, args.version)
         # 되묻기는 선언으로 넘긴다. 개수 미달(N21)은 못 넘긴다.
         for violation in found:
             if args.upstream_acked and violation.code in ASK_CODES:

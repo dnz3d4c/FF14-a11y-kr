@@ -226,10 +226,116 @@ def test_승인이_있으면_지난다(tmp_path, monkeypatch):
 # ── 원본 노트 ──────────────────────────────────────────────────────────────
 
 
-def test_원본_태그는_앞_두_마디다():
-    """우리 5.95.0.0에 원본 v5.95가 붙는다. 개정판도 같은 원본을 본다."""
-    assert release.upstream_tag("5.95.0.0") == "v5.95"
-    assert release.upstream_tag("5.91.0.1") == "v5.91"
+def stub_git(monkeypatch, answers: dict[str, str | None]):
+    """서브모듈 조회를 갈아끼운다. 열쇠는 인자를 공백으로 이은 것."""
+    monkeypatch.setattr(release, "git_upstream", lambda repo, args: answers.get(" ".join(args)))
+
+
+def test_원본_태그를_서브모듈에서_읽는다(tmp_path, monkeypatch):
+    """우리 버전에서 역산하지 않는다.
+
+    원본이 `v6.08.8`처럼 세 마디에 앞자리 0을 붙여 적기 시작했다. 우리 판은
+    `6.8.8.0`이라 그 이름을 만들 길이 아예 없다 - 앞 두 마디로 만들면 `v6.8`이
+    되어 있지도 않은 태그를 찾는다.
+    """
+    stub_git(monkeypatch, {"describe --tags --exact-match HEAD": "v6.08.8"})
+
+    assert release.upstream_tag(tmp_path) == "v6.08.8"
+
+
+def test_핀에_태그가_안_붙어_있으면_없다고_한다(tmp_path, monkeypatch):
+    stub_git(monkeypatch, {})
+
+    assert release.upstream_tag(tmp_path) is None
+
+
+def test_한_번에_얹은_원본_태그를_전부_센다(tmp_path, monkeypatch):
+    """여러 판을 한꺼번에 얹으면 원본 노트도 여럿이다.
+
+    v5.96에서 v6.08.8로 건너뛴 판이 태그 넷을 데려왔다. 하나만 받으면 나머지
+    셋이 더한 기능은 커버리지 검사가 아예 안 본다.
+    """
+    pin = "old" * 13 + "a"
+    listed = "tag --list v* --sort=v:refname --merged"
+    stub_git(
+        monkeypatch,
+        {
+            "describe --tags --exact-match HEAD": "v6.08.8",
+            f"{listed} HEAD": "v5.95\nv5.96\nv6.08.5\nv6.08.6\nv6.08.7\nv6.08.8",
+            f"{listed} {pin}": "v5.95\nv5.96",
+        },
+    )
+    monkeypatch.setattr(release, "latest_upstream_pin", lambda ctx: pin)
+
+    assert release.upstream_tags(context(tmp_path)) == ["v6.08.5", "v6.08.6", "v6.08.7", "v6.08.8"]
+
+
+def test_로컬에_없는_릴리스_태그를_받아_옛_핀을_읽는다(tmp_path, monkeypatch):
+    """**CI가 발행한 태그는 원격에만 있다.**
+
+    이 저장소가 그렇다 - `v5.96.0.0`을 러너가 냈고 개발 머신은 그 태그를 받은
+    적이 없다. 받아 오지 않으면 옛 핀이 없는 것으로 보여 폴백으로 떨어지고, 그
+    폴백은 원본 노트를 한 판만 받는다. 오류가 아니라 **좁아지는 것**이라 화면에
+    아무것도 안 뜬다.
+    """
+    calls: list[list[str]] = []
+
+    def fake(repo, args):
+        calls.append(args)
+        # 받아 오기 전에는 못 읽는다.
+        if args[0] == "rev-parse":
+            return "핀" if any(a[0] == "fetch" for a in calls) else None
+        return ""
+
+    monkeypatch.setattr(release, "git_at", fake)
+    monkeypatch.setattr(release, "latest_tag", lambda ctx: "v5.96.0.0")
+
+    assert release.latest_upstream_pin(context(tmp_path)) == "핀"
+    assert ["fetch", "--quiet", "origin", "tag", "v5.96.0.0", "--no-tags"] in calls
+
+
+def test_옛_핀을_못_찾으면_지금_태그만_본다(tmp_path, monkeypatch):
+    """첫 판이거나 얕은 체크아웃이라 옛 핀에 못 닿는 자리다.
+
+    거기서 서는 대신 지금 핀의 노트 하나로 간다. 이 도구가 옛 저장소에서 하던
+    것과 같은 폭이라 새로 잃는 것이 없다.
+    """
+    stub_git(monkeypatch, {"describe --tags --exact-match HEAD": "v6.08.8"})
+    monkeypatch.setattr(release, "latest_upstream_pin", lambda ctx: None)
+
+    assert release.upstream_tags(context(tmp_path)) == ["v6.08.8"]
+
+
+def test_원본_노트_여럿을_합쳐_넘긴다(tmp_path, monkeypatch):
+    """검사기는 본문 하나를 받는다. 판마다 이름을 달아 이어 붙인다."""
+    monkeypatch.setattr(release, "upstream_tags", lambda ctx: ["v6.08.5", "v6.08.6"])
+    monkeypatch.setattr(release, "fetch_release_body", lambda tag: f"{tag} 본문")
+
+    body = release.upstream_notes(context(tmp_path))
+
+    assert body is not None
+    assert "v6.08.5 본문" in body
+    assert "v6.08.6 본문" in body
+
+
+def test_일부만_못_받으면_받은_것으로_간다(tmp_path, monkeypatch, capsys):
+    """**넘어간 것은 화면에 남긴다.** 태그는 붙었는데 릴리스가 없는 판이 있다."""
+    monkeypatch.setattr(release, "upstream_tags", lambda ctx: ["v6.08.5", "v6.08.6"])
+    monkeypatch.setattr(
+        release, "fetch_release_body", lambda tag: None if tag == "v6.08.5" else "뒤 본문"
+    )
+
+    body = release.upstream_notes(context(tmp_path))
+
+    assert body is not None and "뒤 본문" in body
+    assert "v6.08.5" in capsys.readouterr().err
+
+
+def test_하나도_못_받으면_없다고_한다(tmp_path, monkeypatch):
+    monkeypatch.setattr(release, "upstream_tags", lambda ctx: ["v6.08.5"])
+    monkeypatch.setattr(release, "fetch_release_body", lambda tag: None)
+
+    assert release.upstream_notes(context(tmp_path)) is None
 
 
 def test_앞_세_마디가_같으면_핀이_안_움직인_개정판이다():
