@@ -4,6 +4,11 @@
   "slots": "{name} 같은 보간 자리는 이름을 바꾸지 않는다. 순서는 한국어 어순대로 바꿔도 되지만 자리 집합이 영어와 같아야 하고, 다르면 ko-apply가 거부한다.",
   "strings": [
     {
+      "de": " 1 Stern.",
+      "en": " 1 star.",
+      "ko": " 별 1개."
+    },
+    {
       "de": " Achtung, nicht anvisiert.",
       "en": " Warning, not targeted.",
       "ko": " 주의, 대상 지정 안 됨."
@@ -134,6 +139,16 @@
       "ko": " {name}, HP {Percent(cur, max)} 퍼센트."
     },
     {
+      "de": " {stars} Sterne.",
+      "en": " {stars} stars.",
+      "ko": " 별 {stars}개."
+    },
+    {
+      "de": ", Gruppe {position}",
+      "en": ", party {position}",
+      "ko": ", 파티 {position}번"
+    },
+    {
       "de": ", HP {Percent(cur, max)} Prozent",
       "en": ", HP {Percent(cur, max)} percent",
       "ko": ", HP {Percent(cur, max)} 퍼센트"
@@ -152,6 +167,11 @@
       "de": ", abwärts",
       "en": ", down",
       "ko": ", 아래쪽"
+    },
+    {
+      "de": ", auf dir",
+      "en": ", on you",
+      "ko": ", 나에게"
     },
     {
       "de": ", aufwärts",
@@ -219,6 +239,11 @@
       "ko": ", {habitat}에 서식"
     },
     {
+      "de": ", minus {amount}",
+      "en": ", minus {amount}",
+      "ko": ", {amount} 감소"
+    },
+    {
       "de": ", noch {distance} bis zum Zielkreis",
       "en": ", {distance} to the goal area",
       "ko": ", 목표 범위까지 {distance}"
@@ -227,6 +252,11 @@
       "de": ", oder ",
       "en": ", or ",
       "ko": ", 또는 "
+    },
+    {
+      "de": ", plus {amount}",
+      "en": ", plus {amount}",
+      "ko": ", {amount} 증가"
     },
     {
       "de": ", rasend, nicht zähmbar",
@@ -274,6 +304,11 @@
       "ko": ", 나보다 {heightDiff:F0}미터 위"
     },
     {
+      "de": ", {hpPercent} Prozent",
+      "en": ", {hpPercent} percent",
+      "ko": ", {hpPercent}퍼센트"
+    },
+    {
       "de": ", {percent} Prozent",
       "en": ", {percent} percent",
       "ko": ", {percent}퍼센트"
@@ -307,6 +342,11 @@
       "de": "1 Tastenkonflikt.",
       "en": "1 key conflict.",
       "ko": "키 충돌 1개."
+    },
+    {
+      "de": "1 freier Platz",
+      "en": "1 empty socket",
+      "ko": "빈 홈 1개"
     },
     {
       "de": "Achtung, diese Spur ueberwindet {MetersRemaining(drop)} Hoehe und gilt deshalb nur in Laufrichtung. Fuer den Rueckweg zeichne bitte eine eigene Spur auf.",
@@ -419,6 +459,11 @@
       "ko": "연합 파티"
     },
     {
+      "de": "Alt+",
+      "en": "Alt+",
+      "ko": "알트 "
+    },
+    {
       "de": "Am schnellsten",
       "en": "Fastest",
       "ko": "가장 빠름"
@@ -427,6 +472,11 @@
       "de": "An- und abschwellend",
       "en": "Swelling",
       "ko": "물결"
+    },
+    {
+      "de": "Anderer Ring: {name}.",
+      "en": "Other ring: {name}.",
+      "ko": "다른 반지: {name}."
     },
     {
       "de": "Anfang des Verlaufs.",
@@ -674,9 +724,9 @@
       "ko": "알림 응답 없음."
     },
     {
-      "de": "Benachrichtigung. Mit {key} annehmen.",
-      "en": "Notification. Press {key} to accept.",
-      "ko": "알림. {key}는 수락."
+      "de": "Benachrichtigung. Mit {SpokenKeyLabel(key)} annehmen.",
+      "en": "Notification. Press {SpokenKeyLabel(key)} to accept.",
+      "ko": "알림. {SpokenKeyLabel(key)}는 수락."
     },
     {
       "de": "Berechne Weg zu {name}.",
@@ -692,6 +742,16 @@
       "de": "Beschreibung: {description}",
       "en": "Description: {description}",
       "ko": "설명: {description}"
+    },
+    {
+      "de": "Besser in {better}, schlechter in {worse}, von {total}.",
+      "en": "Better in {better}, worse in {worse}, of {total}.",
+      "ko": "{total}개 중 {better}개 더 좋고 {worse}개 더 나쁨."
+    },
+    {
+      "de": "Besser in {changed} von {total}.",
+      "en": "Better in {changed} of {total}.",
+      "ko": "{total}개 중 {changed}개 더 좋음."
     },
     {
       "de": "Bestiarium ist nicht geöffnet.",
@@ -732,6 +792,11 @@
       "de": "Biss!",
       "en": "Bite!",
       "ko": "입질."
+    },
+    {
+      "de": "Blau",
+      "en": "Blue",
+      "ko": "파란색"
     },
     {
       "de": "Blau",
@@ -847,6 +912,26 @@
       "de": "Chatsystem: {(legacy ? ChatSystemLegacyName : ChatSystemNewName)}",
       "en": "Chat system: {(legacy ? ChatSystemLegacyName : ChatSystemNewName)}",
       "ko": "대화 시스템: {(legacy ? ChatSystemLegacyName : ChatSystemNewName)}"
+    },
+    {
+      "de": "Chocobo Rang {rank}, Höchstrang erreicht.",
+      "en": "Chocobo rank {rank}, maximum rank reached.",
+      "ko": "초코보 랭크 {rank}, 최대 랭크 도달."
+    },
+    {
+      "de": "Chocobo Rang {rank}, {current} Erfahrungspunkte gesammelt.",
+      "en": "Chocobo rank {rank}, {current} experience points earned.",
+      "ko": "초코보 랭크 {rank}, 경험치 {current} 획득."
+    },
+    {
+      "de": "Chocobo Rang {rank}. Noch {left} Erfahrungspunkte bis Rang {rank + 1}.",
+      "en": "Chocobo rank {rank}. {left} experience points to rank {rank + 1}.",
+      "ko": "초코보 랭크 {rank}. 랭크 {rank + 1}까지 경험치 {left} 남음."
+    },
+    {
+      "de": "Chocobo-Rang nicht verfügbar.",
+      "en": "Chocobo rank not available.",
+      "ko": "초코보 랭크 확인 불가."
     },
     {
       "de": "Chronik: ",
@@ -1040,12 +1125,12 @@
     },
     {
       "de": "Dungeon",
-      "en": "dungeon",
+      "en": "Dungeon",
       "ko": "던전"
     },
     {
       "de": "Dungeon",
-      "en": "Dungeon",
+      "en": "dungeon",
       "ko": "던전"
     },
     {
@@ -1087,6 +1172,11 @@
       "de": "Eigene Stimme für Kampfwarnungen",
       "en": "Separate voice for combat warnings",
       "ko": "전투 경고 전용 음성"
+    },
+    {
+      "de": "Ein Gegner:",
+      "en": "One enemy:",
+      "ko": "적 1명:"
     },
     {
       "de": "Ein passender Gegenstand: {items[0]}. Auswählen und dann Übergeben drücken.",
@@ -1219,9 +1309,29 @@
       "ko": "조금 빠름"
     },
     {
+      "de": "Events",
+      "en": "Events",
+      "ko": "이벤트"
+    },
+    {
+      "de": "Events: {total} Gebiete, keines hier.",
+      "en": "Events: {total} zones, none here.",
+      "ko": "이벤트: {total}개 지역, 이 지역에 없음."
+    },
+    {
+      "de": "Events: {total} Gebiete, {here} hier.",
+      "en": "Events: {total} zones, {here} here.",
+      "ko": "이벤트: {total}개 지역, 이 지역에 {here}개."
+    },
+    {
       "de": "FATEs",
       "en": "FATEs",
       "ko": "돌발 임무"
+    },
+    {
+      "de": "FATEs dort mit der Yo-kai-Uhr machen.",
+      "en": "Do FATEs there with the Yo-kai Watch on.",
+      "ko": "그곳에서 요괴워치를 켜고 돌발 임무 수행."
     },
     {
       "de": "FATEs: {active} aktiv, {preparing} starten gleich.",
@@ -1505,6 +1615,11 @@
     },
     {
       "de": "Gegenstand",
+      "en": "Item",
+      "ko": "아이템"
+    },
+    {
+      "de": "Gegenstand",
       "en": "Item effect",
       "ko": "아이템 효과"
     },
@@ -1554,6 +1669,16 @@
       "ko": "적이 {action} 시전."
     },
     {
+      "de": "Gegnerfarben",
+      "en": "Enemy colours",
+      "ko": "적 색상"
+    },
+    {
+      "de": "Gegnerfarben sind aus.",
+      "en": "Enemy colours are off.",
+      "ko": "적 색상 꺼짐."
+    },
+    {
       "de": "Gehhilfe an: {name}.",
       "en": "Walk guide on: {name}.",
       "ko": "길안내 켜짐. 목적지 {name}."
@@ -1590,6 +1715,11 @@
     },
     {
       "de": "Gelb",
+      "en": "Yellow",
+      "ko": "노란색"
+    },
+    {
+      "de": "Gelb",
       "en": "yellow",
       "ko": "노랑"
     },
@@ -1619,9 +1749,19 @@
       "ko": "소지금을 알 수 없음."
     },
     {
+      "de": "Gleich wie angelegt.",
+      "en": "Same as equipped.",
+      "ko": "장착 중인 것과 같음."
+    },
+    {
       "de": "Gold",
       "en": "gold",
       "ko": "황금색"
+    },
+    {
+      "de": "Grau",
+      "en": "Grey",
+      "ko": "회색"
     },
     {
       "de": "Graugrün",
@@ -1632,6 +1772,11 @@
       "de": "Gruppe",
       "en": "Party",
       "ko": "파티"
+    },
+    {
+      "de": "Grün",
+      "en": "Green",
+      "ko": "초록색"
     },
     {
       "de": "Grün",
@@ -1697,6 +1842,26 @@
       "de": "Hauptmenü",
       "en": "Main menu",
       "ko": "주 메뉴"
+    },
+    {
+      "de": "Heilmonitor an",
+      "en": "Heal monitor on",
+      "ko": "힐 모니터 켜짐"
+    },
+    {
+      "de": "Heilmonitor an, Klänge werden noch geladen.",
+      "en": "Heal monitor on, sounds are still loading.",
+      "ko": "힐 모니터 켜짐, 소리 불러오는 중."
+    },
+    {
+      "de": "Heilmonitor aus",
+      "en": "Heal monitor off",
+      "ko": "힐 모니터 꺼짐"
+    },
+    {
+      "de": "Heilmonitor: Nummer drei bei vollem Leben, halb, und fast tot.",
+      "en": "Heal monitor: number three at full health, half, and nearly dead.",
+      "ko": "힐 모니터: 3번이 HP 가득, 절반, 거의 전투불능."
     },
     {
       "de": "Hell (bisheriger Klang)",
@@ -1984,9 +2149,19 @@
       "ko": "충분히 가까운 낚시터 없음. 가장 가까운 곳: {name}, {distance:F0}미터. 낚시 자리에 서서 다시 시도 필요."
     },
     {
+      "de": "Kein Ausrüstungs-Vergleich offen.",
+      "en": "No gear comparison open.",
+      "ko": "열린 장비 비교 없음."
+    },
+    {
       "de": "Kein Aussehen-Fenster offen. Nur im Schritt Aussehen der Charaktererschaffung.",
       "en": "No appearance window open. Only during the Appearance step of character creation.",
       "ko": "외모 창이 열려 있지 않음. 캐릭터 생성의 외모 단계에서만 사용할 수 있음."
+    },
+    {
+      "de": "Kein Begleit-Chocobo.",
+      "en": "No companion chocobo.",
+      "ko": "초코보 없음."
     },
     {
       "de": "Kein Emote gewählt. Erst durchblättern.",
@@ -2007,6 +2182,11 @@
       "de": "Kein Flüster-Partner zum Antworten.",
       "en": "No tell partner to answer.",
       "ko": "답장할 귓속말 상대 없음."
+    },
+    {
+      "de": "Kein Gegner im Kampf.",
+      "en": "No enemies engaged.",
+      "ko": "전투 중인 적 없음."
     },
     {
       "de": "Kein Ok-Knopf gefunden.",
@@ -2164,6 +2344,11 @@
       "ko": "길드 의뢰 없음. 먼저 의뢰인에게서 수령 필요."
     },
     {
+      "de": "Keine Gruppe",
+      "en": "No party",
+      "ko": "파티 없음"
+    },
+    {
       "de": "Keine Handkarten mehr.",
       "en": "No hand cards left.",
       "ko": "남은 카드 없음."
@@ -2294,6 +2479,11 @@
       "ko": "소지품에 맞는 아이템 없음."
     },
     {
+      "de": "Keine zeitlichen Events. Yo-kai-Uhr fehlt — erst den Event-Auftrag machen.",
+      "en": "No timed events. Yo-kai Watch missing — finish the event quest first.",
+      "ko": "시간제 이벤트 없음. 요괴워치 없음 — 이벤트 퀘스트 먼저 수행 필요."
+    },
+    {
       "de": "Keine {label} in {range:F0} Metern.",
       "en": "No {label} within {range:F0} meters.",
       "ko": "{range:F0}미터 안에 {label} 없음."
@@ -2317,6 +2507,11 @@
       "de": "Klangtest: Navigations-Ton von vorn, rechts, hinten, dann Wegpunkt und Ankunft, dann HP- und Mana-Töne.",
       "en": "Sound test: navigation tone from ahead, right, behind, then waypoint and arrival, then HP and mana tones.",
       "ko": "소리 확인. 길안내 알림음이 앞, 오른쪽, 뒤에서 차례로 난다. 그다음 경유지 알림음과 도착 알림음, 마지막으로 HP 알림음과 MP 알림음이 난다."
+    },
+    {
+      "de": "Klassen",
+      "en": "Classes",
+      "ko": "클래스"
     },
     {
       "de": "Knopf Zufälliges Aussehen nicht gefunden.",
@@ -2455,6 +2650,11 @@
     },
     {
       "de": "Lila",
+      "en": "Purple",
+      "ko": "보라색"
+    },
+    {
+      "de": "Lila",
       "en": "purple",
       "ko": "보라"
     },
@@ -2497,6 +2697,11 @@
       "de": "Markierung",
       "en": "Flag",
       "ko": "표식"
+    },
+    {
+      "de": "Materia",
+      "en": "Materia",
+      "ko": "마테리아"
     },
     {
       "de": "Mauve",
@@ -2599,6 +2804,11 @@
       "ko": "준비된 것 없음."
     },
     {
+      "de": "Nichts zum Belegen verfügbar.",
+      "en": "Nothing available to assign.",
+      "ko": "배정할 수 있는 것 없음."
+    },
+    {
       "de": "Noch nicht erlernt.",
       "en": "Not learned yet.",
       "ko": "아직 체득 안 함."
@@ -2615,12 +2825,12 @@
     },
     {
       "de": "Norden",
-      "en": "north",
+      "en": "North",
       "ko": "북"
     },
     {
       "de": "Norden",
-      "en": "North",
+      "en": "north",
       "ko": "북"
     },
     {
@@ -2690,6 +2900,11 @@
     },
     {
       "de": "Orange",
+      "en": "Orange",
+      "ko": "주황색"
+    },
+    {
+      "de": "Orange",
       "en": "orange",
       "ko": "주황"
     },
@@ -2705,12 +2920,12 @@
     },
     {
       "de": "Osten",
-      "en": "east",
+      "en": "East",
       "ko": "동"
     },
     {
       "de": "Osten",
-      "en": "East",
+      "en": "east",
       "ko": "동"
     },
     {
@@ -2935,6 +3150,11 @@
     },
     {
       "de": "Rot",
+      "en": "Red",
+      "ko": "빨간색"
+    },
+    {
+      "de": "Rot",
       "en": "red",
       "ko": "빨강"
     },
@@ -3014,6 +3234,16 @@
       "ko": "채집 지점"
     },
     {
+      "de": "Sammelpunkte: {total} verfügbar, {herePart}",
+      "en": "Gathering spots: {total} available, {herePart}",
+      "ko": "채집 지점: 채집 가능 {total}개, {herePart}"
+    },
+    {
+      "de": "Sammelpunkte: {upNow} gerade da, {total} verfügbar, {herePart}",
+      "en": "Gathering spots: {upNow} up now, {total} available, {herePart}",
+      "ko": "채집 지점: 지금 {upNow}개, 채집 가능 {total}개, {herePart}"
+    },
+    {
       "de": "Sammelstelle, Stufe {level}",
       "en": "Gathering spot, level {level}",
       "ko": "채집 지점, 레벨 {level}"
@@ -3032,6 +3262,11 @@
       "de": "Schatztruhe",
       "en": "treasure coffer",
       "ko": "보물상자"
+    },
+    {
+      "de": "Schlechter in {changed} von {total}.",
+      "en": "Worse in {changed} of {total}.",
+      "ko": "{total}개 중 {changed}개 더 나쁨."
     },
     {
       "de": "Schließen-Knopf reagiert nicht.",
@@ -3089,11 +3324,6 @@
       "ko": "화면 요소가 보이는지 모드가 대신 계산함."
     },
     {
-      "de": "Skill-Menü geschlossen.",
-      "en": "Skill menu closed.",
-      "ko": "기술 메뉴 닫힘."
-    },
-    {
       "de": "Skill-Zuweisung, {count} Skills. Nummernblock 8 und 2 blättern, 4 oder 6 wechselt die Liste, Nummernblock 0 wählt, Nummernblock Komma zurück.",
       "en": "Skill assignment, {count} skills. Numpad 8 and 2 to browse, 4 or 6 switches the list, Numpad 0 selects, Numpad decimal to go back.",
       "ko": "기술 배정, 기술 {count}개. 숫자패드 8과 2는 항목 이동, 4와 6은 목록 전환, 0은 선택, 마침표는 뒤로."
@@ -3105,13 +3335,13 @@
     },
     {
       "de": "Smaragd",
-      "en": "emerald green",
-      "ko": "에메랄드 초록"
+      "en": "Emerald",
+      "ko": "에메랄드"
     },
     {
       "de": "Smaragd",
-      "en": "Emerald",
-      "ko": "에메랄드"
+      "en": "emerald green",
+      "ko": "에메랄드 초록"
     },
     {
       "de": "Sonde braucht Taste 12 der ersten Leiste frei.",
@@ -3229,6 +3459,11 @@
       "ko": "스토리: "
     },
     {
+      "de": "Strg+",
+      "en": "Ctrl+",
+      "ko": "컨트롤 "
+    },
+    {
       "de": "Stufe",
       "en": "Level",
       "ko": "레벨"
@@ -3300,12 +3535,12 @@
     },
     {
       "de": "Süden",
-      "en": "south",
+      "en": "South",
       "ko": "남"
     },
     {
       "de": "Süden",
-      "en": "South",
+      "en": "south",
       "ko": "남"
     },
     {
@@ -3342,6 +3577,11 @@
       "de": "Tastenbelegung konnte nicht gelesen werden. Details im Log.",
       "en": "Could not read keybinds. See log for details.",
       "ko": "단축키를 읽지 못함. 자세한 내용은 로그에."
+    },
+    {
+      "de": "Tastenbelegung, {count} Tasten. Nummernblock 8 und 2 blättern, Nummernblock 0 wählt die Taste, Nummernblock Komma schließt.",
+      "en": "Key assignment, {count} keys. Numpad 8 and 2 to browse, Numpad 0 picks the key, Numpad decimal closes.",
+      "ko": "키 배정, 키 {count}개. 숫자패드 8과 2는 항목 이동, 0은 키 선택, 마침표는 닫기."
     },
     {
       "de": "Tausch",
@@ -3389,6 +3629,11 @@
       "ko": "토파즈"
     },
     {
+      "de": "Tragbar {classes}.",
+      "en": "Wearable {classes}.",
+      "ko": "착용 가능: {classes}."
+    },
+    {
       "de": "Truhe {name}",
       "en": "Chest {name}",
       "ko": "{name} 보관함"
@@ -3412,6 +3657,11 @@
       "de": "UI Dump auf Desktop gespeichert. {addonCount} Fenster, {nodeCount} Nodes.",
       "en": "UI dump saved to desktop. {addonCount} windows, {nodeCount} nodes.",
       "ko": "UI 덤프를 바탕 화면에 저장함. 창 {addonCount}개, 노드 {nodeCount}개."
+    },
+    {
+      "de": "Umschalt+",
+      "en": "Shift+",
+      "ko": "시프트 "
     },
     {
       "de": "Unbekannt",
@@ -3619,18 +3869,23 @@
       "ko": "다음 버튼 응답 없음."
     },
     {
+      "de": "Weiß",
+      "en": "White",
+      "ko": "흰색"
+    },
+    {
       "de": "Welt",
       "en": "World",
       "ko": "필드"
     },
     {
       "de": "Westen",
-      "en": "west",
+      "en": "West",
       "ko": "서"
     },
     {
       "de": "Westen",
-      "en": "West",
+      "en": "west",
       "ko": "서"
     },
     {
@@ -3672,6 +3927,11 @@
       "de": "Ziel unbekannt",
       "en": "target unknown",
       "ko": "목적지 모름"
+    },
+    {
+      "de": "Ziel weit entfernt, führe in Etappen.",
+      "en": "Destination far away, guiding in stages.",
+      "ko": "목적지가 멀어 구간을 나눠 안내함."
     },
     {
       "de": "Ziel {name} nicht gefunden.",
@@ -3757,6 +4017,16 @@
       "de": "Zurück",
       "en": "Back",
       "ko": "뒤로"
+    },
+    {
+      "de": "Zurück zur Tastenauswahl, {count} Tasten.",
+      "en": "Back to key selection, {count} keys.",
+      "ko": "키 선택으로 돌아감, 키 {count}개."
+    },
+    {
+      "de": "Zuweisungs-Menü geschlossen.",
+      "en": "Assignment menu closed.",
+      "ko": "배정 메뉴 닫힘."
     },
     {
       "de": "Zwischenablage konnte nicht beschrieben werden.",
@@ -3969,6 +4239,11 @@
       "ko": "불러옴"
     },
     {
+      "de": "gerade da",
+      "en": "up now",
+      "ko": "지금 있음"
+    },
+    {
       "de": "geradeaus",
       "en": "straight ahead",
       "ko": "정면"
@@ -4129,6 +4404,16 @@
       "ko": "아는 길 없음"
     },
     {
+      "de": "keine Plätze",
+      "en": "no sockets",
+      "ko": "홈 없음"
+    },
+    {
+      "de": "keiner in diesem Gebiet.",
+      "en": "none in this area.",
+      "ko": "이 지역에 없음."
+    },
+    {
       "de": "kräftiges",
       "en": "vivid",
       "ko": "선명한"
@@ -4217,6 +4502,11 @@
       "de": "nicht verwendbar",
       "en": "not usable",
       "ko": "사용 불가"
+    },
+    {
+      "de": "nichts",
+      "en": "none",
+      "ko": "없음"
     },
     {
       "de": "noch {seconds} Sekunden",
@@ -4404,6 +4694,11 @@
       "ko": "숨겨짐"
     },
     {
+      "de": "verfügbar",
+      "en": "available",
+      "ko": "채집 가능"
+    },
+    {
       "de": "vom Spiel geändert",
       "en": "changed by the game",
       "ko": "게임이 바꿈"
@@ -4487,6 +4782,11 @@
       "de": "{count} Angelplätze: {joined}.",
       "en": "{count} fishing spots: {joined}.",
       "ko": "낚시터 {count}곳: {joined}."
+    },
+    {
+      "de": "{count} Gegner:",
+      "en": "{count} enemies:",
+      "ko": "적 {count}명:"
     },
     {
       "de": "{count} Sammelstellen: {joined}.",
@@ -4577,6 +4877,11 @@
       "de": "{head}{colour}, {pos}Gruppe {group} Ton {shade}",
       "en": "{head}{colour}, {pos}group {group} shade {shade}",
       "ko": "{head}{colour}, {pos}{group}번 묶음 {shade}번 색조"
+    },
+    {
+      "de": "{here} in diesem Gebiet.",
+      "en": "{here} in this area.",
+      "ko": "이 지역에 {here}개."
     },
     {
       "de": "{items.Count} passende Gegenstände: {string.Join(\", \", items)}. Auswählen und dann Übergeben drücken.",
@@ -4724,6 +5029,16 @@
       "ko": "{level}, 착용 가능"
     },
     {
+      "de": "{melded}, {sockets} Plätze",
+      "en": "{melded}, {sockets} sockets",
+      "ko": "{melded}, 홈 {sockets}개"
+    },
+    {
+      "de": "{mine}, angelegt {equipped}",
+      "en": "{mine}, equipped {equipped}",
+      "ko": "{mine}, 장착 중 {equipped}"
+    },
+    {
       "de": "{monster} in Reichweite, {distance}, {direction}.",
       "en": "{monster} in range, {distance}, {direction}.",
       "ko": "{monster} 범위 안, {distance}, {direction}."
@@ -4829,6 +5144,11 @@
       "ko": "{name}, 레벨 {level}, {compass} 방향 {distance:F0}미터"
     },
     {
+      "de": "{name}, Stufe {level}, {status}, {distance:F0} Meter {compass}",
+      "en": "{name}, level {level}, {status}, {distance:F0} meters {compass}",
+      "ko": "{name}, 레벨 {level}, {status}, {compass} 방향 {distance:F0}미터"
+    },
+    {
       "de": "{name}, Stufe {level}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
       "en": "{name}, level {level}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
       "ko": "{name}, 레벨 {level}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
@@ -4867,6 +5187,11 @@
       "de": "{name}, {value}",
       "en": "{name}, {value}",
       "ko": "{name}, {value}"
+    },
+    {
+      "de": "{name}: {mine}, angelegt {equipped}",
+      "en": "{name}: {mine}, equipped {equipped}",
+      "ko": "{name}: {mine}, 장착 중 {equipped}"
     },
     {
       "de": "{name}{(command.Length > 0 ? $\", Befehl {command}\" : \"\")}, {index} von {count}",
@@ -4969,19 +5294,24 @@
       "ko": "{shape}, {meters}미터"
     },
     {
-      "de": "{skillName} gewählt. Ziel-Taste wählen, {count} verfügbar. Nummernblock 8 und 2 blättern, Nummernblock 0 belegt, Nummernblock Komma zurück.",
-      "en": "{skillName} selected. Choose a target key, {count} available. Numpad 8 and 2 to browse, Numpad 0 assigns, Numpad decimal to go back.",
-      "ko": "{skillName} 선택됨. 배정할 키 선택. 선택할 수 있는 키 {count}개. 숫자패드 8과 2는 항목 이동, 0은 배정, 마침표는 뒤로."
+      "de": "{slotLabel} gewählt, {current}. Was soll darauf?",
+      "en": "{slotLabel} selected, {current}. What goes on it?",
+      "ko": "{slotLabel} 선택됨, {current}. 무엇을 배정할지 선택."
     },
     {
-      "de": "{slotLabel}, aktuell {current}, {index} von {count}",
-      "en": "{slotLabel}, currently {current}, {index} of {count}",
-      "ko": "{slotLabel}, 현재 {current}, {count} 중 {index}"
+      "de": "{slotLabel}, {current}, {index} von {count}",
+      "en": "{slotLabel}, {current}, {index} of {count}",
+      "ko": "{slotLabel}, {current}, {count} 중 {index}"
     },
     {
       "de": "{slot}: {action}",
       "en": "{slot}: {action}",
       "ko": "{slot}: {action}"
+    },
+    {
+      "de": "{sockets} freie Plätze",
+      "en": "{sockets} empty sockets",
+      "ko": "빈 홈 {sockets}개"
     },
     {
       "de": "{spell} gibt es in {duty}. Zu diesem Eingang ist kein Ort hinterlegt.",
