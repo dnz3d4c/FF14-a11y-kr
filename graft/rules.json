@@ -422,6 +422,48 @@
       ]
     },
     {
+      "name": "strings-enemy-marker-colors-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "언어별 배열을 통째로 고르는 자리라 파서가 배열 이름 둘만 보고 낱말은 못 본다. 나침반 낱말과 같은 모양이고 같은 이유다. 원소별 삼항으로 펴면 여덟 색상이 저마다 갈림길이 되어 대장이 연다. 이 여덟은 전투마다 적을 부르는 이름이라 안 열면 한국어 사용자가 매 전투에서 영어를 듣는다. 차례가 곧 뜻이다 - 원본 주석이 Sku의 배정 차례(해골·십자·사각·삼각·다이아·별·원·달)를 그대로 옮겼다고 밝히고 있고, 어긋나면 컴파일은 되고 적마다 다른 별명이 붙는다. german과 english 선언을 같이 걷어내는 것은 펴고 나면 아무도 안 쓰게 되고 -warnaserror가 죽은 변수를 잡기 때문이다.",
+      "phase": "before",
+      "find": [
+        "        var german = new[] { \"Weiß\", \"Rot\", \"Blau\", \"Grün\", \"Lila\", \"Gelb\", \"Orange\", \"Grau\" };",
+        "        var english = new[] { \"White\", \"Red\", \"Blue\", \"Green\", \"Purple\", \"Yellow\", \"Orange\", \"Grey\" };",
+        "        var table = IsGerman ? german : english;"
+      ],
+      "replace": [
+        "        // ORDER IS MEANING: Sku's own assignment order, see the summary above.",
+        "        // Reordering compiles and then gives every enemy a callname the player",
+        "        // has not learned.",
+        "        var table = new[]",
+        "        {",
+        "            IsGerman ? \"Weiß\" : \"White\",",
+        "            IsGerman ? \"Rot\" : \"Red\",",
+        "            IsGerman ? \"Blau\" : \"Blue\",",
+        "            IsGerman ? \"Grün\" : \"Green\",",
+        "            IsGerman ? \"Lila\" : \"Purple\",",
+        "            IsGerman ? \"Gelb\" : \"Yellow\",",
+        "            IsGerman ? \"Orange\" : \"Orange\",",
+        "            IsGerman ? \"Grau\" : \"Grey\",",
+        "        };"
+      ]
+    },
+    {
+      "name": "strings-materia-melded-flatten",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.ItemCompare.cs",
+      "why": "중첩 삼항이라 scanner의 unnest가 알아서 펴는데, 편 결과의 뒤쪽 갈래가 IsGerman ? melded : melded가 되어 못 읽음으로 남는다. 양쪽이 글자까지 같아 번역할 것이 없는 자리인데도 신호가 울리고, 그 신호가 쌓이면 진짜 못 읽음과 섞여 아무도 안 보게 된다. 안쪽 조건을 손으로 밖에 빼면 갈림길이 하나만 남고 그 하나는 리터럴 쌍이라 대장이 읽는다. 뜻은 그대로다 - 자리가 없으면 마테리아 이름만 말하는 것이 원본의 동작이고 그 이름은 게임 창에서 글자 그대로 온다.",
+      "phase": "before",
+      "find": [
+        "        IsGerman ? (sockets > 0 ? $\"{melded}, {sockets} Plätze\" : melded)",
+        "                 : (sockets > 0 ? $\"{melded}, {sockets} sockets\" : melded);"
+      ],
+      "replace": [
+        "        sockets > 0",
+        "            ? (IsGerman ? $\"{melded}, {sockets} Plätze\" : $\"{melded}, {sockets} sockets\")",
+        "            : melded;"
+      ]
+    },
+    {
       "name": "update-service-kr-repo",
       "file": "FF14Accessibility/Services/UpdateService.cs",
       "why": "자기 갱신이 우리 릴리스를 봐야 한다. 원본 주소를 그대로 두면 옵션 메뉴의 갱신 검사가 글로벌 판의 새 릴리스를 우리 것으로 안내한다 - 오류가 아니라 잘못된 안내라 화면에 아무 이상도 안 남는다. 게다가 원본은 하루 1.4개꼴로 판을 내므로 우리 사용자는 늘 뒤처진 것처럼 듣는다. 값의 원천은 tools/release-manifest의 GH_REPO다.",

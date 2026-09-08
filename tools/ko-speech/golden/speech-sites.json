@@ -22,6 +22,12 @@
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
+      "text": "Ausrüstung vergleichen",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. 원본 v6.08.5가 장비 비교를 들여오면서 형제들과 같은 배열에 한 줄로 더했다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
+    },
+    {
+      "file": "Plugin.cs",
+      "rule": "umlaut",
       "text": "Beste Ausrüstung",
       "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
