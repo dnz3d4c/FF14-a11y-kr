@@ -84,6 +84,30 @@ def test_설정_폴더째_들어가면_잡는다():
     assert any("폴더" in p for p in problems)
 
 
+def test_힐_모니터_음성이_폴더째_들어가도_지난다():
+    """원본 v6.08.5가 mp3 122개를 `assets/partymonitor/`에 담아 배포한다.
+
+    실제 원본 릴리스 압축을 열어 확인했다 - 달라무드가 이 폴더를 그대로
+    가져간다. 막으면 배포물을 아예 못 만들고, 통째로 허용하면 화이트리스트가
+    뜻을 잃으므로 이름 모양까지 잰다.
+    """
+    names = [
+        "assets/partymonitor/1_-10.mp3",
+        "assets/partymonitor/8_35.mp3",
+        "assets/partymonitor/dead.mp3",
+        "assets/partymonitor/full.mp3",
+    ]
+
+    assert pack_check.zip_problems(zip_crcs(names)) == []
+
+
+def test_그_폴더에_모르는_파일이_섞이면_잡는다():
+    """허용이 폴더가 아니라 이름 모양에 걸려 있어야 한다."""
+    problems = pack_check.zip_problems(zip_crcs(["assets/partymonitor/readme.txt"]))
+
+    assert any("readme.txt" in p for p in problems)
+
+
 def test_dll이_빠지면_잡는다():
     crcs = {n: c for n, c in zip_crcs().items() if n != "FF14Accessibility.dll"}
     assert any("FF14Accessibility.dll" in p for p in pack_check.zip_problems(crcs))

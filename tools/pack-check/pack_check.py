@@ -143,6 +143,20 @@ ALLOWED_PATTERNS = (re.compile(r"^NAudio(\.[A-Za-z]+)?\.dll$"),)
 #: 패키지가 다음 TFM으로 올라간 날 진짜 사고가 아닌 자리에서 빨개진다.
 SPEECH_RID = re.compile(r"^runtimes/win/lib/net\d+\.\d+/System\.Speech\.dll$")
 
+#: 힐 모니터가 읽는 숫자 음성. 원본 v6.08.5가 들여왔다.
+#:
+#: **압축 안의 폴더를 통째로 여는 것이 아니라 이름 모양까지 잰다.** 화이트리스트가
+#: 이 파일의 요점이라, 폴더 하나를 열어 주면 그 아래로는 무엇이든 들어온다.
+#:
+#: `<자리>_<음높이>.mp3`로 자리가 1부터 8까지(`NumberVoiceBank.MaxPosition`)이고
+#: 음높이가 반음 단위로 오르내린다. 여기에 `dead`와 `full`이 붙어 122개다. 실제
+#: 원본 릴리스 압축을 열어 122개가 이 모양을 하나도 안 벗어나는 것을 확인했다
+#: (2026-09-08, v6.08.8).
+#:
+#: **개수를 못박지 않는다.** 원본이 자리나 음높이를 늘리면 진짜 사고가 아닌
+#: 자리에서 빨개진다.
+PARTY_MONITOR_MP3 = re.compile(r"^assets/partymonitor/(?:[1-8]_-?\d+|dead|full)\.mp3$")
+
 #: 배포물에 있으면 안 되는 것. 설치 프로그램이 설치할 때 **붙이는** 필드라서,
 #: 압축 안에 이미 있으면 누군가 설치된 사본을 다시 압축했다는 뜻이다.
 LOCAL_ONLY_FIELDS = ("InstalledFromUrl", "WorkingPluginId", "Disabled", "ScheduledForDeletion")
@@ -199,7 +213,7 @@ def zip_problems(crcs: dict[str, int]) -> list[str]:
     """압축 목록에서 규칙을 어긴 것들. 이름마다 CRC를 받는다."""
     problems = []
     for name in crcs:
-        if SPEECH_RID.match(name):
+        if SPEECH_RID.match(name) or PARTY_MONITOR_MP3.match(name):
             continue
         if "/" in name or "\\" in name:
             problems.append(f"압축 안에 폴더가 있다: {name}")
