@@ -38,10 +38,48 @@ def test_줄마다_행_번호가_있다(catalog):
         assert number > 0, row
 
 
+def _why_row_is_wrong(row: dict) -> str | None:
+    """대장 한 줄이 자기 안에서 앞뒤가 맞는지. 맞으면 None, 아니면 까닭.
+
+    보통은 한국어가 그 행의 원문 안에 통째로 있어야 한다. 예외는 **시트의
+    낱말에 일반 명사를 붙여 만든 말**이고, 그런 줄은 `composed_from`에 재료를
+    적는다. 그때는 재료가 시트에 있는지를 대신 재므로, 지어낸 말은 재료부터
+    걸려서 이 필드가 면죄부가 되지 않는다.
+    """
+    stem = row.get("composed_from")
+    if stem is None:
+        if row["ko"] not in row["row_text"]:
+            return "한국어가 그 행의 원문에 없다"
+        return None
+    if stem not in row["row_text"]:
+        return "조합의 재료가 그 행의 원문에 없다"
+    if stem not in row["ko"]:
+        return "한국어가 적어 둔 재료를 품고 있지 않다"
+    if row["ko"] == stem:
+        return "붙인 말이 없으니 조합이 아니다 - composed_from을 지워라"
+    return None
+
+
 def test_한국어가_원문_안에_있다(catalog):
     # 대장이 자기 안에서 먼저 앞뒤가 맞아야 한다.
     for row in catalog["terms"]:
-        assert row["ko"] in row["row_text"], row
+        assert _why_row_is_wrong(row) is None, (_why_row_is_wrong(row), row)
+
+
+def test_조합어_예외가_지어낸_말을_통과시키지_않는다():
+    # composed_from을 달았다고 넘어가면 이 검사가 있으나 마나다.
+    행 = "채집 관련 시스템 메시지"
+    지어냄 = {"ko": "에테라이트 광장", "row_text": 행, "composed_from": "에테라이트"}
+    assert _why_row_is_wrong(지어냄) is not None, "재료가 시트에 없는데 통과했다"
+
+    안_붙임 = {"ko": "채집", "row_text": 행, "composed_from": "채집"}
+    assert _why_row_is_wrong(안_붙임) is not None, "조합이 아닌데 통과했다"
+
+    딴_재료 = {"ko": "제작 지점", "row_text": 행, "composed_from": "채집"}
+    assert _why_row_is_wrong(딴_재료) is not None, "재료를 안 품었는데 통과했다"
+
+    제대로 = {"ko": "채집 지점", "row_text": 행, "composed_from": "채집"}
+    assert _why_row_is_wrong(제대로) is None
 
 
 def test_영어가_겹치지_않는다(catalog):
