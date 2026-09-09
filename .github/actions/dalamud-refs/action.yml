@@ -10,7 +10,7 @@ inputs:
   release-tag:
     description: 한국 클라이언트 전용 어셈블리 둘이 붙어 있는 이 저장소의 릴리스 태그.
     required: false
-    default: dalamud-kr-15.0.3.2
+    default: dalamud-kr-15.0.3.3
   path:
     description: 여섯을 모아 둘 디렉토리. 저장소 루트 기준 상대 경로다.
     required: false

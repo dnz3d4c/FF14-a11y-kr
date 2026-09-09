@@ -2,7 +2,9 @@
 
 플러그인 DLL이 참조하는 멤버가 **한국 클라이언트용 Dalamud가 실제로 깔아 둔 어셈블리에 존재하는지**를 게임을 켜지 않고 판정한다.
 
-한국 클라이언트용 Dalamud는 공식 15.0.3.2를 IL 패치한 것이고 FFXIVClientStructs를 7.55 계열에서 7.51로 낮춰 싣는다(`docs/dev/dalamud-refs.md`). 글로벌용으로 빌드된 플러그인은 이 차이 때문에 **적재는 되는데 호출 시점에 MissingMethodException으로 죽을** 수 있다. 이 도구는 그 위험을 사전에 거른다.
+한국 클라이언트용 Dalamud는 공식 배포본을 IL 패치한 것이다(`docs/dev/dalamud-refs.md`). 글로벌용으로 빌드된 플러그인은 그 차이 때문에 **적재는 되는데 호출 시점에 MissingMethodException으로 죽을** 수 있고, 이 도구는 그 위험을 사전에 거른다.
+
+**2026-09-09부터 FFXIVClientStructs 다운그레이드가 없다.** 업데이터 0.5.1이 옛 판으로 갈아 끼우는 것을 그만두고 공식이 싣는 판(15.0.3.3에서 7.55.1.9032)을 그 자리에서 패치한다. 그전에는 7.55 계열을 7.51로 낮춰 실었고, 그것이 이 도구를 만든 직접적인 까닭이었다. **판이 같아졌다고 도구가 필요 없어지지는 않는다** — 한국 클라이언트 오프셋과 시그니처는 여전히 덧씌워지고, 무엇보다 다음 판에서 다운그레이드가 돌아올 수 있다.
 
 ## 판정하는 것과 못 하는 것
 
@@ -97,9 +99,9 @@ Hooks 디렉토리의 `Dalamud.dll`을 **같은 디렉토리에 대고** 검사�
 
 "$USERPROFILE\scoop\apps\dotnet-sdk\current\dotnet.exe" run -c Release --project tools/asmref-check -- "$DALAMUD_HOME\Dalamud.dll" "$DALAMUD_HOME"
 
-어셈블리가 자기와 함께 배포된 의존성을 못 찾을 리 없으므로, **여기서 나오는 것은 전부 오탐이다.** 무엇보다 `Dalamud.dll` 자신이 FFXIVClientStructs 7.55.1.8875를 참조하는데 실제로 깔린 건 7.51.0.8667이다 — 7.55→7.51 다운그레이드를 가로지르는 참조가 전부 해석되는지 보는 것이라 이 프로젝트의 관심사와 정확히 겹친다.
+어셈블리가 자기와 함께 배포된 의존성을 못 찾을 리 없으므로, **여기서 나오는 것은 전부 오탐이다.** 검사 건수가 우리 플러그인의 세 배라 도구가 실제로 도는지를 넓게 확인해 준다.
 
-2026-09-04 실측으로 `3763 checked, 0 missing-type, 0 missing-member, 0 arity, 0 sig-diff`였다.
+2026-09-09에 15.0.3.3으로 재니 `3775 checked, 0 missing-type, 0 missing-member, 0 arity, 0 sig-diff`였다(15.0.3.2에서는 3763이었다). 다운그레이드가 있던 시절에는 이 대조군이 한 가지를 더 했다 — `Dalamud.dll` 자신이 7.55를 참조하는데 깔린 것은 7.51이라, 그 갈림을 가로지르는 참조가 전부 해석되는지까지 봤다. 지금은 판이 같아져서 그 몫이 없다.
 
 **이 대조군이 우리 플러그인에 기대지 않는다는 게 중요하다.** 우리 것이 아직 게임에서 안 돌아 봤어도 (b)는 그대로 성립한다.
 
@@ -112,16 +114,18 @@ Hooks 디렉토리의 `Dalamud.dll`을 **같은 디렉토리에 대고** 검사�
 
 ## 지금 결과
 
-2026-09-04 실측. 조립 → Release 빌드 → 위 명령 순으로 돌렸다.
+2026-09-09 실측. 조립 → Release 빌드 → 위 명령 순으로 돌렸다.
 
 ```
-# Dalamud ref=15.0.3.2 actual=15.0.3.2                        (no issues)
-# FFXIVClientStructs ref=7.51.0.8667 actual=7.51.0.8667       (no issues)
+# Dalamud ref=15.0.3.3 actual=15.0.3.3                        (no issues)
+# FFXIVClientStructs ref=7.55.1.9032 actual=7.55.1.9032       (no issues)
 # InteropGenerator.Runtime ref=1.0.0.0 actual=1.0.0.0         (no issues)
 # Lumina ref=7.0.0.0 actual=7.0.0.0                           (no issues)
 # Lumina.Excel ref=7.0.0.0 actual=7.0.0.0                     (no issues)
 
-SUMMARY: 1072 checked, 0 missing-type, 0 missing-member, 0 arity, 0 sig-diff
+SUMMARY: 1217 checked, 0 missing-type, 0 missing-member, 0 arity, 0 sig-diff
 ```
 
-참조 버전과 실제 버전이 다섯 다 같다. 글로벌용 빌드였다면 FFXIVClientStructs가 `ref=7.55.x actual=7.51.x`로 갈렸을 자리다.
+참조 버전과 실제 버전이 다섯 다 같다. 건수가 1072에서 늘어난 것은 힐 모니터 덧대기 넷을 걷어내면서 원본이 쓰던 7.55 멤버가 참조로 돌아왔기 때문이다(D-12 해제).
+
+**같은 날 이 도구가 실제로 값을 했다.** 덧대기를 걷어낸 코드를 옛 참조(7.51)로 빌드하니 `CS1061`이 8건 났다 — `DisplayRow` 셋, `TrustCount` 셋, `ChocoboCount`와 `PetCount` 하나씩. 컴파일러가 먼저 잡는 부류라 이 도구까지 오지도 않았지만, **어느 어셈블리로 빌드하느냐가 결과를 가른다는 것**을 그대로 보여 준다.
