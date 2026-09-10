@@ -651,6 +651,60 @@
         "      LogicalName=\"FF14AccessibilityPlay.exe\" />",
         "  </ItemGroup>"
       ]
+    },
+    {
+      "name": "installer-kr-updater-first",
+      "file": "Installer/InstallerService.cs",
+      "why": "업데이터 설치를 달라무드 검사보다 앞으로 옮긴다. 달라무드 파일을 손으로 넣은 사람은 원래 순서에서 이 자리를 영영 안 지나서, 설치 프로그램은 만족하는데 업데이터가 없는 상태로 끝난다. 업데이터가 없으면 모드가 게임에 안 붙는다. installer-kr-bundle-offer와 한 몸이고 해제 조건은 docs/decisions.md D-13에 있다.",
+      "find": [
+        "        if (KrProfile.DalamudInstalled)",
+        "            return true;",
+        "",
+        "        // Two different situations wear the same face here, and telling them",
+        "        // apart is the whole point: the updater being absent is ours to fix,",
+        "        // Dalamud being absent needs a button pressed in the updater's window.",
+        "        if (!KrProfile.UpdaterInstalled)",
+        "            await SetupKrUpdaterAsync();"
+      ],
+      "replace": [
+        "        // Two different situations wear the same face here, and telling them",
+        "        // apart is the whole point: the updater being absent is ours to fix,",
+        "        // Dalamud being absent needs a button pressed in the updater's window.",
+        "        //",
+        "        // The updater is fetched before the Dalamud check, not after. Whoever",
+        "        // put the Dalamud files there by hand would otherwise never reach this",
+        "        // line - the installer would be satisfied and the updater would stay",
+        "        // missing - and without it the plugin is never injected into the game.",
+        "        if (!KrProfile.UpdaterInstalled)",
+        "            await SetupKrUpdaterAsync();",
+        "",
+        "        if (KrProfile.DalamudInstalled)",
+        "            return true;"
+      ]
+    },
+    {
+      "name": "installer-kr-bundle-offer",
+      "file": "Installer/InstallerService.cs",
+      "why": "달라무드가 없을 때 우리가 올린 한국 서버용 한 벌을 먼저 권한다. 업데이터의 내려받기 단계가 바로 막힌 자리라, 실패가 확정된 15분 대기로 사람을 보내는 것이 가장 나쁘다. 아니오를 고르면 원래 경로로 그대로 흘러간다. 로직은 kr/Installer/KrDalamudBundle.cs가 들고 있어서 이 규칙과 그 파일을 지우면 원본 흐름이 돌아온다. 해제 조건은 docs/decisions.md D-13에 있다.",
+      "find": [
+        "        // Everything that needs an answer gets asked here, while this window is",
+        "        // still the one in front. Past this line the updater owns the foreground.",
+        "        AskAboutVnavmeshUpFront();"
+      ],
+      "replace": [
+        "        // Offered before the updater window is opened, because the updater's own",
+        "        // fetch is the step that is broken: it stalls whenever official Dalamud",
+        "        // ships a FFXIVClientStructs it was not built against, and sending",
+        "        // somebody into the wait below when that is already known to fail is the",
+        "        // worst of both. Answering no falls through to the normal path unchanged.",
+        "        if (await KrDalamudBundle.TryInstallAsync(",
+        "                DownloadFileAsync, Info, Warn, AskYesNo))",
+        "            return true;",
+        "",
+        "        // Everything that needs an answer gets asked here, while this window is",
+        "        // still the one in front. Past this line the updater owns the foreground.",
+        "        AskAboutVnavmeshUpFront();"
+      ]
     }
   ]
 }
