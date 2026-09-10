@@ -687,24 +687,26 @@
       "file": "Installer/InstallerService.cs",
       "why": "달라무드가 없으면 우리가 올린 한국 서버용 한 벌을 받아 넣는다. 업데이터의 내려받기 단계가 바로 막힌 자리라, 실패가 확정된 15분 대기로 사람을 보내는 것이 가장 나쁘다. 묻지 않는다 - 달라무드는 vnavmesh나 던전 경로와 달리 선택이 아니고, 사람은 이미 설치를 눌렀다. 받기가 실패하면 거짓을 돌려주므로 원래 경로로 그대로 흘러간다. 그래서 한 벌 릴리스를 내리는 것만으로 새 판 없이 이 기능이 꺼진다. 로직은 kr/Installer/KrDalamudBundle.cs가 들고 있어서 이 규칙과 그 파일을 지우면 원본 흐름이 돌아온다. 해제 조건은 docs/decisions.md D-13에 있다.",
       "find": [
-        "        // Everything that needs an answer gets asked here, while this window is",
-        "        // still the one in front. Past this line the updater owns the foreground.",
-        "        AskAboutVnavmeshUpFront();"
+        "        // Printed whether or not that worked. These four lines used to sit behind",
+        "        // an early return, so somebody whose download failed heard \"fetch it by",
+        "        // hand\" and nothing else - no path, no page, no next step.",
+        "        Warn(Loc.Get(\"KrDalamudMissing\"));"
       ],
       "replace": [
-        "        // Done before the updater window is opened, because the updater's own",
-        "        // fetch is the step that is broken: it stalls whenever official Dalamud",
-        "        // ships a FFXIVClientStructs it was not built against, and sending",
-        "        // somebody into the wait below when that is already known to fail is the",
-        "        // worst of both. Failing to fetch returns false and the normal path",
-        "        // below runs unchanged, so unpublishing the bundle release switches",
-        "        // this off without a new build going out.",
+        "        // Tried before anything is said about the updater's button, because that",
+        "        // button is the step that is broken: it stalls whenever official Dalamud",
+        "        // ships a FFXIVClientStructs the updater was not built against. Telling",
+        "        // somebody to press it and then quietly succeeding without it would leave",
+        "        // two contradictory instructions in a log that is read one line at a time.",
+        "        // Failing returns false and the original lines below run unchanged, so",
+        "        // unpublishing the bundle release switches this off with no new build.",
         "        if (await KrDalamudBundle.TryInstallAsync(DownloadFileAsync, Info, Warn))",
         "            return true;",
         "",
-        "        // Everything that needs an answer gets asked here, while this window is",
-        "        // still the one in front. Past this line the updater owns the foreground.",
-        "        AskAboutVnavmeshUpFront();"
+        "        // Printed whether or not that worked. These four lines used to sit behind",
+        "        // an early return, so somebody whose download failed heard \"fetch it by",
+        "        // hand\" and nothing else - no path, no page, no next step.",
+        "        Warn(Loc.Get(\"KrDalamudMissing\"));"
       ]
     }
   ]
