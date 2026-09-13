@@ -351,7 +351,7 @@
     {
       "de": "Achtung, diese Spur ueberwindet {MetersRemaining(drop)} Hoehe und gilt deshalb nur in Laufrichtung. Fuer den Rueckweg zeichne bitte eine eigene Spur auf.",
       "en": "Careful: this trail covers {MetersRemaining(drop)} of height, so it only counts in the direction you walked it. Record a separate trail for the way back.",
-      "ko": "주의: 이 발자취는 높이 {MetersRemaining(drop)}를 내려가므로 걸어간 방향으로만 사용할 수 있음. 돌아오는 길은 따로 기록 필요."
+      "ko": "주의, 이 발자취는 높이 {MetersRemaining(drop)}를 내려가므로 걸어간 방향으로만 사용할 수 있음. 돌아오는 길은 따로 기록 필요."
     },
     {
       "de": "Achtung, du stehst drin, {AoeSeconds(seconds)}.",
@@ -381,7 +381,7 @@
     {
       "de": "Aktionsleiste {bar} ist leer.",
       "en": "Hotbar {bar} is empty.",
-      "ko": "{bar}번 단축바, 비어 있음."
+      "ko": "{bar}번 단축바 비어 있음."
     },
     {
       "de": "Aktionsleiste {bar}. ",
@@ -431,7 +431,7 @@
     {
       "de": "Alle Inhalte: {total}, davon {unlocked} freigeschaltet.",
       "en": "All duties: {total}, {unlocked} of them unlocked.",
-      "ko": "전체 임무 {total}개, 개방 {unlocked}개."
+      "ko": "전체 임무: {total}개, 개방 {unlocked}개."
     },
     {
       "de": "Alle Reittiere.",
@@ -516,7 +516,7 @@
     {
       "de": "Angelplatz {name} hier gemerkt: Karte {mapX:F1}, {mapY:F1}.",
       "en": "Fishing spot {name} remembered here: map {mapX:F1}, {mapY:F1}.",
-      "ko": "낚시터 {name}, 서 있는 자리로 기억함: 지도 {mapX:F1}, {mapY:F1}."
+      "ko": "낚시터 {name} 서 있는 자리로 기억함: 지도 {mapX:F1}, {mapY:F1}."
     },
     {
       "de": "Angelplätze",
@@ -526,7 +526,7 @@
     {
       "de": "Angelplätze: {count} im Gebiet.",
       "en": "Fishing spots: {count} in this area.",
-      "ko": "낚시터, {count}곳"
+      "ko": "낚시터: {count}곳."
     },
     {
       "de": "Angezielt.",
@@ -791,7 +791,7 @@
     {
       "de": "Biss!",
       "en": "Bite!",
-      "ko": "입질."
+      "ko": "입질!"
     },
     {
       "de": "Blau",
@@ -851,7 +851,7 @@
     {
       "de": "Brett. Deine Karten {yours}, gegnerische {enemy}.",
       "en": "Board. Your cards {yours}, enemy {enemy}.",
-      "ko": "판에 놓인 카드, 내 것 {yours}장, 상대 것 {enemy}장."
+      "ko": "판에 놓인 카드. 내 것 {yours}장, 상대 것 {enemy}장."
     },
     {
       "de": "Bronze",
@@ -1156,7 +1156,7 @@
     {
       "de": "Dungeon: {total} Stationen, weiter bei {next}.",
       "en": "Dungeon: {total} stations, continuing at {next}.",
-      "ko": "던전 지점 {total}개. 지금 {next}번."
+      "ko": "던전: 지점 {total}개, 지금 {next}번."
     },
     {
       "de": "Ebene",
@@ -1261,7 +1261,7 @@
     {
       "de": "Enter öffnet das Hauptmenü. Strg+F1 sagt diese Hilfe erneut an.",
       "en": "Press Enter to open the main menu. Press Ctrl+F1 to hear this help again.",
-      "ko": "엔터는 주 메뉴 열기, 컨트롤 F1은 도움말 다시 듣기."
+      "ko": "엔터는 주 메뉴 열기. 컨트롤 F1은 도움말 다시 듣기."
     },
     {
       "de": "Entnehmen",
@@ -1336,12 +1336,12 @@
     {
       "de": "FATEs: {active} aktiv, {preparing} starten gleich.",
       "en": "FATEs: {active} active, {preparing} starting soon.",
-      "ko": "돌발 임무, 진행 중 {active}개, 곧 시작 {preparing}개"
+      "ko": "돌발 임무: 진행 중 {active}개, 곧 시작 {preparing}개."
     },
     {
       "de": "FATEs: {active} aktiv.",
       "en": "FATEs: {active} active.",
-      "ko": "돌발 임무, 진행 중 {active}개"
+      "ko": "돌발 임무: 진행 중 {active}개."
     },
     {
       "de": "FC",
@@ -1536,12 +1536,12 @@
     {
       "de": "Freibriefe: {enemies} Gegner, {givers} Geber, {goals} Ziele.",
       "en": "Levequests: {enemies} enemies, {givers} givers, {goals} goals.",
-      "ko": "길드 의뢰, 적 {enemies}명, 의뢰인 {givers}명, 목표 지점 {goals}곳"
+      "ko": "길드 의뢰: 적 {enemies}명, 의뢰인 {givers}명, 목표 지점 {goals}곳."
     },
     {
       "de": "Freibriefe: {givers} Geber, {goals} Ziele.",
       "en": "Levequests: {givers} givers, {goals} goals.",
-      "ko": "길드 의뢰, 의뢰인 {givers}명, 목표 지점 {goals}곳"
+      "ko": "길드 의뢰: 의뢰인 {givers}명, 목표 지점 {goals}곳."
     },
     {
       "de": "Freie Gesellschaft",
@@ -1681,12 +1681,12 @@
     {
       "de": "Gehhilfe an: {name}.",
       "en": "Walk guide on: {name}.",
-      "ko": "길안내 켜짐. 목적지 {name}."
+      "ko": "길안내 켜짐: 목적지 {name}."
     },
     {
       "de": "Gehhilfe an: {name}. Liegt unter einem Vorsprung, führe bis auf {metres:F0} Meter heran.",
       "en": "Walk guide on: {name}. It is under an overhang, guiding to within {metres:F0} meters of it.",
-      "ko": "길안내 켜짐. 목적지 {name}. 위쪽이 막힌 곳이라 {metres:F0}미터 앞까지 안내함."
+      "ko": "길안내 켜짐: 목적지 {name}. 위쪽이 막힌 곳이라 {metres:F0}미터 앞까지 안내함."
     },
     {
       "de": "Gehhilfe aus.",
@@ -1701,7 +1701,7 @@
     {
       "de": "Gehhilfe: Ziel verloren.",
       "en": "Walk guide: target lost.",
-      "ko": "길안내 대상을 놓침."
+      "ko": "길안내: 대상을 놓침."
     },
     {
       "de": "Gehilfe",
@@ -2046,12 +2046,12 @@
     {
       "de": "Jagdziele: {total} offen, keines in diesem Gebiet.",
       "en": "Hunting targets: {total} open, none in this area.",
-      "ko": "토벌 대상, 남은 것 {total}종, 이 지역 없음"
+      "ko": "토벌 대상: 남은 것 {total}종, 이 지역 없음."
     },
     {
       "de": "Jagdziele: {total} offen, {here} in diesem Gebiet.",
       "en": "Hunting targets: {total} open, {here} in this area.",
-      "ko": "토벌 대상, 남은 것 {total}종, 이 지역 {here}종"
+      "ko": "토벌 대상: 남은 것 {total}종, 이 지역 {here}종."
     },
     {
       "de": "Japanisch",
@@ -2096,7 +2096,7 @@
     {
       "de": "Kanal {channel} kann noch nicht gesetzt werden.",
       "en": "Channel {channel} cannot be set yet.",
-      "ko": "채널 {channel}, 아직 지정할 수 없음."
+      "ko": "채널 {channel} 아직 지정할 수 없음."
     },
     {
       "de": "Karte {index}: {sides}",
@@ -2506,7 +2506,7 @@
     {
       "de": "Klangtest: Navigations-Ton von vorn, rechts, hinten, dann Wegpunkt und Ankunft, dann HP- und Mana-Töne.",
       "en": "Sound test: navigation tone from ahead, right, behind, then waypoint and arrival, then HP and mana tones.",
-      "ko": "소리 확인. 길안내 알림음이 앞, 오른쪽, 뒤에서 차례로 난다. 그다음 경유지 알림음과 도착 알림음, 마지막으로 HP 알림음과 MP 알림음이 난다."
+      "ko": "소리 확인: 길안내 알림음이 앞, 오른쪽, 뒤에서 차례로 난다. 그다음 경유지 알림음과 도착 알림음, 마지막으로 HP 알림음과 MP 알림음이 난다."
     },
     {
       "de": "Klassen",
@@ -2951,7 +2951,7 @@
     {
       "de": "Pfeile hoch und runter wechseln Option. Links und rechts ändern Wert oder Tab. Enter speichert, Escape verwirft, Strg+F1 für Hilfe.",
       "en": "Up and down arrows move between options. Left and right change value or tab. Enter saves, Escape discards, Ctrl+F1 for help.",
-      "ko": "위아래 화살표는 항목 이동, 좌우 화살표는 값이나 탭 변경, 엔터는 저장, 이스케이프는 취소, 컨트롤 F1은 도움말."
+      "ko": "위아래 화살표는 항목 이동. 좌우 화살표는 값이나 탭 변경. 엔터는 저장, 이스케이프는 취소, 컨트롤 F1은 도움말."
     },
     {
       "de": "Pfirsich",
@@ -3081,7 +3081,7 @@
     {
       "de": "Raus nach {direction}, {distance}.",
       "en": "Escape {direction}, {distance}.",
-      "ko": "회피: {direction}, {distance}."
+      "ko": "회피 {direction}, {distance}."
     },
     {
       "de": "Register vorlesen",
@@ -3396,12 +3396,12 @@
     {
       "de": "Sprache folgt jetzt Windows: {language}.",
       "en": "Language now follows Windows: {language}.",
-      "ko": "언어가 윈도 설정을 따르도록 변경됨. 현재 {language}."
+      "ko": "언어가 윈도 설정을 따르도록 변경됨: 현재 {language}."
     },
     {
       "de": "Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.",
       "en": "Choose a language with: /acc lang de, /acc lang en, /acc lang ko or /acc lang auto.",
-      "ko": "언어를 선택하려면 /acc lang ko, /acc lang en, /acc lang de, /acc lang auto 중 하나를 입력한다."
+      "ko": "언어를 선택하려면: /acc lang ko, /acc lang en, /acc lang de, /acc lang auto 중 하나를 입력한다."
     },
     {
       "de": "Spur geloescht: {name}.",
@@ -3571,7 +3571,7 @@
     {
       "de": "Tastenbelegung gespeichert: {boundCount} Aktionen mit Taste, {conflictCount} Konflikte mit Plugin-Tasten. Datei auf dem Desktop, Details im Log.",
       "en": "Keybinds saved: {boundCount} bound actions, {conflictCount} conflicts with plugin keys. File on desktop, details in log.",
-      "ko": "단축키 저장됨. 키가 지정된 동작 {boundCount}개, 모드 키와 충돌 {conflictCount}개. 파일은 바탕 화면에, 자세한 내용은 로그에."
+      "ko": "단축키 저장됨: 키가 지정된 동작 {boundCount}개, 모드 키와 충돌 {conflictCount}개. 파일은 바탕 화면에, 자세한 내용은 로그에."
     },
     {
       "de": "Tastenbelegung konnte nicht gelesen werden. Details im Log.",
@@ -3631,7 +3631,7 @@
     {
       "de": "Tragbar {classes}.",
       "en": "Wearable {classes}.",
-      "ko": "착용 가능: {classes}."
+      "ko": "착용 가능 {classes}."
     },
     {
       "de": "Truhe {name}",
@@ -3841,12 +3841,12 @@
     {
       "de": "Wegpunkte: {count} im Gebiet, davon {exits} Übergänge.",
       "en": "Waypoints: {count} in this area, {exits} of them exits.",
-      "ko": "경유지, {count}곳, 다른 지역으로 넘어가는 통로 {exits}곳"
+      "ko": "경유지: {count}곳, 다른 지역으로 넘어가는 통로 {exits}곳."
     },
     {
       "de": "Wegpunkte: {count} im Gebiet.",
       "en": "Waypoints: {count} in this area.",
-      "ko": "경유지, {count}곳"
+      "ko": "경유지: {count}곳."
     },
     {
       "de": "Weich",
@@ -3936,7 +3936,7 @@
     {
       "de": "Ziel {name} nicht gefunden.",
       "en": "Target {name} not found.",
-      "ko": "대상 {name}, 찾을 수 없음."
+      "ko": "대상 {name} 찾을 수 없음."
     },
     {
       "de": "Ziel-Lebenspunkte",
@@ -4826,7 +4826,7 @@
     {
       "de": "{dutyName} liegt in {zoneName}. Dorthin führt kein Weg über Zonenübergänge.",
       "en": "{dutyName} is in {zoneName}. No route there over zone transitions.",
-      "ko": "{dutyName}, {zoneName}에 있음. 지역 이동으로 갈 경로 없음."
+      "ko": "{dutyName} {zoneName}에 있음. 지역 이동으로 갈 경로 없음."
     },
     {
       "de": "{dutyName}, Stufe {level}",
@@ -4836,12 +4836,12 @@
     {
       "de": "{enemy} wirkt {action} auf dich.",
       "en": "{enemy} casts {action} on you.",
-      "ko": "{enemy}, 나에게 {action} 시전."
+      "ko": "{enemy} 나에게 {action} 시전."
     },
     {
       "de": "{enemy} wirkt {action}.",
       "en": "{enemy} casts {action}.",
-      "ko": "{enemy}, {action} 시전."
+      "ko": "{enemy} {action} 시전."
     },
     {
       "de": "{files} Dungeon-Wege geladen.",
@@ -4996,17 +4996,17 @@
     {
       "de": "{label}: {count} in der Nähe.",
       "en": "{label}: {count} nearby.",
-      "ko": "{label}, {count}"
+      "ko": "{label}: {count}."
     },
     {
       "de": "{label}: {here} im Gebiet, {away} in anderen Gebieten.",
       "en": "{label}: {here} in this area, {away} in other areas.",
-      "ko": "{label}, 이 지역 {here}, 다른 지역 {away}"
+      "ko": "{label}: 이 지역 {here}, 다른 지역 {away}."
     },
     {
       "de": "{label}: {here} im Gebiet.",
       "en": "{label}: {here} in this area.",
-      "ko": "{label}, {here}"
+      "ko": "{label}: {here}."
     },
     {
       "de": "{label}: {total} offen, keines in diesem Gebiet.",
@@ -5046,12 +5046,12 @@
     {
       "de": "{monster} lebt in {area}. Dieses Gebiet ist auf der Karte nicht verzeichnet.",
       "en": "{monster} lives in {area}. That area is not marked on the map.",
-      "ko": "{monster}, {area}에 서식. 그 지역은 지도에 표시되지 않음."
+      "ko": "{monster} {area}에 서식. 그 지역은 지도에 표시되지 않음."
     },
     {
       "de": "{monster} lebt in {zone}. Dorthin führt kein Weg über Gebietsübergänge.",
       "en": "{monster} lives in {zone}. No route there over zone transitions.",
-      "ko": "{monster}, {zone}에 서식. 지역 통로로 가는 길이 없음."
+      "ko": "{monster} {zone}에 서식. 지역 통로로 가는 길이 없음."
     },
     {
       "de": "{monster}, {killed} von {required} erlegt",
@@ -5081,12 +5081,12 @@
     {
       "de": "{name} bleibt an - es ist die letzte eingeschaltete Kategorie.",
       "en": "{name} stays on - it is the last category left switched on.",
-      "ko": "{name}, 켜짐 유지. 마지막으로 켜져 있는 분류임."
+      "ko": "{name} 켜짐 유지. 마지막으로 켜져 있는 분류임."
     },
     {
       "de": "{name} hat keine Einstellungen.",
       "en": "{name} has no settings.",
-      "ko": "{name}, 설정 없음."
+      "ko": "{name} 설정 없음."
     },
     {
       "de": "{name} ist weg. Folgen beendet.",
@@ -5096,7 +5096,7 @@
     {
       "de": "{name} liegt jetzt auf {slotLabel}.",
       "en": "{name} is now on {slotLabel}.",
-      "ko": "{name}, 이제 {slotLabel}에 있음."
+      "ko": "{name} 이제 {slotLabel}에 있음."
     },
     {
       "de": "{name} liegt unter einem Vorsprung. Laufe bis auf {metres:F0} Meter heran.",
@@ -5266,7 +5266,7 @@
     {
       "de": "{quest} ist in einem anderen Gebiet und ich finde keinen Übergang dorthin.",
       "en": "{quest} is in another area and I can't find a transition there.",
-      "ko": "{quest}, 다른 지역에 있고 그리로 가는 통로를 찾을 수 없음."
+      "ko": "{quest} 다른 지역에 있고 그리로 가는 통로를 찾을 수 없음."
     },
     {
       "de": "{removed} gelöscht",
@@ -5296,7 +5296,7 @@
     {
       "de": "{slotLabel} gewählt, {current}. Was soll darauf?",
       "en": "{slotLabel} selected, {current}. What goes on it?",
-      "ko": "{slotLabel} 선택됨, {current}. 무엇을 배정할지 선택."
+      "ko": "{slotLabel} 선택됨, {current}. 무엇을 배정할지 선택?"
     },
     {
       "de": "{slotLabel}, {current}, {index} von {count}",
@@ -5316,12 +5316,12 @@
     {
       "de": "{spell} gibt es in {duty}. Zu diesem Eingang ist kein Ort hinterlegt.",
       "en": "{spell} is found in {duty}. No location is recorded for that entrance.",
-      "ko": "{spell}, {duty} 임무에 있음. 그 입구의 위치는 기록되어 있지 않음."
+      "ko": "{spell} {duty} 임무에 있음. 그 입구의 위치는 기록되어 있지 않음."
     },
     {
       "de": "{spell} gibt es in {zone}. Dorthin führt kein Weg über Gebietsübergänge.",
       "en": "{spell} is found in {zone}. No route there over zone transitions.",
-      "ko": "{spell}, {zone}에 있음. 지역 이동으로 가는 길 없음."
+      "ko": "{spell} {zone}에 있음. 지역 이동으로 가는 길 없음."
     },
     {
       "de": "{spell}, Nr. {number}",
@@ -5386,7 +5386,7 @@
     {
       "de": "Ätheryten: {count} im Gebiet.",
       "en": "Aetherytes: {count} in this area.",
-      "ko": "에테라이트, {count}곳"
+      "ko": "에테라이트: {count}곳."
     },
     {
       "de": "Übergang",
