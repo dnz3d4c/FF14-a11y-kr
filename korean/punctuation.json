@@ -1,0 +1,81 @@
+{
+  "note": "구두점이 원문과 달라도 통과시킬 자리. `tools/ko-punct`가 읽는다. 키는 `de` 값이고 대장(`strings.json`)과 글자까지 같아야 한다 - 번역이 바뀌어 원문 쌍이 사라지면 검사가 그 줄을 죽은 항목으로 잡는다.",
+  "rule": "사람이 판정한 것만 들어간다. 넣을 때 `faults`에 무슨 부호를 빼는지, `why`에 왜 빼는지, `when`에 날짜를 적는다. `나열`은 영구 면제이고 `보류`는 사용자 판정을 기다리는 빚이라, 보류가 늘면 검사가 먼저 빨개진다.",
+  "faults": "면제는 행이 아니라 부호 갈래 단위다. 행을 통째로 빼면 그 줄에 다른 결함이 생겨도 영영 안 보인다 - 실측에서 나열 쉼표로 뺀 행의 콜론 결함이 그렇게 가려졌다.",
+  "kinds": {
+    "나열": "독일어와 영어는 나열 마지막 항목을 접속사(und, oder)로 잇고 한국어는 쉼표로 잇는다. 부호 용법이 고유 관습이라 바꾸는 것이 맞다. 검사기가 낱말만 보고 자동 면제하지 않는 까닭은 등위절 und가 새어 나가기 때문이다 - 2026-09-13에 실제로 한 건이 그렇게 통과했다.",
+    "보류": "구두점만으로는 안 끝나는 자리. 쉼표를 지우면 말이 붙거나 어미까지 바꿔야 한다. 낱말은 사용자 판정 영역이라 손대지 않고 여기 세워 둔다."
+  },
+  "held": [
+    {
+      "de": " Dabei {up:F0} Meter aufwärts und {down:F0} Meter abwärts.",
+      "kind": "나열",
+      "faults": ["쉼표"],
+      "why": "und가 두 항목을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-09-13"
+    },
+    {
+      "de": " Erholungsbonus für {percent} Prozent einer Stufe.",
+      "kind": "보류",
+      "faults": ["쉼표"],
+      "why": "쉼표를 지우면 '휴식 보너스 한 레벨의'가 붙어 읽힌다",
+      "when": "2026-09-13"
+    },
+    {
+      "de": " Zwischen {before} und {after}.",
+      "kind": "나열",
+      "faults": ["쉼표"],
+      "why": "und가 두 항목을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-09-13"
+    },
+    {
+      "de": "Bedarf, Gier oder Passen möglich",
+      "kind": "나열",
+      "faults": ["쉼표"],
+      "why": "oder가 나열 마지막 항목을 잇는다",
+      "when": "2026-09-13"
+    },
+    {
+      "de": "Gegner wirkt {action} auf dich.",
+      "kind": "보류",
+      "faults": ["쉼표"],
+      "why": "쉼표를 지우면 '적 나에게'가 붙어 읽힌다",
+      "when": "2026-09-13"
+    },
+    {
+      "de": "Hier kann nicht geflogen werden. In Städten, Dungeons und Innenräumen gibt es keine Flugstrecken.",
+      "kind": "나열",
+      "faults": ["쉼표"],
+      "why": "und가 세 항목 나열의 마지막을 잇는다",
+      "when": "2026-09-13"
+    },
+    {
+      "de": "Ich komme nicht weiter, {blocker} steht im Weg. Noch {MetersRemaining(distance)}. Auto-Lauf beendet.",
+      "kind": "보류",
+      "faults": ["마침표"],
+      "why": "원문의 두 문장을 합쳤는데 가르려면 연결어미 '남기고'를 종결형으로 바꿔야 한다",
+      "when": "2026-09-13"
+    },
+    {
+      "de": "Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.",
+      "kind": "나열",
+      "faults": ["쉼표"],
+      "why": "oder가 명령 넷 나열의 마지막을 잇는다",
+      "when": "2026-09-13"
+    },
+    {
+      "de": "{label} abgelegt auf Platz {index}.",
+      "kind": "보류",
+      "faults": ["쉼표"],
+      "why": "쉼표를 지우면 '놓음 {index}번 자리'가 붙어 읽힌다",
+      "when": "2026-09-13"
+    },
+    {
+      "de": "{label} bleibt auf {index} von {count}.",
+      "kind": "보류",
+      "faults": ["쉼표"],
+      "why": "쉼표를 지우면 '그대로 {count} 중'이 붙어 읽힌다",
+      "when": "2026-09-13"
+    }
+  ]
+}

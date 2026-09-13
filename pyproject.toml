@@ -29,6 +29,7 @@ pythonpath = [
     "tools/pack",
     "tools/ko-speech",
     "tools/ko-words",
+    "tools/ko-punct",
 ]
 testpaths = ["tools"]
 
@@ -53,6 +54,7 @@ known-first-party = [
     "files",
     "graft",
     "ko_lexicon",
+    "ko_punct",
     "ko_speech",
     "ko_style",
     "ko_words",
