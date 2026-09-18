@@ -183,3 +183,9 @@
 **해제 절차**: 업데이터가 공식 최신 달라무드를 다시 다루게 되면 ① `kr/Installer/KrDalamudBundle.cs`를 지우고 ② `graft/rules.json`에서 위 규칙 둘을 이름으로 지우고 ③ `Loc.cs`의 `KrBundle*`과 `AskFetchKrBundle` 키를 빼고 ④ `kr_revision`을 올린다. 그러면 원본 흐름이 그대로 돌아온다. **`installer-kr-updater-first`는 같이 지울지 따로 판단한다** — 그 규칙이 고치는 순서 함정은 이번 사안과 무관하게 성립하는 결함이다.
 
 **`replace/`를 안 늘린 것이 핵심이다.** graft는 앵커를 못 찾으면 규칙 이름을 대고 멈추므로, 다음에 원본이 그 자리를 고치면 조용히 깨지지 않고 알린다. `InstallerService.cs`에 직접 써 넣으면 그 신호가 없다.
+
+**해제** (2026-09-18): KR Dalamud Updater 0.5.2가 2026-09-11에 나와 공식 15.0.3.4(FFXIVClientStructs 7.55.1.9047)를 다룬다. 예약해 둔 조건이 그대로 충족됐고, `MiqoKR/kr-dalamud-updater#3`도 해결로 닫혔다. 절차 넷을 그대로 밟았다 — `KrDalamudBundle.cs`를 지우고, graft에서 `installer-kr-bundle-offer`를 지우고, `Loc.cs`의 `KrBundle*` 여덟 키를 세 언어에서 빼고, `kr_revision`을 4로 올렸다(`3`은 한 번 내고 물린 번호라 건너뛴다). `AskFetchKrBundle`은 `v6.8.8.2`에서 묻는 것을 없앨 때 이미 빠져 있었다. 사용자 안내에서도 한 벌을 받는 6장 2절 ④와 그것을 가리키던 두 자리를 걷어냈다. 이제 달라무드 조달은 업데이터의 [업데이트 확인] 하나로 돌아왔다.
+
+**`installer-kr-updater-first`는 남겼다.** 위 절차가 따로 판단하라고 못 박은 자리다. 그 규칙이 고치는 것은 "달라무드를 손으로 넣은 사람이 업데이터 설치 단계를 영영 안 지난다"는 순서 함정이고, 한 벌 조달이 있든 없든 성립한다. 같이 지우면 그 결함이 되살아난다. 두 규칙은 `InstallerService.cs`의 서로 다른 자리를 잡고 있어 하나만 빼도 나머지 앵커가 그대로 맞는다.
+
+**한 벌 릴리스 `dalamud-kr-full-15.0.3.3`은 그대로 둔다.** 코드가 더는 그것을 안 보므로 내려도 새 판이 필요 없고, 남겨도 아무도 안 받는다. 내리는 것은 바깥에 흔적을 지우는 일이라 사용자 판단을 받는다.

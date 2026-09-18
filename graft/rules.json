@@ -655,7 +655,7 @@
     {
       "name": "installer-kr-updater-first",
       "file": "Installer/InstallerService.cs",
-      "why": "업데이터 설치를 달라무드 검사보다 앞으로 옮긴다. 달라무드 파일을 손으로 넣은 사람은 원래 순서에서 이 자리를 영영 안 지나서, 설치 프로그램은 만족하는데 업데이터가 없는 상태로 끝난다. 업데이터가 없으면 모드가 게임에 안 붙는다. installer-kr-bundle-offer와 한 몸이고 해제 조건은 docs/decisions.md D-13에 있다.",
+      "why": "업데이터 설치를 달라무드 검사보다 앞으로 옮긴다. 달라무드 파일을 손으로 넣은 사람은 원래 순서에서 이 자리를 영영 안 지나서, 설치 프로그램은 만족하는데 업데이터가 없는 상태로 끝난다. 업데이터가 없으면 모드가 게임에 안 붙는다. D-13을 해제할 때 installer-kr-bundle-offer는 지웠지만 이 규칙은 남겼다 - 이 순서 함정은 한 벌 조달과 무관하게 성립하는 결함이라, D-13이 해제 절차에서 따로 판단하라고 못 박아 둔 자리다.",
       "find": [
         "        if (KrProfile.DalamudInstalled)",
         "            return true;",
@@ -680,33 +680,6 @@
         "",
         "        if (KrProfile.DalamudInstalled)",
         "            return true;"
-      ]
-    },
-    {
-      "name": "installer-kr-bundle-offer",
-      "file": "Installer/InstallerService.cs",
-      "why": "달라무드가 없으면 우리가 올린 한국 서버용 한 벌을 받아 넣는다. 업데이터의 내려받기 단계가 바로 막힌 자리라, 실패가 확정된 15분 대기로 사람을 보내는 것이 가장 나쁘다. 묻지 않는다 - 달라무드는 vnavmesh나 던전 경로와 달리 선택이 아니고, 사람은 이미 설치를 눌렀다. 받기가 실패하면 거짓을 돌려주므로 원래 경로로 그대로 흘러간다. 그래서 한 벌 릴리스를 내리는 것만으로 새 판 없이 이 기능이 꺼진다. 로직은 kr/Installer/KrDalamudBundle.cs가 들고 있어서 이 규칙과 그 파일을 지우면 원본 흐름이 돌아온다. 해제 조건은 docs/decisions.md D-13에 있다.",
-      "find": [
-        "        // Printed whether or not that worked. These four lines used to sit behind",
-        "        // an early return, so somebody whose download failed heard \"fetch it by",
-        "        // hand\" and nothing else - no path, no page, no next step.",
-        "        Warn(Loc.Get(\"KrDalamudMissing\"));"
-      ],
-      "replace": [
-        "        // Tried before anything is said about the updater's button, because that",
-        "        // button is the step that is broken: it stalls whenever official Dalamud",
-        "        // ships a FFXIVClientStructs the updater was not built against. Telling",
-        "        // somebody to press it and then quietly succeeding without it would leave",
-        "        // two contradictory instructions in a log that is read one line at a time.",
-        "        // Failing returns false and the original lines below run unchanged, so",
-        "        // unpublishing the bundle release switches this off with no new build.",
-        "        if (await KrDalamudBundle.TryInstallAsync(DownloadFileAsync, Info, Warn))",
-        "            return true;",
-        "",
-        "        // Printed whether or not that worked. These four lines used to sit behind",
-        "        // an early return, so somebody whose download failed heard \"fetch it by",
-        "        // hand\" and nothing else - no path, no page, no next step.",
-        "        Warn(Loc.Get(\"KrDalamudMissing\"));"
       ]
     }
   ]
