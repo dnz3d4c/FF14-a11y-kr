@@ -35,6 +35,12 @@ jobs:
   checks:
     name: 파이썬 검사
     runs-on: windows-latest
+    # 워크플로 검사기의 브랜치 규칙이 로컬 git이 아는 이름으로 잰다. 브랜치 하나를
+    # 이름으로 체크아웃하면 그 가지 하나만 알게 되어, 기본 가지를 가리키는 멀쩡한
+    # 워크플로가 "없는 브랜치"로 걸린다. 여기서 알려 줘 그 가짜 빨강을 없앤다.
+    # 잡 수준에 두는 까닭은 검사기를 pytest도 부르고 인코딩 검사도 부르기 때문이다.
+    env:
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
     steps:
       - uses: actions/checkout@v4
 

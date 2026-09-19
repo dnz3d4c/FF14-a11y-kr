@@ -54,6 +54,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import subprocess
 import sys
@@ -83,6 +84,10 @@ VERSION_CONSTANT = re.compile(r"dalamud-kr-\d+(?:\.\d+)+")
 #: PR 체크아웃이 만드는 ref 이름. `actions/checkout`이 병합 결과 하나만 받아 오므로
 #: 이것만 있는 저장소는 **브랜치 이름을 잴 수 있는 상태가 아니다.**
 PULL_REQUEST_REF = re.compile(r"^\d+/(?:merge|head)$")
+
+#: CI가 알려 주는 기본 가지 이름. `actions/checkout`이 한 가지만 받으면 로컬 git이
+#: 기본 가지를 모르는데, 워크플로가 그것을 가리키는 것은 정상이다.
+DEFAULT_BRANCH_ENV = "DEFAULT_BRANCH"
 
 #: 워크플로가 부르는 우리 스크립트.
 SCRIPT_CALL = re.compile(r"(?:uv run )?python3? (tools/[\w./-]+\.py)")
@@ -349,6 +354,17 @@ def known_branches(root: Path) -> set[str] | None:
     # 못 잰다고 하는 편이 낫다 - 로컬 git이 아예 없을 때와 같은 갈래다.
     if names and all(PULL_REQUEST_REF.match(name) for name in names):
         return None
+
+    # **CI가 알려 주면 받아 쓴다.** 브랜치 하나를 이름으로 체크아웃하면 로컬 git이
+    # 그 가지 하나만 알아서, 기본 가지를 가리키는 멀쩡한 워크플로가 "없는 브랜치"로
+    # 걸린다. 2026-09-20에 sync 브랜치에서 build.yml을 돌리다가 실제로 그랬고,
+    # 원본 코드가 낸 진짜 빨강 둘 옆에 섞여서 어느 것이 진짜인지 흐려졌다.
+    #
+    # 검사를 무르는 것이 아니라 **잴 정보를 더 주는 것**이다. 더하는 이름은 기본
+    # 가지 하나뿐이라 다른 오타는 그대로 걸리고, 안 알려 주면 규칙이 전부 그대로다.
+    told = os.environ.get(DEFAULT_BRANCH_ENV, "").strip()
+    if told:
+        names.add(told)
     return names or None
 
 

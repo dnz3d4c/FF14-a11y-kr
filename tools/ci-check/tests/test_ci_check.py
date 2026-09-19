@@ -9,7 +9,17 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+import pytest
+
 import ci_check
+
+
+@pytest.fixture(autouse=True)
+def _기본_가지_환경을_지운다(monkeypatch: pytest.MonkeyPatch) -> None:
+    """CI는 이 이름을 세우고 돌린다. 테스트가 그것을 물려받으면 로컬과 CI에서
+    결과가 갈리고, 갈린 쪽이 어느 쪽인지 아무도 모른다."""
+    monkeypatch.delenv(ci_check.DEFAULT_BRANCH_ENV, raising=False)
+
 
 WORKFLOW = """
 name: 보기
@@ -307,6 +317,45 @@ def test_PR_체크아웃에서는_브랜치_검사를_건너뛴다(tmp_path: Pat
 
     assert ci_check.known_branches(root) is None
     assert ci_check.check_tree(root) == []
+
+
+def test_CI가_알려_준_기본_가지를_아는_것으로_본다(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """`actions/checkout`이 한 가지만 받으면 로컬 git은 기본 가지를 모르는데,
+    워크플로가 그것을 가리키는 것은 정상이다.
+
+    2026-09-20에 sync 브랜치에서 build.yml을 손으로 돌리다가 그 가짜 빨강을
+    실제로 만났다. 원본 코드가 낸 진짜 빨강 둘 옆에 섞여서 **어느 것이 진짜인지
+    흐려졌다.** 검사를 무르는 것이 아니라 잴 정보를 더 주는 쪽으로 푼다.
+    """
+    root = _repo(tmp_path, TRIGGERED.format(branch="master"), branch="sync/upstream-v1")
+    monkeypatch.setenv(ci_check.DEFAULT_BRANCH_ENV, "master")
+
+    assert ci_check.check_tree(root) == []
+
+
+def test_안_알려_주면_그대로_잡는다(tmp_path: Path) -> None:
+    """규칙이 죽지 않는다. 알려 주지 않은 채로 없는 이름을 가리키면 그대로 빨갛다."""
+    root = _repo(tmp_path, TRIGGERED.format(branch="master"), branch="sync/upstream-v1")
+
+    found = ci_check.check_tree(root)
+
+    assert len(found) == 1
+    assert "master" in found[0]
+
+
+def test_알려_줘도_없는_이름은_그대로_잡는다(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """더하는 것은 기본 가지 하나뿐이다. 다른 오타는 여전히 걸린다."""
+    root = _repo(tmp_path, TRIGGERED.format(branch="main"), branch="sync/upstream-v1")
+    monkeypatch.setenv(ci_check.DEFAULT_BRANCH_ENV, "master")
+
+    found = ci_check.check_tree(root)
+
+    assert len(found) == 1
+    assert "main" in found[0]
 
 
 def test_없는_로컬_액션을_가리키면_잡는다(tmp_path: Path) -> None:
