@@ -41,10 +41,12 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: read
+      pull-requests: read
     outputs:
       current: ${{ steps.look.outputs.current }}
       latest: ${{ steps.look.outputs.latest }}
       has-new: ${{ steps.look.outputs.has-new }}
+      proposed: ${{ steps.open.outputs.proposed }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -87,6 +89,25 @@ jobs:
             echo "has-new=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # 같은 판정을 매일 다시 내지 않는다. 태그 하나에 PR이 이미 열려 있는데도
+      # 아래 잡들이 매일 전부 다시 조립하고 빌드하며 같은 가지에 새 커밋을 밀어
+      # 넣었다. 오류가 아니어도 매일 활동 알림이 되고 러너 시간을 매일 쓴다.
+      #
+      # GH_TOKEN이 없으면 인증이 안 돼 조회가 바로 죽는다 - 아래 propose의
+      # `브랜치와 PR`이 같은 gh 호출 앞에서 이미 그 모양이다. gh에는 시간 제한
+      # 옵션이 없어서 단계에 timeout-minutes를 단다.
+      - name: 이미 제안했는지 본다
+        id: open
+        if: steps.look.outputs.has-new == 'true'
+        timeout-minutes: 10
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch="sync/upstream-${{ steps.look.outputs.latest }}"
+          number=$(gh pr list --head "$branch" --state open --json number --jq '.[].number' | head -1)
+          echo "proposed=$number" >> "$GITHUB_OUTPUT"
+
       - name: 잡 요약
         if: always()
         shell: bash
@@ -99,10 +120,14 @@ jobs:
             echo "| 지금 핀 | ${{ steps.look.outputs.current }} |"
             echo "| 원본 최신 | ${{ steps.look.outputs.latest }} |"
             echo
-            if [ "${{ steps.look.outputs.has-new }}" = "true" ]; then
-              echo "얹을 것이 있다. 아래 잡이 조립과 빌드를 본다."
-            else
+            if [ "${{ steps.look.outputs.has-new }}" != "true" ]; then
               echo "새 태그 없음. 아래 잡은 skipped로 남는다."
+            elif [ -n "${{ steps.open.outputs.proposed }}" ]; then
+              echo "이미 제안했다 - PR #${{ steps.open.outputs.proposed }}. 아래 잡은 skipped로 남는다."
+              echo
+              echo "같은 판정을 매일 다시 내지 않는다. 그 PR을 얹거나 닫으면 다음 실행이 다시 본다."
+            else
+              echo "얹을 것이 있다. 아래 잡이 조립과 빌드를 본다."
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -113,7 +138,7 @@ jobs:
   # 2026-09-04에 실제로 돌려 보니 `if`로 건너뛴 잡은 실행 컨텍스트가 없어서 이름의
   # 표현식이 평가되지 않고 원문 그대로 뜬다 - 목록에 이렇게 나온다.
   #
-  #     skipped | needs.check.outputs.has-new == 'true' && '새 판 얹기' || '새 태그 없음'
+  #     skipped | needs.check.outputs.has-new == 'true' && '새 버전 얹기' || '새 태그 없음'
   #
   # 구분하고 싶었던 바로 그 경우에 못 읽는 문자열이 뜨므로 목적을 정반대로 이룬다.
   # 정적 이름이 표현식 없이 같은 일을 한다. tools/ci-check가 이 자리를 지킨다.
@@ -125,14 +150,15 @@ jobs:
   # 이 잡은 **원본이 쓴 코드를 실행한다.** 새 태그를 체크아웃해 dotnet build를 돌리고,
   # 원본 csproj에는 커스텀 MSBuild 타깃이 있다. 그래서 읽기 권한만 갖는다.
   port:
-    name: 새 판 얹기 (새 태그가 없으면 건너뜀)
+    name: 새 버전 얹기 (새 태그가 없거나 이미 제안했으면 건너뜀)
     needs: check
-    if: needs.check.outputs.has-new == 'true'
+    if: needs.check.outputs.has-new == 'true' && needs.check.outputs.proposed == ''
     runs-on: windows-latest
     permissions:
       contents: read
     outputs:
       sha: ${{ steps.pin.outputs.sha }}
+      warnings: ${{ steps.warn.outputs.count }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -177,13 +203,46 @@ jobs:
           uv run python tools/assemble/assemble.py | tee assemble.log
           cp build/assemble-report.json after.json
 
+      # **여기만 -warnaserror를 안 쓴다.** 이 잡이 재는 것은 원본이 방금 낸 코드이고,
+      # 그 코드의 경고는 우리가 고칠 수 없다 - 원본의 결함은 우리가 고치지 않기로
+      # 정해 두었다. 게이트로 걸면 초록으로 가는 길이 아예 없어 매일 빨개지고,
+      # 그러면 빨강이 신호이기를 그만둔다. 저장소가 이미 같은 논증을 두 곳에 갖고
+      # 있다 - build.yml의 "미번역 개수 자체는 실패가 아니다"와 위 check 잡의
+      # "새 태그 없음을 실패로 만들지 않는다"다. tools/ci-check의 규칙 9가 이 자리를
+      # 지킨다.
+      #
+      # 컴파일 오류는 그대로 빨강이다. 그것은 **우리 것이다** - 참조 어셈블리 버전이
+      # 낡았다는 뜻이고, 2026-09-07에 실제로 그랬다(CS1061을 15.0.3.3으로 올려 풀었다).
+      #
+      # shell: bash는 pipefail이 켜져 있어서 tee를 거쳐도 dotnet의 실패가 그대로
+      # 단계의 실패가 된다.
       - name: 빌드
         shell: bash
         env:
           DALAMUD_HOME: ${{ steps.refs.outputs.home }}
         run: |
-          dotnet build -c Release -warnaserror \
-            build/FF14Accessibility/FF14Accessibility.csproj
+          dotnet build -c Release \
+            build/FF14Accessibility/FF14Accessibility.csproj | tee build.log
+
+      # 경고를 버리지 않는다. 게이트에서 뺀 대신 **세어서 사람에게 낸다.**
+      #
+      # 빌드가 서도 돈다. 오류로 죽은 로그에도 경고가 같이 들어 있고, 그것이
+      # 무엇을 봐야 하는지 말해 준다.
+      #
+      # 중복을 없애는 까닭: MSBuild가 마지막 요약 절에서 같은 경고를 들여쓰기만
+      # 붙여 되풀이한다. 그대로 세면 개수가 두 배가 되고 같은 줄이 본문에 두 번 온다.
+      # 꼬리의 `[...csproj]`도 같은 이유로 뗀다.
+      - name: 원본 경고를 센다
+        id: warn
+        if: always()
+        shell: bash
+        run: |
+          sed -n 's/^[[:space:]]*//; s/[[:space:]]*\[[^][]*\][[:space:]]*$//; /: warning [A-Z][A-Z0-9]*:/p' \
+            build.log 2>/dev/null | sort -u > warnings.txt || true
+          count=$(wc -l < warnings.txt | tr -d ' ')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "원본이 데려온 경고 $count개."
+          cat warnings.txt
 
       - name: 미번역 인벤토리
         uses: actions/upload-artifact@v4
@@ -194,8 +253,10 @@ jobs:
             after.json
           if-no-files-found: error
 
-      # 고아는 업스트림이 그 문장을 고쳤다는 신호다. 새 판을 받을 때 사람이 가장
-      # 먼저 봐야 하는 것이라 본문 맨 앞에 온다.
+      # 경고 목록이 본문 맨 앞에 온다. 까닭: master의 build.yml은 -warnaserror로
+      # 재므로, **이 PR을 얹으면 그 경고가 곧 master의 빨강이 된다.** 사람이 얹기
+      # 전에 그것을 알아야 한다. 그 다음이 고아인데, 업스트림이 그 문장을 고쳤다는
+      # 신호라 새 버전을 받을 때 그 다음으로 먼저 봐야 한다.
       - name: PR 본문
         shell: bash
         run: |
@@ -204,7 +265,20 @@ jobs:
             echo "원본 \`${{ needs.check.outputs.current }}\`에서"
             echo "\`${{ needs.check.outputs.latest }}\`로 옮긴다."
             echo
-            echo "조립과 \`dotnet build -c Release -warnaserror\`가 선 것을 확인했다."
+            if [ -s warnings.txt ]; then
+              echo "## 이 버전이 데려오는 경고 ${{ steps.warn.outputs.count }}개"
+              echo
+              echo "\`master\`의 \`build.yml\`은 \`-warnaserror\`로 잰다."
+              echo "**이 PR을 얹으면 아래가 곧 \`master\`의 빨강이 된다.**"
+              echo "원본의 결함은 우리가 고치지 않으므로, 얹기 전에 무엇을 할지 사람이 정한다."
+              echo "그래서 이 PR은 draft로 열린다."
+              echo
+              echo '```'
+              cat warnings.txt
+              echo '```'
+            else
+              echo "조립과 \`dotnet build -c Release\`가 경고 없이 섰다."
+            fi
             echo
             cat change.md
             echo
@@ -231,6 +305,16 @@ jobs:
           {
             echo "## ${{ needs.check.outputs.current }} 에서 ${{ needs.check.outputs.latest }} 로"
             echo
+            if [ -s warnings.txt ]; then
+              echo "### 이 버전이 데려오는 경고 ${{ steps.warn.outputs.count }}개"
+              echo
+              echo "게이트가 아니다. master는 \`-warnaserror\`로 재므로 얹기 전에 사람이 본다."
+              echo
+              echo '```'
+              cat warnings.txt
+              echo '```'
+              echo
+            fi
             cat change.md 2>/dev/null || echo "견줄 것을 못 만들었다."
             echo
             echo '```'
@@ -244,8 +328,9 @@ jobs:
   # 포인터는 `git update-index --cacheinfo`로 적는다. 서브모듈 내용 없이 gitlink만
   # 갈아 끼우는 방법이라, 원본 트리를 받지 않고도 커밋이 만들어진다.
   propose:
-    name: PR 열기 (새 태그가 없으면 건너뜀)
+    name: PR 열기 (새 태그가 없거나 이미 제안했으면 건너뜀)
     needs: [check, port]
+    if: needs.check.outputs.has-new == 'true' && needs.check.outputs.proposed == ''
     runs-on: windows-latest
     permissions:
       contents: write
@@ -277,12 +362,25 @@ jobs:
           if [ -n "$(gh pr list --head "$branch" --state open --json number --jq '.[].number')" ]; then
             echo "state=열려 있는 PR에 밀어 넣었다" >> "$GITHUB_OUTPUT"
           else
+            # 경고가 하나라도 있으면 draft로 연다. 병합할 준비가 안 된 제안이라는
+            # 것을 PR 자신이 말한다 - master는 -warnaserror로 재므로 그대로 얹으면
+            # 그 경고가 곧 빨강이 된다.
+            #
+            # 값이 비어 있을 때도 draft다. 앞 잡이 경고를 못 센 것이지 경고가
+            # 없다고 확인된 것이 아니다.
+            draft="--draft"
+            note="경고를 못 셌다"
+            if [ "${{ needs.port.outputs.warnings }}" = "0" ]; then
+              draft=""
+            elif [ -n "${{ needs.port.outputs.warnings }}" ]; then
+              note="경고 ${{ needs.port.outputs.warnings }}개"
+            fi
             # 기본 브랜치 이름을 적어 두지 않고 받아 쓴다. 손으로 적으면 이 저장소처럼
             # master를 쓰는 곳에서 main이라고 적힌 채로 조용히 실패한다.
-            gh pr create --head "$branch" --base "${{ github.event.repository.default_branch }}" \
+            gh pr create $draft --head "$branch" --base "${{ github.event.repository.default_branch }}" \
               --title "[원본] ${{ needs.check.outputs.latest }}를 얹는다" \
               --body-file body.md
-            echo "state=PR을 새로 열었다" >> "$GITHUB_OUTPUT"
+            echo "state=PR을 새로 열었다${draft:+ (draft - $note)}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: 잡 요약

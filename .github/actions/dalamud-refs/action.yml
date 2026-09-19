@@ -1,14 +1,15 @@
 name: Dalamud 참조 마련
 description: >
-  빌드에 필요한 어셈블리 여섯을 한 디렉토리에 모으고 sha256으로 대조한다.
-  여섯 중 둘만 한국 클라이언트 전용이고 넷은 공식 배포본에서 꺼낸다.
+  빌드에 필요한 어셈블리 여섯을 이 저장소의 참조 릴리스에서 한 디렉토리로 받아
+  sha256으로 대조한다. 여섯 중 둘은 한국 클라이언트 전용이고 넷은 공식 배포본과
+  바이트가 같지만, 넷도 공식이 아니라 여기서 받는다.
 
 # 여기가 Dalamud 판을 정하는 유일한 자리다. 워크플로 둘이 이 액션을 부르므로
 # 값이 두 벌로 갈릴 자리가 없다. 기존 저장소는 워크플로마다 상수를 두고 갈리는
 # 것을 "테스트가 YAML을 grep한다"로 막고 있었다.
 inputs:
   release-tag:
-    description: 한국 클라이언트 전용 어셈블리 둘이 붙어 있는 이 저장소의 릴리스 태그.
+    description: 어셈블리 여섯이 붙어 있는 이 저장소의 릴리스 태그.
     required: false
     default: dalamud-kr-15.0.3.3
   path:
@@ -27,36 +28,34 @@ outputs:
 runs:
   using: composite
   steps:
-    # 공식 배포본과 바이트가 같은 넷. 같다는 것은 믿지 않고 아래에서 잰다.
+    # **여섯을 다 여기서 받는다.** 넷은 공식 배포본과 바이트가 같지만 공식에서
+    # 직접 받지 않는다. 공식에는 버전을 고정한 주소가 없고 latest.zip 하나뿐이라,
+    # 공식이 버전을 올리는 날 그 넷의 바이트가 바뀌어 우리가 못 박아 둔 해시와
+    # 어긋난다. 그러면 우리 코드가 아닌 이유로 모든 푸시와 모든 PR과 매일의
+    # 동기화가 통째로 빨개진다 - 2026-09-10 빌드 실패 여섯 건이 전부 그것이었다.
+    # tools/ci-check의 규칙 10이 이 자리를 지킨다.
     #
-    # 시간 제한을 명령에 단다. 복합 액션의 단계는 timeout-minutes를 못 갖기 때문이다.
-    # 제한이 없으면 상대가 멈췄을 때 잡 제한까지 붙잡히고, 그동안 무엇을 기다리는지도
-    # 안 보인다.
-    - name: 공식 배포본에서 넷을 꺼낸다
-      shell: bash
-      run: |
-        mkdir -p "${{ inputs.path }}"
-        curl -sSL --fail --connect-timeout 20 --max-time 300 \
-          -o dalamud-latest.zip https://goatcorp.github.io/dalamud-distrib/latest.zip
-        7z x -y -odalamud-latest dalamud-latest.zip > /dev/null
-        for name in Lumina.dll Lumina.Excel.dll InteropGenerator.Runtime.dll ImGuiScene.dll; do
-          cp "dalamud-latest/$name" "${{ inputs.path }}/$name"
-        done
-
-    # 한국 클라이언트 전용 둘과, 여섯 전부의 해시 목록.
-    # gh에는 시간 제한 옵션이 없어서 timeout으로 감싼다.
-    - name: 한국 클라이언트 전용 둘을 받는다
+    # "넷은 바이트가 같다"는 여전히 참이고 여전히 재는데, 재는 자리가 다르다.
+    # 참조 릴리스를 만들 때 사람이 한 번 대조하고 그 결과를 문서에 적는다
+    # (docs/dev/dalamud-refs.md). 빌드마다 재지 않는다.
+    #
+    # gh에는 시간 제한 옵션이 없어서 timeout으로 감싼다. 복합 액션의 단계는
+    # timeout-minutes를 못 갖기 때문이다.
+    - name: 참조 릴리스에서 여섯을 받는다
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
       run: |
+        mkdir -p "${{ inputs.path }}"
         timeout 300 gh release download "${{ inputs.release-tag }}" \
           --repo "$GITHUB_REPOSITORY" \
           --pattern '*.dll' --pattern 'SHA256SUMS.txt' \
           --dir "${{ inputs.path }}" --clobber
 
-    # 공식 판이 올라가면 넷이 어느 날 달라질 수 있다. 그때 조용히 다른 어셈블리로
-    # 빌드하면 안 되므로 매번 잰다. 어긋나면 여기서 멈춘다.
+    # 재는 대상이 바깥에서 우리 릴리스로 바뀌었지 대조가 없어진 것이 아니다.
+    # **받아 오기가 반만 돼도 gh는 0으로 끝난다** - 참조 릴리스에 자산 넷이 빠져
+    # 있던 것을 만든 날부터 몰랐던 것이 그 모양이었다. 여섯이 다 왔는지와
+    # 바이트가 온전한지를 여기서 잰다. 어긋나면 여기서 멈춘다.
     - name: 여섯을 해시로 대조한다
       id: verify
       shell: bash

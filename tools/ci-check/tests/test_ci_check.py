@@ -534,6 +534,163 @@ def test_건너뛸_수_없는_잡의_동적_이름은_안_따진다(tmp_path: Pa
     assert ci_check.check_tree(_write(tmp_path, text)) == []
 
 
+STRICT = """
+name: 보기
+on: [push]
+jobs:
+  port:
+    runs-on: windows-latest
+    steps:
+      - name: 새 태그로 갈아 끼운다
+        shell: bash
+        run: git -C upstream checkout v1.2.3
+      - name: 빌드
+        shell: bash
+        run: dotnet build -c Release -warnaserror build/x.csproj
+"""
+
+
+def test_원본을_갈아_끼우는_잡이_경고를_오류로_올리면_잡는다(tmp_path: Path) -> None:
+    """원본이 방금 낸 코드를 우리 엄격 기준으로 재면 **우리가 고칠 수 없는 이유로**
+    매일 빨개진다. 원본 결함은 우리가 고치지 않기로 정해 두었으므로 초록으로 가는
+    길이 아예 없다. 2026-09-20 예약 실행이 원본 v6.08.20의 죽은 필드 하나 때문에
+    죽었고, 그 로그를 보면 DLL은 실제로 만들어져 있었다."""
+    found = ci_check.check_tree(_write(tmp_path, STRICT))
+
+    assert len(found) == 1
+    assert "port" in found[0]
+
+
+def test_핀을_고정해_놓고_재는_것은_안_따진다(tmp_path: Path) -> None:
+    """이것이 이 규칙이 가르는 경계다. build.yml에는 checkout이 없고, 재는 대상이
+    우리가 고를 수 있는 핀이라 경고를 오류로 올리는 것이 옳다."""
+    text = STRICT.replace("        run: git -C upstream checkout v1.2.3", "        run: echo hi")
+
+    assert ci_check.check_tree(_write(tmp_path, text)) == []
+
+
+def test_갈아_끼우기만_하면_안_따진다(tmp_path: Path) -> None:
+    text = STRICT.replace(" -warnaserror", "")
+
+    assert ci_check.check_tree(_write(tmp_path, text)) == []
+
+
+def test_다른_잡에서_재는_것은_안_따진다(tmp_path: Path) -> None:
+    """잡마다 작업 공간이 새로 나므로, 다른 잡의 빌드가 재는 것은 갈아 끼우기 전의
+    핀이다. 같은 잡 안에 있을 때만 원본이 방금 낸 코드를 재게 된다."""
+    text = STRICT.replace(
+        "      - name: 빌드\n        shell: bash\n"
+        "        run: dotnet build -c Release -warnaserror build/x.csproj",
+        "  build:\n    runs-on: windows-latest\n    steps:\n"
+        "      - name: 빌드\n        shell: bash\n"
+        "        run: dotnet build -c Release -warnaserror build/x.csproj",
+    )
+
+    assert ci_check.check_tree(_write(tmp_path, text)) == []
+
+
+def test_MSBuild_속성으로_올려도_잡는다(tmp_path: Path) -> None:
+    """-warnaserror만 막으면 같은 일을 하는 다른 표기로 그대로 우회된다."""
+    text = STRICT.replace("-warnaserror", "-p:TreatWarningsAsErrors=true")
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "port" in found[0]
+
+
+def test_경고_승격을_말로_적은_것은_안_따진다(tmp_path: Path) -> None:
+    """낱말만 찾으면 그 낱말을 화면에 적는 echo까지 걸린다. 실물에서 실제로 그랬다 -
+    PR 본문이 "master는 -warnaserror로 잰다"고 적는데, 그것은 사람에게 알리는
+    문구이지 빌드에 넘기는 플래그가 아니다."""
+    text = STRICT.replace(
+        "        run: dotnet build -c Release -warnaserror build/x.csproj",
+        '        run: echo "master의 build.yml은 -warnaserror로 잰다."',
+    )
+
+    assert ci_check.check_tree(_write(tmp_path, text)) == []
+
+
+def test_빌드_명령이_여러_줄에_걸쳐도_잡는다(tmp_path: Path) -> None:
+    """줄 이어쓰기를 펴지 않으면 플래그가 다음 줄에 있을 때 그냥 지나친다."""
+    text = STRICT.replace(
+        "        run: dotnet build -c Release -warnaserror build/x.csproj",
+        "        run: |\n          dotnet build -c Release \\\n"
+        "            -warnaserror build/x.csproj",
+    )
+
+    found = ci_check.check_tree(_write(tmp_path, text))
+
+    assert len(found) == 1
+    assert "port" in found[0]
+
+
+MOVING = """
+name: 마련
+runs:
+  using: composite
+  steps:
+    - name: 받는다
+      shell: bash
+      run: curl -sSL --max-time 300 -o x.zip https://example.invalid/dist/latest.zip
+    - name: 잰다
+      shell: bash
+      run: sha256sum -c SHA256SUMS.txt
+"""
+
+
+def _action(tmp_path: Path, text: str) -> Path:
+    root = _write(tmp_path, WORKFLOW)
+    action = root / ".github" / "actions" / "마련" / "action.yml"
+    action.parent.mkdir(parents=True)
+    action.write_text(text, encoding="utf-8")
+    return root
+
+
+def test_움직이는_주소에서_받은_것을_해시로_재면_잡는다(tmp_path: Path) -> None:
+    """`latest`는 언제나 최신을 가리킨다. 상대가 버전을 올리면 받은 바이트가 바뀌고,
+    못 박아 둔 해시와 어긋나 **우리 코드가 아닌 이유로** 모든 푸시와 모든 PR이
+    통째로 빨개진다. 2026-09-10 빌드 실패 여섯 건이 전부 그것이었다."""
+    found = ci_check.check_tree(_action(tmp_path, MOVING))
+
+    assert len(found) == 1
+    assert "action.yml" in found[0]
+
+
+def test_줄_이어쓰기로_나뉘어_있어도_잡는다(tmp_path: Path) -> None:
+    """실물이 이 모양이었다. 명령과 주소가 `\\`로 두 줄에 나뉘어 있어서, 한 줄
+    안에서만 찾는 패턴은 잡아야 할 자리를 그냥 지나쳤다."""
+    text = MOVING.replace(
+        "      run: curl -sSL --max-time 300 -o x.zip https://example.invalid/dist/latest.zip",
+        "      run: |\n"
+        "        curl -sSL --max-time 300 \\\n"
+        "          -o x.zip https://example.invalid/dist/latest.zip",
+    )
+
+    found = ci_check.check_tree(_action(tmp_path, text))
+
+    assert len(found) == 1
+    assert "action.yml" in found[0]
+
+
+def test_고정된_주소면_안_따진다(tmp_path: Path) -> None:
+    text = MOVING.replace("latest.zip", "15.0.3.3.zip")
+
+    assert ci_check.check_tree(_action(tmp_path, text)) == []
+
+
+def test_해시_대조만_있으면_안_따진다(tmp_path: Path) -> None:
+    """받아 오기가 반만 돼도 `gh`는 0으로 끝나므로, 우리 릴리스에서 받은 것을 재는
+    자리는 그대로 있어야 한다. 이 규칙이 막는 것은 대조가 아니라 출처다."""
+    text = MOVING.replace(
+        "    - name: 받는다\n      shell: bash\n"
+        "      run: curl -sSL --max-time 300 -o x.zip https://example.invalid/dist/latest.zip\n",
+        "",
+    )
+
+    assert ci_check.check_tree(_action(tmp_path, text)) == []
+
+
 def test_워크플로가_하나도_없으면_잡는다(tmp_path: Path) -> None:
     """검사가 조용히 통과하는 가장 쉬운 길을 막는다."""
     found = ci_check.check_tree(tmp_path)

@@ -1,7 +1,7 @@
 """워크플로가 지켜야 할 것을 검사한다.
 
-여기서 막는 넷은 전부 **기존 저장소에서 실제로 일어난 것**이다. 사람이 다시 안
-그러기를 바라는 대신 검사가 막는다.
+여기서 막는 열은 전부 **실제로 일어난 것**이다. 사람이 다시 안 그러기를 바라는
+대신 검사가 막는다.
 
 1. **모든 `run:`에 `shell:`을 적는다.** 러너 기본 셸에 기대면 셸이 바뀔 때 조용히
    동작이 달라진다. 워크플로 하나가 그래서 3/3 실패하며 에러를 로그에 한 줄도 못
@@ -27,6 +27,18 @@
 8. **건너뛸 수 있는 잡의 이름에 표현식을 쓰지 않는다.** 건너뛴 잡은 실행 컨텍스트가
    없어서 이름의 표현식이 평가되지 않고 원문 그대로 뜬다(2026-09-04 실측). 이름으로
    상태를 말하려던 시도가 정확히 그 경우에 못 읽는 문자열을 내놓는다.
+9. **실행 중에 원본 ref를 갈아 끼우는 잡에서 경고를 오류로 올리지 않는다.** 원본이
+   방금 낸 코드를 우리 엄격 기준으로 재면 **우리가 고칠 수 없는 이유로** 매일
+   빨개진다. 이 저장소는 원본 결함을 우리가 고치지 않기로 정해 두었으므로 초록으로
+   가는 길이 아예 없다. 2026-09-20 예약 실행이 원본 v6.08.20의 죽은 필드 하나 때문에
+   죽었고, 그 로그를 보면 DLL은 실제로 만들어져 있었다 - 실패는 오직 경고 승격
+   때문이었다. 핀을 고정해 놓고 재는 `build.yml`은 여기 안 걸린다. 그 워크플로에는
+   갈아 끼우기가 없고, 그것이 이 규칙이 가르는 경계다.
+10. **`sha256sum -c`로 재는 것을 움직이는 주소에서 받지 않는다.** `latest`가 든 주소는
+   언제나 최신을 가리키므로, 상대가 버전을 올리면 받은 바이트가 바뀌고 못 박아 둔
+   해시와 어긋난다. 그러면 **우리 코드가 아닌 이유로** 모든 푸시와 모든 PR과 매일의
+   동기화가 통째로 빨개진다. 2026-09-10 빌드 실패 여섯 건이 전부 그것이었다
+   (`4 computed checksums did NOT match`).
 
 ## 이 검사가 못 재는 것
 
@@ -105,6 +117,30 @@ PYTHON_CALL = re.compile(r"\bpython3?\b")
 #: 한국어 출력이 러너에서 살아남으려면 있어야 하는 환경 변수.
 ENCODING_ENV = ("PYTHONIOENCODING", "PYTHONUTF8")
 
+#: 줄 이어쓰기. 아래 둘은 **명령 하나를 한 줄로** 봐야 하는데, 실물이 긴 명령을
+#: `\`로 여러 줄에 나눠 갖고 있어서 한 줄 안에서만 찾으면 그냥 지나친다.
+LINE_CONTINUATION = re.compile(r"\\\n[ \t]*")
+
+#: 실행 중에 원본 서브모듈의 ref를 갈아 끼우는 명령. 그 뒤에 도는 빌드는 **원본이
+#: 방금 낸 코드**를 재게 된다.
+UPSTREAM_CHECKOUT = re.compile(r"git\s+-C\s+upstream\s+checkout\b")
+
+#: 빌드 명령이 경고를 오류로 올리는 것. 두 표기가 같은 일을 하므로 둘 다 본다.
+#:
+#: **빌드 명령과 묶어서 본다.** 낱말만 찾으면 그 낱말을 화면에 적는 `echo`까지
+#: 걸린다 - `sync.yml`의 PR 본문이 실제로 "master는 -warnaserror로 잰다"고 적고
+#: 있고, 그것은 사람에게 알리는 문구이지 빌드에 넘기는 플래그가 아니다.
+WARNINGS_AS_ERRORS = re.compile(
+    r"\b(?:dotnet|msbuild)\b[^\n]*?(?:-warnaserror\b|TreatWarningsAsErrors\s*=\s*true)"
+)
+
+#: 움직이는 주소에서 받는 것. `latest`가 들어 있으면 그 주소가 가리키는 바이트가
+#: 언제 바뀔지를 우리가 모른다.
+MOVING_DOWNLOAD = re.compile(r"\b(?:curl|wget)\b[^\n]*https?://\S*latest")
+
+#: 받은 것을 못 박아 둔 해시와 대조하는 명령.
+CHECKSUM_VERIFY = re.compile(r"\bsha256sum\s+-c\b")
+
 #: `needs.<잡>.outputs.<이름>`과 `steps.<id>.outputs.<이름>`.
 #: 이름이 갈리면 GitHub이 조용히 빈 값을 준다. 오류가 아니라 빈 문자열이다.
 #:
@@ -162,7 +198,67 @@ def check_document(path: str, document: dict[str, Any]) -> list[str]:
     problems += _artifacts(path, document)
     problems += _encoding(path, document)
     problems += _job_names(path, document)
+    problems += _upstream_strictness(path, document)
+    problems += _moving_target(path, document)
     return problems
+
+
+def _scripts_by_job(document: dict[str, Any]) -> dict[str, list[str]]:
+    """잡 이름 -> 그 잡의 `run` 전부. 복합 액션은 `runs` 하나로 들어온다.
+
+    **줄 이어쓰기를 펴서 돌려준다.** 아래 둘은 한 명령 안에서 두 가지가 같이
+    나오는 것을 재는데, 실물이 긴 명령을 `\\`로 나눠 갖고 있어서 펴지 않으면
+    잡아야 할 자리를 지나친다.
+    """
+    found: dict[str, list[str]] = {}
+    for job, step in _steps(document):
+        script = step.get("run")
+        if script is not None:
+            found.setdefault(job, []).append(LINE_CONTINUATION.sub(" ", script))
+    return found
+
+
+def _upstream_strictness(path: str, document: dict[str, Any]) -> list[str]:
+    """원본 ref를 갈아 끼우는 잡이 경고를 오류로 올리는가.
+
+    원본이 방금 낸 코드를 우리 엄격 기준으로 재면 **우리가 고칠 수 없는 이유로**
+    매일 빨개진다. 원본 결함은 우리가 고치지 않기로 정해 두었으므로(`CLAUDE.md`의
+    `## 원본 취급`) 초록으로 가는 길이 아예 없고, 그러면 빨강이 신호이기를 그만둔다.
+
+    **잡 단위로 본다.** 잡마다 작업 공간이 새로 나므로, 다른 잡의 빌드가 재는 것은
+    갈아 끼우기 전의 핀이다. 핀을 고정해 놓고 재는 `build.yml`이 안 걸리는 것도
+    같은 까닭이고, 그것이 이 규칙이 가르는 경계다.
+    """
+    return [
+        f"{path}: {job} 잡이 원본 ref를 갈아 끼운 다음 경고를 오류로 올린다 - "
+        "원본이 방금 낸 코드를 우리 엄격 기준으로 재면 우리가 고칠 수 없는 이유로 "
+        "매일 빨개진다. 게이트는 진짜 오류만 보게 두고 경고는 세어서 사람에게 낸다"
+        for job, scripts in _scripts_by_job(document).items()
+        if any(UPSTREAM_CHECKOUT.search(script) for script in scripts)
+        and any(WARNINGS_AS_ERRORS.search(script) for script in scripts)
+    ]
+
+
+def _moving_target(path: str, document: dict[str, Any]) -> list[str]:
+    """움직이는 주소에서 받은 것을 못 박아 둔 해시로 재는가.
+
+    `latest`가 든 주소는 언제나 최신을 가리킨다. 상대가 버전을 올리면 받은 바이트가
+    바뀌고 우리 해시와 어긋나, **우리 코드가 아닌 이유로** 모든 푸시와 모든 PR이
+    통째로 빨개진다.
+
+    막는 것은 대조가 아니라 **출처**다. 우리 릴리스에서 받은 것을 재는 자리는 그대로
+    있어야 한다 - 받아 오기가 반만 돼도 `gh`는 0으로 끝난다.
+    """
+    scripts = [script for group in _scripts_by_job(document).values() for script in group]
+    if not any(MOVING_DOWNLOAD.search(script) for script in scripts):
+        return []
+    if not any(CHECKSUM_VERIFY.search(script) for script in scripts):
+        return []
+    return [
+        f"{path}: 움직이는 주소에서 받은 것을 못 박아 둔 해시로 잰다 - "
+        "상대가 버전을 올리면 우리 코드가 아닌 이유로 모든 실행이 빨개진다. "
+        "버전을 고정한 주소가 없으면 우리 릴리스에 올려 두고 거기서 받는다"
+    ]
 
 
 def _job_names(path: str, document: dict[str, Any]) -> list[str]:
