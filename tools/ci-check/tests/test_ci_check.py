@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -13,11 +14,18 @@ import pytest
 
 import ci_check
 
+#: CI가 세워 둔 기본 가지 이름. 아래 fixture가 지우기 전에 담아 둔다.
+_CI_DEFAULT_BRANCH = os.environ.get(ci_check.DEFAULT_BRANCH_ENV, "")
+
 
 @pytest.fixture(autouse=True)
 def _기본_가지_환경을_지운다(monkeypatch: pytest.MonkeyPatch) -> None:
-    """CI는 이 이름을 세우고 돌린다. 테스트가 그것을 물려받으면 로컬과 CI에서
-    결과가 갈리고, 갈린 쪽이 어느 쪽인지 아무도 모른다."""
+    """CI는 이 이름을 세우고 돌린다. 여기 만드는 임시 저장소가 그것을 물려받으면
+    로컬과 CI에서 결과가 갈리고, 갈린 쪽이 어느 쪽인지 아무도 모른다.
+
+    **실물을 재는 테스트는 예외다.** 그쪽은 CI가 주는 사실 위에서 재야 하므로
+    `_CI_DEFAULT_BRANCH`를 되돌린다.
+    """
     monkeypatch.delenv(ci_check.DEFAULT_BRANCH_ENV, raising=False)
 
 
@@ -748,8 +756,16 @@ def test_워크플로가_하나도_없으면_잡는다(tmp_path: Path) -> None:
     assert "워크플로" in found[0]
 
 
-def test_이_저장소의_워크플로가_규칙을_지킨다() -> None:
-    """실물을 잰다. 위의 것들은 규칙을 검사하고 이것은 우리 파일을 검사한다."""
+def test_이_저장소의_워크플로가_규칙을_지킨다(monkeypatch: pytest.MonkeyPatch) -> None:
+    """실물을 잰다. 위의 것들은 규칙을 검사하고 이것은 우리 파일을 검사한다.
+
+    **CI가 세운 기본 가지 이름을 되돌린다.** 위 fixture는 임시 저장소를 재는
+    테스트를 위한 것이고, 실물은 CI가 주는 사실 위에서 재야 한다. 2026-09-20에
+    그것을 빠뜨려서, master가 아닌 가지에서 이 테스트가 가짜로 빨개졌다 -
+    같은 실행의 「워크플로 규칙」 단계는 통과했는데 이것만 빨갰다.
+    """
+    if _CI_DEFAULT_BRANCH:
+        monkeypatch.setenv(ci_check.DEFAULT_BRANCH_ENV, _CI_DEFAULT_BRANCH)
     root = Path(__file__).resolve().parents[3]
 
     assert ci_check.check_tree(root) == []
