@@ -238,6 +238,33 @@ def test_다른_이름의_Pick은_거른다() -> None:
     assert scanner.find_sites(text) == []
 
 
+def test_별칭_호출도_자리로_잡힌다() -> None:
+    """`GaugeReadyCues.cs`의 `Job(de, en)`이 그런 자리다.
+
+    선언이 `Loc.IsGerman ? de : en`이라 표식은 잡히는데 피연산자가 리터럴이 아니라
+    못 읽음으로 나간다. 정작 리터럴은 호출부에 있다.
+    """
+    text = 'var x = Job("Paladin", "Paladin");\n'
+    sites = scanner.find_sites(text)
+
+    assert len(sites) == 1
+    assert (sites[0].de, sites[0].en) == ("Paladin", "Paladin")
+
+
+def test_별칭_호출은_그_자리가_쓰던_이름으로_되쓴다() -> None:
+    """`Pick`으로 되쓰면 그 클래스에 없는 이름이 되어 빌드가 선다."""
+    text = 'var x = Job("Ninja", "Ninja");\n'
+    result = scanner.rewrite(text, {("Ninja", "Ninja"): "닌자"})
+
+    assert result.text == 'var x = Job("Ninja", "Ninja", "닌자");\n'
+
+
+def test_별칭_앞에_다른_이름이_붙으면_거른다() -> None:
+    text = 'var x = ByJob("Hallo", "Hello");\n'
+
+    assert scanner.find_sites(text) == []
+
+
 def test_대장에_있는_쌍에만_한국어가_들어간다() -> None:
     text = (
         'public static string A => IsGerman ? "Hallo" : "Hello";\n'

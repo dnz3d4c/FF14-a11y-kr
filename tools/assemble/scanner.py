@@ -14,7 +14,7 @@
 
 ## 표식으로 못 보는 것
 
-갈림길을 알아보는 표식은 `MARKERS`에 적어 둔 이름과 `Pick` 뿐이다. 여기 없는 별칭을
+갈림길을 알아보는 표식은 `MARKERS`와 `PICKS`에 적어 둔 이름뿐이다. 여기 없는 별칭을
 새로 정의하고 그 별칭으로 갈라지는 자리는 한 건도 안 잡힌다. 안 잡히면 미적용에도
 못 읽음에도 안 나타나므로, 미적용 0건은 그 자체로 "다 옮겼다"가 아니다.
 """
@@ -29,6 +29,13 @@ from dataclasses import dataclass, field
 #: 되써야 한다 - `De`로 갈리던 자리에 `IsGerman`을 넣으면 그 파일에 없는 이름이 된다.
 MARKERS = ("IsGerman", "De")
 PICK = "Pick("
+
+#: `Pick` 말고 같은 모양으로 갈리는 호출 축약. `Job`은 `GaugeReadyCues.cs`가 직업
+#: 이름 스물셋에 쓰는 것인데, 선언이 `Loc.IsGerman ? de : en`이라 표식은 잡히지만
+#: 피연산자가 리터럴이 아니라 못 읽음으로 나갔다. 정작 리터럴은 호출부에 있다.
+#: 표식과 마찬가지로 되쓸 때 **그 자리가 쓰던 이름**을 되쓴다 - `Job`으로 갈리던
+#: 자리에 `Pick`을 넣으면 그 클래스에 없는 이름이 된다.
+PICKS = (PICK, "Job(")
 
 #: 표식 앞에 붙을 수 있는 한정자. 파일마다 관례가 달라 통일하지 않는다.
 QUALIFIER = "Loc."
@@ -72,6 +79,8 @@ class Site:
     qualifier: str = ""
     #: 아직 안 옮긴 `IsGerman ? de : en`인가. 이미 `Pick(...)`인 자리와 가른다.
     ternary: bool = False
+    #: 그 자리가 쓰던 호출 이름. `PICKS`의 하나이고 되쓸 때 그대로 되쓴다.
+    call: str = PICK
 
 
 @dataclass(frozen=True)
@@ -644,16 +653,24 @@ def _ternary_sites(stripped: str, text: str, unreadable: list[Blind]) -> list[Si
 
 
 def _pick_sites(stripped: str, text: str) -> list[Site]:
-    """이미 옮긴 `Pick(de, en[, ko])`."""
+    """이미 옮긴 `Pick(de, en[, ko])`와 그 별칭 호출."""
+    sites: list[Site] = []
+    for name in PICKS:
+        sites.extend(_named_pick_sites(stripped, text, name))
+    return sites
+
+
+def _named_pick_sites(stripped: str, text: str, name: str) -> list[Site]:
+    """이름 하나로 `name(de, en[, ko])`을 훑는다."""
     sites: list[Site] = []
     start = 0
     while True:
-        found = stripped.find(PICK, start)
+        found = stripped.find(name, start)
         if found < 0:
             return sites
-        start = found + len(PICK)
+        start = found + len(name)
 
-        # `PickItem(` 같은 다른 이름을 거른다.
+        # `PickItem(`이나 `ByJob(` 같은 다른 이름을 거른다.
         if found > 0 and stripped[found - 1] in _IDENT:
             continue
 
@@ -697,6 +714,7 @@ def _pick_sites(stripped: str, text: str) -> list[Site]:
                 ko=ko,
                 line=stripped.count(_NEWLINE, 0, found) + 1,
                 qualifier=qualifier,
+                call=name,
             )
         )
 
@@ -832,7 +850,7 @@ def _render(site: Site, ko: str | None, text: str) -> str:
     args = [site.de_raw, site.en_raw]
     if ko is not None:
         args.append(_literal(ko))
-    head = site.qualifier + PICK
+    head = site.qualifier + site.call
     column = site.start - text.rfind(_NEWLINE, 0, site.start) - 1
 
     single = f"{head}{', '.join(args)})"
