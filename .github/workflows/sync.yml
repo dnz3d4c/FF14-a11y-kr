@@ -295,13 +295,11 @@ jobs:
             echo "8. 인게임에서 귀로 판정한다"
             echo "9. 발행은 \`release.yml\`을 손으로 돌린다. 러너가 못 재는 게이트 셋을 입력으로 선언한다"
             echo
-            echo "<details><summary>조립 보고 전체</summary>"
+            echo "---"
             echo
-            echo '```'
-            cat assemble.log 2>/dev/null || echo "조립이 결과를 못 남겼다."
-            echo '```'
-            echo
-            echo "</details>"
+            echo "잘린 목록의 나머지와 조립 보고 전체는"
+            echo "[이 실행](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})의"
+            echo "잡 요약과 산출물에 있다."
           } > issue.md
 
       - name: 글과 인벤토리를 넘긴다
@@ -323,6 +321,19 @@ jobs:
             echo "## ${{ needs.check.outputs.current }} 에서 ${{ needs.check.outputs.latest }} 로"
             echo
             cat issue.md 2>/dev/null || echo "잴 것을 못 만들었다."
+            echo
+            echo "## 달라진 것 전체"
+            echo
+            echo "이슈는 목록마다 15개까지만 담는다. 잘린 나머지가 여기 있다."
+            echo
+            uv run python tools/assemble/compare.py before.json after.json 2>/dev/null \
+              || echo "견줄 것을 못 만들었다."
+            echo
+            echo "## 조립 보고"
+            echo
+            echo '```'
+            cat assemble.log 2>/dev/null || echo "조립이 결과를 못 남겼다."
+            echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
   # 쓰기 권한은 여기에만 있다. 이 잡은 **원본 코드를 한 줄도 실행하지 않는다** -
