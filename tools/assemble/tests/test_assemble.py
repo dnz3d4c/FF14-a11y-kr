@@ -77,7 +77,9 @@ def _repo(tmp_path: Path, *, catalog: Mapping[str, object] | None = None) -> Pat
     (repo / "korean" / "strings.json").write_text(
         json.dumps(catalog or CATALOG, ensure_ascii=False), encoding="utf-8"
     )
-    (repo / "korean" / "version.json").write_text(json.dumps({"kr_revision": 0}), encoding="utf-8")
+    (repo / "korean" / "version.json").write_text(
+        json.dumps({"kr_revision": 0, "installer_revision": 0}), encoding="utf-8"
+    )
 
     (repo / "kr" / "FF14Accessibility").mkdir(parents=True)
     (repo / "kr" / "FF14Accessibility" / "Compat.cs").write_text("// 신규\n", encoding="utf-8")
@@ -214,7 +216,9 @@ def test_앞자리_0을_뺀_뒤에_갈린_것만_실패한다(tmp_path: Path) ->
 
 def test_저장소의_개정_마디를_읽는다(tmp_path: Path) -> None:
     repo = _repo(tmp_path)
-    (repo / "korean" / "version.json").write_text(json.dumps({"kr_revision": 2}), encoding="utf-8")
+    (repo / "korean" / "version.json").write_text(
+        json.dumps({"kr_revision": 2, "installer_revision": 2}), encoding="utf-8"
+    )
 
     report = assemble.assemble(repo)
 
@@ -226,7 +230,7 @@ def test_개정_마디가_정수가_아니면_실패한다(tmp_path: Path) -> No
     """손으로 고치는 파일이다. 문자열이 들어오면 csproj에 그대로 적히기 전에 멈춘다."""
     repo = _repo(tmp_path)
     version = repo / "korean" / "version.json"
-    version.write_text(json.dumps({"kr_revision": "3"}), encoding="utf-8")
+    version.write_text(json.dumps({"kr_revision": "3", "installer_revision": 0}), encoding="utf-8")
 
     report = assemble.assemble(repo)
 
@@ -237,7 +241,7 @@ def test_개정_마디가_정수가_아니면_실패한다(tmp_path: Path) -> No
 def test_개정_마디를_인자로_받으면_그것을_찍는다(tmp_path: Path) -> None:
     """저장소의 값은 안 고친다. 시험 삼아 한 번 다르게 조립해 보는 길이다."""
     repo = _repo(tmp_path)
-    report = assemble.assemble(repo, kr_revision=3)
+    report = assemble.assemble(repo, kr_revision=3, installer_revision=3)
 
     assert report.problems == []
     assert report.versions == dict.fromkeys(CSPROJ_NAMES, "5.95.0.3")
@@ -246,8 +250,84 @@ def test_개정_마디를_인자로_받으면_그것을_찍는다(tmp_path: Path
     saved = json.loads((repo / "build" / "assemble-report.json").read_text(encoding="utf-8"))
     assert saved["kr_revision"] == 3
     assert json.loads((repo / "korean" / "version.json").read_text(encoding="utf-8")) == {
-        "kr_revision": 0
+        "kr_revision": 0,
+        "installer_revision": 0,
     }
+
+
+# --------------------------------------------- 개정 마디가 둘인 까닭
+#
+# **2026-09-20에 발행이 여기서 섰다.** 핀을 `v6.08.20`으로 옮기며 개정을 2에서 0으로
+# 되돌렸더니 플러그인은 `6.8.8.2` -> `6.8.20.0`으로 올랐는데 설치 프로그램은
+# `1.2.2.2` -> `1.2.2.0`으로 내려갔다. 앞 세 마디가 오르는 속도가 갈리기 때문이다 -
+# 플러그인은 원본 태그를 따르고, 설치 프로그램은 원본이 자기 사정으로만 올리며,
+# 런처는 우리 `kr/`가 적는 값이다. `release.py`의 버전 검사가 `gh`를 부르기 전에
+# 막아서 바깥에 흔적이 안 남았다.
+
+
+def test_플러그인만_태그를_따르는_개정을_쓴다() -> None:
+    """앞 세 마디가 원본 태그를 따라 오르는 산출물은 플러그인 하나다.
+
+    매핑이 바뀌면 여기가 걸린다. 나머지 둘을 `kr_revision`으로 되돌리면 버전이
+    그냥 내려가고, 내려간 버전은 이미 깐 쪽에서 갱신이 영영 안 뜬다.
+    """
+    by_key: dict[str, list[str]] = {}
+    for name, key in assemble.VERSION_FILES.items():
+        by_key.setdefault(key, []).append(name)
+
+    assert by_key["kr_revision"] == ["FF14Accessibility/FF14Accessibility.csproj"]
+    assert sorted(by_key["installer_revision"]) == [
+        "Installer/FF14AccessibilityInstaller.csproj",
+        "Launcher/FF14AccessibilityPlay.csproj",
+    ]
+
+
+def test_플러그인과_설치_프로그램이_서로_다른_개정을_쓴다(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    (repo / "korean" / "version.json").write_text(
+        json.dumps({"kr_revision": 0, "installer_revision": 3}), encoding="utf-8"
+    )
+
+    report = assemble.assemble(repo)
+
+    assert report.problems == []
+    assert _versions(repo, "FF14Accessibility/FF14Accessibility.csproj") == ["5.95.0.0"] * 3
+    assert _versions(repo, "Installer/FF14AccessibilityInstaller.csproj") == ["5.95.0.3"] * 3
+    # 런처는 설치 프로그램 EXE 안에 임베드돼 한 묶음으로 나가므로 그쪽 개정을 쓴다.
+    assert _versions(repo, "Launcher/FF14AccessibilityPlay.csproj") == ["5.95.0.3"] * 3
+
+
+def test_설치_프로그램_개정이_없으면_실패한다(tmp_path: Path) -> None:
+    """**폴백을 두지 않는다.** 없을 때 `kr_revision`으로 조용히 넘어가면 이번에
+    겪은 일이 그대로 다시 난다 - 되돌린 값이 설치 프로그램에 그냥 찍힌다."""
+    repo = _repo(tmp_path)
+    (repo / "korean" / "version.json").write_text(json.dumps({"kr_revision": 0}), encoding="utf-8")
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "installer_revision" in report.problems[0]
+
+
+def test_설치_프로그램_개정만_인자로_덮는다(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    report = assemble.assemble(repo, installer_revision=5)
+
+    assert report.problems == []
+    assert _versions(repo, "FF14Accessibility/FF14Accessibility.csproj") == ["5.95.0.0"] * 3
+    assert _versions(repo, "Installer/FF14AccessibilityInstaller.csproj") == ["5.95.0.5"] * 3
+
+
+def test_설치_프로그램_개정이_정수가_아니면_실패한다(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    (repo / "korean" / "version.json").write_text(
+        json.dumps({"kr_revision": 0, "installer_revision": "3"}), encoding="utf-8"
+    )
+
+    report = assemble.assemble(repo)
+
+    assert len(report.problems) == 1
+    assert "installer_revision" in report.problems[0]
 
 
 def test_버전을_찍을_파일이_없으면_실패한다(tmp_path: Path) -> None:

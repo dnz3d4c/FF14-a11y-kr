@@ -58,12 +58,34 @@ TUPLE_TABLES = ["Services/CharaMakeIconText.cs", "Services/CharaMakeShapeText.cs
 #: `replace/`의 사본이 어느 원본 판을 보고 쓰였는지 적어 둔 자리.
 BASELINE_NAME = "upstream-baseline.json"
 
-#: 버전을 찍는 csproj. 셋 다 조립이 끝난 트리에서의 상대 경로다.
-VERSION_FILES = [
-    "FF14Accessibility/FF14Accessibility.csproj",
-    "Installer/FF14AccessibilityInstaller.csproj",
-    "Launcher/FF14AccessibilityPlay.csproj",
-]
+#: `korean/version.json`이 갖는 개정 마디의 이름. **둘이다.**
+KR_REVISION = "kr_revision"
+INSTALLER_REVISION = "installer_revision"
+
+#: 버전을 찍는 csproj와 그 파일이 넷째 마디로 쓸 개정. 셋 다 조립이 끝난 트리에서의
+#: 상대 경로다.
+#:
+#: **개정이 둘인 까닭은 앞 세 마디가 오르는 속도가 갈리기 때문이다.** 플러그인의 앞
+#: 마디는 원본 핀이 새 태그로 옮겨가면 올라가므로, 개정을 0으로 되돌려도 단조 증가가
+#: 안 깨진다. 나머지 둘은 그렇지 않다 - 설치 프로그램의 앞 마디는 원본이 자기 사정으로만
+#: 올리고(`v6.08.20`인데 `1.2.2`다) 런처는 우리 `kr/`가 적는 값이라, **핀을 옮겼다는
+#: 이유로 개정을 되돌리면 버전이 그냥 내려간다.**
+#:
+#: 2026-09-20에 실제로 그렇게 섰다. 핀을 `v6.08.20`으로 옮기며 개정을 2에서 0으로
+#: 되돌렸더니 플러그인은 `6.8.8.2` → `6.8.20.0`으로 올랐는데 설치 프로그램은
+#: `1.2.2.2` → `1.2.2.0`으로 내려갔다. `release.py`의 버전 검사가 `gh`를 부르기 전에
+#: 막아서 바깥에 흔적은 안 남았다. **내려간 버전은 이미 깐 쪽에서 갱신이 영영 안 뜬다** -
+#: 설치 프로그램의 `IsNewer`도 달라무드도 버전만 보므로 오류가 안 나고 내는 사람 화면에도
+#: 안 남는다.
+#:
+#: 런처가 설치 프로그램 쪽 개정을 쓰는 까닭은 **런처 EXE가 설치 프로그램 안에
+#: `EmbeddedResource`로 들어가 한 묶음으로 나가기** 때문이다(`docs/dev/installer.md`의
+#: 「빌드 순서」).
+VERSION_FILES = {
+    "FF14Accessibility/FF14Accessibility.csproj": KR_REVISION,
+    "Installer/FF14AccessibilityInstaller.csproj": INSTALLER_REVISION,
+    "Launcher/FF14AccessibilityPlay.csproj": INSTALLER_REVISION,
+}
 
 #: csproj가 버전을 적는 태그 셋. 읽는 쪽이 저마다 달라서 늘 함께 쓴다.
 VERSION_TAG = re.compile(r"<(Version|AssemblyVersion|FileVersion)>([^<]*)</\1>")
@@ -122,8 +144,12 @@ class Report:
     #: 조립은 됐지만 사람이 봐야 할 것.
     warnings: list[str] = field(default_factory=list)
     catalog_rows: int = 0
-    #: 버전 넷째 자리에 찍은 한국어판 개정 마디.
+    #: 버전 넷째 자리에 찍은 한국어판 개정 마디. **플러그인 쪽 값이다** - 설치
+    #: 프로그램과 런처는 따로 세므로 `revisions`가 전부를 갖는다.
     kr_revision: int = 0
+    #: 넷째 자리에 찍은 개정 전부. `개정 이름 -> 값`. 어느 csproj가 어느 것을 쓰는지는
+    #: `VERSION_FILES`가 갖는다.
+    revisions: dict[str, int] = field(default_factory=dict)
     #: csproj에 실제로 찍은 버전. `파일 -> 값`.
     versions: dict[str, str] = field(default_factory=dict)
     #: 한국어를 써 넣은 자리의 수. 같은 문장이 여러 자리에 있으면 여러 번 센다.
@@ -340,18 +366,28 @@ def load_graft(repo: Path, report: Report) -> list[graft.Rule]:
         return []
 
 
-def load_revision(path: Path) -> int:
-    """`korean/version.json`의 개정 마디. 모양이 깨져 있으면 ValueError.
+def load_revisions(path: Path) -> dict[str, int]:
+    """`korean/version.json`의 개정 마디들. 모양이 깨져 있으면 ValueError.
 
-    앞 세 마디는 여기 없다. 그것은 원본이 자기 사정으로 정하는 값이라 우리가 적을 자리가
+    앞 세 마디는 여기 없다. 그것은 각 csproj가 적고 있는 값이라 우리가 적을 자리가
     아니다.
+
+    **없는 값을 다른 것으로 메우지 않는다.** `installer_revision`이 빠졌을 때
+    `kr_revision`으로 넘어가면 `VERSION_FILES`가 둘을 가른 뜻이 사라지고, 되돌린 값이
+    설치 프로그램에 그냥 찍힌다.
     """
-    value = json.loads(path.read_text(encoding="utf-8"))["kr_revision"]
-    # bool을 따로 거르는 까닭은 파이썬에서 bool이 int이기 때문이다. `true`를 그냥
-    # 통과시키면 csproj에 `5.95.0.True`가 적힌다.
-    if not isinstance(value, int) or isinstance(value, bool) or value < 0:
-        raise ValueError(f"kr_revision은 0 이상의 정수다 - {value!r}")
-    return value
+    document = json.loads(path.read_text(encoding="utf-8"))
+    found: dict[str, int] = {}
+    for key in sorted(set(VERSION_FILES.values())):
+        if key not in document:
+            raise ValueError(f"{key}가 없다 - {path.name}에 0 이상의 정수로 적는다")
+        value = document[key]
+        # bool을 따로 거르는 까닭은 파이썬에서 bool이 int이기 때문이다. `true`를 그냥
+        # 통과시키면 csproj에 `5.95.0.True`가 적힌다.
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise ValueError(f"{key}는 0 이상의 정수다 - {value!r}")
+        found[key] = value
+    return found
 
 
 def normalise_head(head: str) -> str:
@@ -365,8 +401,14 @@ def normalise_head(head: str) -> str:
     return ".".join(str(int(part)) for part in head.split("."))
 
 
-def stamp_versions(build: Path, revision: int, report: Report) -> None:
-    """csproj 셋의 버전 태그를 `<그 파일의 앞 세 마디>.<개정>`으로 맞춘다.
+def stamp_versions(build: Path, revisions: dict[str, int], report: Report) -> None:
+    """csproj 셋의 버전 태그를 `<그 파일의 앞 세 마디>.<그 파일의 개정>`으로 맞춘다.
+
+    ## 개정이 파일마다 다르다
+
+    어느 파일이 어느 개정을 쓰는지는 `VERSION_FILES`가 갖는다. 플러그인만 원본 태그를
+    따라 앞 마디가 오르므로, 나머지 둘에 같은 값을 찍으면 핀을 옮긴 버전에서 그 둘이
+    내려간다.
 
     ## 왜 넷째 자리인가
 
@@ -385,7 +427,7 @@ def stamp_versions(build: Path, revision: int, report: Report) -> None:
     우리가 정하지 않는다. 설치 프로그램의 버전은 플러그인과 달리 태그 이름과 아무 관계가
     없고(`v5.95`인데 `1.2.2`다) 업스트림이 자기 사정으로 올린다.
     """
-    for name in VERSION_FILES:
+    for name, key in VERSION_FILES.items():
         target = build / name
         if not target.is_file():
             report.problems.append(f"버전을 찍을 파일이 없다 - {name}")
@@ -413,7 +455,7 @@ def stamp_versions(build: Path, revision: int, report: Report) -> None:
             )
             continue
 
-        version = f"{heads.pop()}.{revision}"
+        version = f"{heads.pop()}.{revisions[key]}"
         files.write(target, VERSION_TAG.sub(rf"<\1>{version}</\1>", text))
         report.versions[name] = version
 
@@ -492,11 +534,14 @@ def count_tuple_tables(build: Path) -> dict[str, dict[str, int]]:
 # --- 전체 ------------------------------------------------------------------
 
 
-def assemble(repo: Path, kr_revision: int | None = None) -> Report:
+def assemble(
+    repo: Path, kr_revision: int | None = None, installer_revision: int | None = None
+) -> Report:
     """원본에 한국어를 얹어 `build/`를 만든다.
 
-    `kr_revision`을 주면 `korean/version.json`의 값 대신 그것을 찍는다. 저장소의 값은
-    안 고친다 - 시험 삼아 한 번 다르게 조립해 보는 길이다.
+    개정 마디를 주면 `korean/version.json`의 값 대신 그것을 찍는다. 저장소의 값은
+    안 고친다 - 시험 삼아 한 번 다르게 조립해 보는 길이다. 한쪽만 줘도 되고, 안 준 쪽은
+    파일에서 읽는다.
     """
     report = Report()
     build = repo / "build"
@@ -508,13 +553,18 @@ def assemble(repo: Path, kr_revision: int | None = None) -> Report:
         return report
     report.catalog_rows = len(catalog)
 
-    if kr_revision is None:
+    given = {KR_REVISION: kr_revision, INSTALLER_REVISION: installer_revision}
+    stored: dict[str, int] = {}
+    if any(value is None for value in given.values()):
         try:
-            kr_revision = load_revision(repo / "korean" / "version.json")
+            stored = load_revisions(repo / "korean" / "version.json")
         except (OSError, ValueError, KeyError, json.JSONDecodeError) as error:
             report.problems.append(f"개정 마디를 못 읽었다 - {error}")
             return report
-    report.kr_revision = kr_revision
+    report.revisions = {
+        key: stored[key] if value is None else value for key, value in given.items()
+    }
+    report.kr_revision = report.revisions[KR_REVISION]
 
     rules = load_graft(repo, report)
 
@@ -526,7 +576,7 @@ def assemble(repo: Path, kr_revision: int | None = None) -> Report:
     report.problems += graft.apply_rules(rules, build, graft.AFTER)
     # 버전은 맨 마지막이다. `kr/`와 `replace/`가 복사된 뒤여야 런처 csproj가 트리에 있고,
     # `after` 규칙도 csproj를 건드리므로 그 뒤라야 우리 값이 남는다.
-    stamp_versions(build, kr_revision, report)
+    stamp_versions(build, report.revisions, report)
 
     seen, report.untranslated, report.unreadable = survey(build)
     report.orphans = orphans(catalog, seen)
@@ -543,6 +593,7 @@ def _save(build: Path, report: Report) -> None:
         "warnings": report.warnings,
         "catalog_rows": report.catalog_rows,
         "kr_revision": report.kr_revision,
+        "revisions": report.revisions,
         "versions": report.versions,
         "applied_sites": report.applied_sites,
         "applied_rows": report.applied_rows,
@@ -571,7 +622,9 @@ def _save(build: Path, report: Report) -> None:
 
 def _print(report: Report) -> None:
     """화면에 나가는 줄이라 마크다운 장식은 안 쓴다. 스크린리더가 그대로 읽는다."""
-    print(f"개정 {report.kr_revision} - 버전 넷째 자리")
+    # **둘 다 적는다.** 하나만 찍으면 나머지가 몇인지 모르는 채로 발행까지 간다.
+    print(f"개정 {report.revisions.get(KR_REVISION)} - 플러그인 버전 넷째 자리")
+    print(f"개정 {report.revisions.get(INSTALLER_REVISION)} - 설치 프로그램과 런처 넷째 자리")
     for name, version in report.versions.items():
         print(f"  {name} = {version}")
     print(f"대장 {report.catalog_rows}행")
@@ -601,11 +654,23 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--kr-revision",
         type=int,
-        help="한국어판 개정 마디. 주면 korean/version.json 대신 이 값을 찍는다 - 저장소는 그대로다",
+        help="플러그인 개정 마디. 주면 korean/version.json 대신 이 값을 찍는다 - 저장소는 그대로다",
+    )
+    parser.add_argument(
+        "--installer-revision",
+        type=int,
+        help=(
+            "설치 프로그램과 런처의 개정 마디. 플러그인과 따로 센다 - "
+            "그 둘은 앞 세 마디가 원본 태그를 안 따라서, 같이 되돌리면 버전이 내려간다"
+        ),
     )
     args = parser.parse_args(argv)
-    if args.kr_revision is not None and args.kr_revision < 0:
-        parser.error("--kr-revision은 0 이상이다")
+    for flag, value in (
+        ("--kr-revision", args.kr_revision),
+        ("--installer-revision", args.installer_revision),
+    ):
+        if value is not None and value < 0:
+            parser.error(f"{flag}은 0 이상이다")
 
     repo = Path(__file__).resolve().parents[2]
     if not (repo / "upstream" / SOURCE_NAME).is_dir():
@@ -615,7 +680,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    report = assemble(repo, kr_revision=args.kr_revision)
+    report = assemble(
+        repo, kr_revision=args.kr_revision, installer_revision=args.installer_revision
+    )
     _print(report)
 
     if report.problems:
