@@ -376,8 +376,8 @@ jobs:
           if [ "${{ needs.measure.result }}" = "skipped" ]; then
             if [ -n "$number" ]; then
               gh issue close "$number" --repo "$GITHUB_REPOSITORY" \
-                --comment "원본 최신 \`${{ needs.check.outputs.latest }}\`을 이미 쓰고 있다. 새 태그가 나오면 다시 열린다."
-              echo "state=원본 최신을 이미 쓰고 있어서 이슈 #$number 를 닫았다" >> "$GITHUB_OUTPUT"
+                --comment "원본 최신 \`${{ needs.check.outputs.latest }}\` — 이미 쓰고 있다. 새 태그가 나오면 다시 열린다."
+              echo "state=원본 최신을 이미 쓰고 있어서 이슈를 닫았다 (#$number)" >> "$GITHUB_OUTPUT"
             else
               echo "state=원본 최신을 이미 쓰고 있다. 열린 이슈가 없어 아무것도 안 했다" >> "$GITHUB_OUTPUT"
             fi
@@ -387,7 +387,7 @@ jobs:
           if [ "${{ needs.measure.result }}" = "success" ]; then
             title="원본 모드 ${{ needs.check.outputs.current }} → ${{ needs.check.outputs.latest }} 업데이트 대기"
           else
-            title="원본 모드 ${{ needs.check.outputs.latest }}를 재다가 멈췄다"
+            title="원본 모드 ${{ needs.check.outputs.latest }} — 재다가 멈췄다"
             {
               echo "> 이 이슈는 매일 06:00에 자동으로 다시 쓰인다."
               echo
@@ -410,7 +410,7 @@ jobs:
           if [ -n "$number" ]; then
             gh issue edit "$number" --repo "$GITHUB_REPOSITORY" \
               --title "$title" --body-file issue.md
-            echo "state=이슈 #$number 를 갱신했다 — $title" >> "$GITHUB_OUTPUT"
+            echo "state=이슈를 갱신했다 (#$number) — $title" >> "$GITHUB_OUTPUT"
           else
             gh issue create --repo "$GITHUB_REPOSITORY" --label "$STATUS_LABEL" \
               --title "$title" --body-file issue.md
