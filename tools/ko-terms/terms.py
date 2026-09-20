@@ -17,8 +17,9 @@ CATALOG = REPO / "korean" / "terms.json"
 OUT = Path(__file__).resolve().parent / "out"
 
 # `Program.cs`가 다루는 시트와 같아야 한다. UI 문자열은 Addon에 있지만
-# 기술·소환수·상태 이름은 거기 없다.
-SHEETS = ("Addon", "Action", "Pet", "Status")
+# 기술·소환수·상태·직업 이름은 거기 없다. ClassJob을 더한 것은 2026-09-20이다 -
+# 직업 이름 스물둘이 Addon에 한 건도 없고 클래스 열여덟만 있다(806~823행).
+SHEETS = ("Addon", "Action", "Pet", "Status", "ClassJob")
 
 # 시트를 안 적은 줄은 Addon이다. 대장의 옛 줄들이 전부 `addon` 하나만 갖는
 # 모양이라 그 130줄을 옮겨 적지 않고 기본값으로 읽는다.

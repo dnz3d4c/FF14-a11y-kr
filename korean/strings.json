@@ -19,6 +19,11 @@
       "ko": " 주의: 장비세트에 저장됨. 판매 금지."
     },
     {
+      "de": " Alle in vollem Zustand.",
+      "en": " All at full condition.",
+      "ko": " 모두 내구도 정상."
+    },
+    {
       "de": " Dabei {down:F0} Meter abwärts.",
       "en": " Along the way {down:F0} meters down.",
       "ko": " 내리막 {down:F0}미터."
@@ -107,6 +112,11 @@
       "de": " Vor {after}.",
       "en": " Before {after}.",
       "ko": " {after} 앞."
+    },
+    {
+      "de": " Wirkt: {effects}.",
+      "en": " Active: {effects}.",
+      "ko": " 효과: {effects}."
     },
     {
       "de": " Zwischen {before} und {after}.",
@@ -249,6 +259,11 @@
       "ko": ", 목표 범위까지 {distance}"
     },
     {
+      "de": ", nur mit HQ-Materialien",
+      "en": ", only with HQ materials",
+      "ko": ", HQ 재료로만 가능"
+    },
+    {
       "de": ", oder ",
       "en": ", or ",
       "ko": ", 또는 "
@@ -327,6 +342,11 @@
       "de": ". Übung: {exercise}",
       "en": ". Exercise: {exercise}",
       "ko": ". 훈련: {exercise}"
+    },
+    {
+      "de": "1 Fertigkeitspunkt",
+      "en": "1 skill point",
+      "ko": "기술 포인트 1개"
     },
     {
       "de": "1 Materia-Slot",
@@ -534,6 +554,11 @@
       "ko": "대상 지정됨."
     },
     {
+      "de": "Angezielt: {name}.",
+      "en": "Targeted: {name}.",
+      "ko": "대상 지정됨: {name}."
+    },
+    {
       "de": "Angriff {v}",
       "en": "physical damage {v}",
       "ko": "물리 공격력 {v}"
@@ -552,6 +577,11 @@
       "de": "Aschgrau",
       "en": "ashen grey",
       "ko": "잿빛 회색"
+    },
+    {
+      "de": "Astrologe",
+      "en": "Astrologian",
+      "ko": "점성술사"
     },
     {
       "de": "Aufgaben.",
@@ -577,6 +607,11 @@
       "de": "Ausgänge ",
       "en": "exits ",
       "ko": "출구 "
+    },
+    {
+      "de": "Auslöser: ",
+      "en": "Trigger: ",
+      "ko": "발동 지점: "
     },
     {
       "de": "Ausrüstung",
@@ -652,6 +687,11 @@
       "de": "Automatisch herunterladen",
       "en": "Download automatically",
       "ko": "자동 다운로드"
+    },
+    {
+      "de": "Barde",
+      "en": "Bard",
+      "ko": "음유시인"
     },
     {
       "de": "Bedarf, Gier oder Passen möglich",
@@ -742,6 +782,11 @@
       "de": "Beschreibung: {description}",
       "en": "Description: {description}",
       "ko": "설명: {description}"
+    },
+    {
+      "de": "Beschwörer",
+      "en": "Summoner",
+      "ko": "소환사"
     },
     {
       "de": "Besser in {better}, schlechter in {worse}, von {total}.",
@@ -929,6 +974,11 @@
       "ko": "초코보 랭크 {rank}. 랭크 {rank + 1}까지 경험치 {left} 남음."
     },
     {
+      "de": "Chocobo-Kommandos, {count} Einträge. Nummernblock 8 und 2 blättern, 4 oder 6 wechselt die Liste, Nummernblock 0 wählt, Nummernblock Komma zurück.",
+      "en": "Chocobo commands, {count} entries. Numpad 8 and 2 to browse, 4 or 6 switches the list, Numpad 0 selects, Numpad decimal to go back.",
+      "ko": "초코보 명령, 항목 {count}개. 숫자패드 8과 2는 항목 이동, 4와 6은 목록 전환, 0은 선택, 마침표는 뒤로."
+    },
+    {
       "de": "Chocobo-Rang nicht verfügbar.",
       "en": "Chocobo rank not available.",
       "ko": "초코보 랭크 확인 불가."
@@ -947,6 +997,16 @@
       "de": "Cyan",
       "en": "cyan",
       "ko": "밝은 청록"
+    },
+    {
+      "de": "Dafür muss das Handwerker-Notizbuch offen sein.",
+      "en": "The crafting log has to be open for that.",
+      "ko": "제작수첩이 열려 있어야 함."
+    },
+    {
+      "de": "Dafür sind HQ-Materialien nötig: im Notizbuch {key} drücken oder Schnellsynthese mit HQ-Materialien.",
+      "en": "These need HQ materials: press {key} in the crafting log, or use Quick Synthesis with HQ materials.",
+      "ko": "HQ 재료 필요: 제작수첩에서 {key} 누르기 또는 HQ 재료로 간이 제작."
     },
     {
       "de": "Das Chatfenster ist nicht erreichbar.",
@@ -1039,6 +1099,11 @@
       "ko": "이 설치본은 Dalamud가 관리하므로 스스로 업데이트할 수 없음."
     },
     {
+      "de": "Diese Nachricht hat keinen Spieler-Absender.",
+      "en": "This message has no player sender.",
+      "ko": "이 메시지를 보낸 플레이어가 없음."
+    },
+    {
       "de": "Diese Nummer gibt es hier nicht.",
       "en": "No trail with that number here.",
       "ko": "그 번호 발자취는 여기 없음."
@@ -1052,6 +1117,11 @@
       "de": "Diesen Übergang gibt es nur auf den Unteren Decks.",
       "en": "This crossing only exists on the Lower Decks.",
       "ko": "건너는 지점은 하층 갑판에만 있음. 지금은 다른 지역임."
+    },
+    {
+      "de": "Dragoon",
+      "en": "Dragoon",
+      "ko": "용기사"
     },
     {
       "de": "Du",
@@ -1157,6 +1227,11 @@
       "de": "Dungeon: {total} Stationen, weiter bei {next}.",
       "en": "Dungeon: {total} stations, continuing at {next}.",
       "ko": "던전: 지점 {total}개, 지금 {next}번."
+    },
+    {
+      "de": "Dunkelritter",
+      "en": "Dark Knight",
+      "ko": "암흑기사"
     },
     {
       "de": "Ebene",
@@ -1729,6 +1804,11 @@
       "ko": "노란 연두"
     },
     {
+      "de": "Gelehrter",
+      "en": "Scholar",
+      "ko": "학자"
+    },
+    {
       "de": "Geschlossen.",
       "en": "Closed.",
       "ko": "닫힘."
@@ -1819,6 +1899,21 @@
       "ko": "HP: {max} 중 {cur}."
     },
     {
+      "de": "HQ-Materialien ließen sich nicht übernehmen - im Notizbuch hat sich nichts geändert.",
+      "en": "Could not take HQ materials - nothing changed in the crafting log.",
+      "ko": "HQ 재료를 적용할 수 없음. 제작수첩에서 바뀐 것이 없음."
+    },
+    {
+      "de": "HQ-Materialien stehen schon - nichts zu ändern.",
+      "en": "HQ materials are already in - nothing to change.",
+      "ko": "HQ 재료가 이미 적용됨. 바꿀 것이 없음."
+    },
+    {
+      "de": "HQ-Materialien übernommen.",
+      "en": "HQ materials taken.",
+      "ko": "HQ 재료 적용됨."
+    },
+    {
       "de": "Hals",
       "en": "Neck",
       "ko": "목"
@@ -1867,6 +1962,11 @@
       "de": "Hell (bisheriger Klang)",
       "en": "Bright (previous sound)",
       "ko": "맑은 소리 (이전 소리)"
+    },
+    {
+      "de": "Hermetiker",
+      "en": "Arcanist",
+      "ko": "비술사"
     },
     {
       "de": "Herstellbar {value}",
@@ -1954,6 +2054,11 @@
       "ko": "상인"
     },
     {
+      "de": "Höchstes Tempo",
+      "en": "Maximum speed",
+      "ko": "최고 속도"
+    },
+    {
       "de": "Hörprobe",
       "en": "Sample",
       "ko": "미리 듣기"
@@ -1997,6 +2102,11 @@
       "de": "In der Nähe: {joined}",
       "en": "Nearby: {joined}",
       "ko": "근처: {joined}"
+    },
+    {
+      "de": "In diesem Fenster finde ich keinen HQ-Knopf.",
+      "en": "I cannot find an HQ button in this window.",
+      "ko": "이 창에서 HQ 버튼을 찾을 수 없음."
     },
     {
       "de": "Indigo",
@@ -2059,9 +2169,24 @@
       "ko": "일본어"
     },
     {
+      "de": "Jetzt herstellbar: {count} von {total} Rezepten",
+      "en": "Craftable now: {count} of {total} recipes",
+      "ko": "지금 제작 가능: 제작법 {total}개 중 {count}개"
+    },
+    {
       "de": "Jetzt herunterladen",
       "en": "Download now",
       "ko": "지금 다운로드"
+    },
+    {
+      "de": "Job-Anzeige Ton Lautstärke",
+      "en": "Job gauge tone volume",
+      "ko": "직업 게이지 소리 음량"
+    },
+    {
+      "de": "Job-Anzeige Töne nachhören",
+      "en": "Preview job gauge tones",
+      "ko": "직업 게이지 소리 미리 듣기"
     },
     {
       "de": "Job-Anzeige wieder verfügbar",
@@ -2207,6 +2332,11 @@
       "de": "Kein Skill gewählt. Erst mit dem Skill-Browser blättern.",
       "en": "No skill selected. Browse with the skill browser first.",
       "ko": "선택한 기술 없음. 먼저 기술 목록에서 선택 필요."
+    },
+    {
+      "de": "Kein Synthese-Fenster offen.",
+      "en": "No synthesis window is open.",
+      "ko": "제작 창이 열려 있지 않음."
     },
     {
       "de": "Kein Tiefes Gewölbe.",
@@ -2384,6 +2514,11 @@
       "ko": "설치된 플러그인 없음."
     },
     {
+      "de": "Keine Quest-Objekte und keine Auslöser in der Nähe.",
+      "en": "No quest objects or triggers nearby.",
+      "ko": "주변에 퀘스트 사물과 발동 지점 없음."
+    },
+    {
       "de": "Keine Quest-Ziele. Erst eine Quest annehmen.",
       "en": "No quest goals. Accept a quest first.",
       "ko": "퀘스트 목표 없음. 먼저 퀘스트 수령 필요."
@@ -2414,6 +2549,11 @@
       "ko": "사용할 수 있는 임무 전용 기술 없음."
     },
     {
+      "de": "Keine Sprachausgabe des Systems verfügbar. Der Chat wird über den Screenreader vorgelesen.",
+      "en": "No system speech available. Chat is read through the screen reader.",
+      "ko": "시스템 음성 출력을 사용할 수 없음. 대화는 스크린리더가 읽음."
+    },
+    {
       "de": "Keine Sprachausgabe des Systems verfügbar. Die Kampfwarnungen kommen über den Screenreader.",
       "en": "No system speech available. Combat warnings go through the screen reader.",
       "ko": "시스템 음성 없음. 전투 경고는 스크린 리더로 출력."
@@ -2427,6 +2567,11 @@
       "de": "Keine Wegpunkte in diesem Gebiet gefunden.",
       "en": "No waypoints found in this area.",
       "ko": "경유지를 찾을 수 없음."
+    },
+    {
+      "de": "Keine Wirkungen auf dir.",
+      "en": "No effects on you.",
+      "ko": "나에게 걸린 효과 없음."
     },
     {
       "de": "Keine Ziel-Taste gewählt. Erst die Ziel-Taste wählen.",
@@ -2494,6 +2639,11 @@
       "ko": "에테라이트를 찾을 수 없음."
     },
     {
+      "de": "Keins von {total} Rezepten ist mit dem Beutelinhalt herstellbar",
+      "en": "None of {total} recipes can be made from the bag",
+      "ko": "소지품으로 만들 수 있는 제작법이 {total}개 중 하나도 없음"
+    },
+    {
       "de": "Khaki",
       "en": "khaki",
       "ko": "카키"
@@ -2554,9 +2704,24 @@
       "ko": "원"
     },
     {
+      "de": "Krieger",
+      "en": "Warrior",
+      "ko": "전사"
+    },
+    {
       "de": "Kristall, {needed} benötigt, {owned} im Beutel",
       "en": "Crystal, {needed} needed, {owned} in bag",
       "ko": "크리스탈, {needed}개 필요, 소지품에 {owned}개"
+    },
+    {
+      "de": "Kristalle, {count} Sorten: {joined}",
+      "en": "Crystals, {count} kinds: {joined}",
+      "ko": "크리스탈, 종류 {count}개: {joined}"
+    },
+    {
+      "de": "LP {current} von {max}",
+      "en": "HP {current} of {max}",
+      "ko": "HP {max} 중 {current}"
     },
     {
       "de": "Lade Fassung {version}. Einen Moment.",
@@ -2699,6 +2864,11 @@
       "ko": "표식"
     },
     {
+      "de": "Maschinist",
+      "en": "Machinist",
+      "ko": "기공사"
+    },
+    {
       "de": "Materia",
       "en": "Materia",
       "ko": "마테리아"
@@ -2724,6 +2894,11 @@
       "ko": "수량 {yield}"
     },
     {
+      "de": "Menü für {name}.",
+      "en": "Menu for {name}.",
+      "ko": "{name} 메뉴."
+    },
+    {
       "de": "Menü geschlossen.",
       "en": "Menu closed.",
       "ko": "메뉴 닫힘."
@@ -2737,6 +2912,26 @@
       "de": "Merkmal",
       "en": "Feature",
       "ko": "특징"
+    },
+    {
+      "de": "Mitstreiter",
+      "en": "Companion",
+      "ko": "버디"
+    },
+    {
+      "de": "Mitstreiter-Fenster noch leer.",
+      "en": "Companion window still empty.",
+      "ko": "버디 창이 아직 비어 있음."
+    },
+    {
+      "de": "Mitstreiter-Fenster wird geöffnet.",
+      "en": "Opening the companion window.",
+      "ko": "버디 창 여는 중."
+    },
+    {
+      "de": "Mönch",
+      "en": "Monk",
+      "ko": "몽크"
     },
     {
       "de": "NPC",
@@ -2807,6 +3002,11 @@
       "de": "Nichts zum Belegen verfügbar.",
       "en": "Nothing available to assign.",
       "ko": "배정할 수 있는 것 없음."
+    },
+    {
+      "de": "Ninja",
+      "en": "Ninja",
+      "ko": "닌자"
     },
     {
       "de": "Noch nicht erlernt.",
@@ -2929,6 +3129,11 @@
       "ko": "동"
     },
     {
+      "de": "Paladin",
+      "en": "Paladin",
+      "ko": "나이트"
+    },
+    {
       "de": "Peil-Ton an. Er wird mittig und ruhig, wenn du richtig stehst.",
       "en": "Target beacon on. It centres and slows once you are lined up.",
       "ko": "길안내 신호음 켬. 방향이 맞으면 소리가 가운데로 오고 느려짐."
@@ -2957,6 +3162,11 @@
       "de": "Pfirsich",
       "en": "peach",
       "ko": "살구색"
+    },
+    {
+      "de": "Pictomancer",
+      "en": "Pictomancer",
+      "ko": "픽토맨서"
     },
     {
       "de": "Pink",
@@ -3004,6 +3214,16 @@
       "ko": "최대 품질 {value}"
     },
     {
+      "de": "Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von {maxDurability}, Schritt {step}.",
+      "en": "Quality {quality} of {maxQuality}, HQ chance {hqPercent} percent, progress {progress} of {maxProgress}, durability {durability} of {maxDurability}, step {step}.",
+      "ko": "품질 {maxQuality} 중 {quality}, HQ 확률 {hqPercent} 퍼센트, 작업량 {maxProgress} 중 {progress}, 내구도 {maxDurability} 중 {durability}, 제작 공정 {step}."
+    },
+    {
+      "de": "Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von {maxDurability}.",
+      "en": "Quality {quality} of {maxQuality}, HQ chance {hqPercent} percent, progress {progress} of {maxProgress}, durability {durability} of {maxDurability}.",
+      "ko": "품질 {maxQuality} 중 {quality}, HQ 확률 {hqPercent} 퍼센트, 작업량 {maxProgress} 중 {progress}, 내구도 {maxDurability} 중 {durability}."
+    },
+    {
       "de": "Quest",
       "en": "Quest",
       "ko": "퀘스트"
@@ -3042,6 +3262,21 @@
       "de": "Quest-Objekte",
       "en": "Quest objects",
       "ko": "퀘스트 사물"
+    },
+    {
+      "de": "Quest-Objekte: {objects} Objekte, {triggers} Auslöser in der Nähe.",
+      "en": "Quest objects: {objects} objects, {triggers} triggers nearby.",
+      "ko": "퀘스트 사물: 주변에 사물 {objects}개, 발동 지점 {triggers}개."
+    },
+    {
+      "de": "Quest-Objekte: {objects} in der Nähe.",
+      "en": "Quest objects: {objects} nearby.",
+      "ko": "퀘스트 사물: 주변에 {objects}개."
+    },
+    {
+      "de": "Quest-Objekte: {triggers} Auslöser in der Nähe.",
+      "en": "Quest objects: {triggers} triggers nearby.",
+      "ko": "퀘스트 사물: 주변에 발동 지점 {triggers}개."
     },
     {
       "de": "Quest-Ziel",
@@ -3139,6 +3374,11 @@
       "ko": "탈것, 항목 {count}개. 숫자패드 8과 2는 항목 이동, 4와 6은 목록 전환, 0은 선택, 마침표는 뒤로."
     },
     {
+      "de": "Revolverheld",
+      "en": "Gunbreaker",
+      "ko": "건브레이커"
+    },
+    {
       "de": "Ring",
       "en": "Ring",
       "ko": "반지"
@@ -3164,9 +3404,19 @@
       "ko": "붉은 갈색"
     },
     {
+      "de": "Rotmagier",
+      "en": "Red Mage",
+      "ko": "적마도사"
+    },
+    {
       "de": "Rubin",
       "en": "Ruby",
       "ko": "루비"
+    },
+    {
+      "de": "Rubin bereit",
+      "en": "Ruby ready",
+      "ko": "루비 준비됨"
     },
     {
       "de": "Rufen",
@@ -3249,6 +3499,11 @@
       "ko": "채집 지점, 레벨 {level}"
     },
     {
+      "de": "Samurai",
+      "en": "Samurai",
+      "ko": "사무라이"
+    },
+    {
       "de": "Schalter",
       "en": "switch",
       "ko": "스위치"
@@ -3287,6 +3542,16 @@
       "de": "Schnell",
       "en": "Fast",
       "ko": "빠름"
+    },
+    {
+      "de": "Schnitter",
+      "en": "Reaper",
+      "ko": "리퍼"
+    },
+    {
+      "de": "Schwarzmagier",
+      "en": "Black Mage",
+      "ko": "흑마도사"
     },
     {
       "de": "Schätze",
@@ -3344,6 +3609,11 @@
       "ko": "에메랄드 초록"
     },
     {
+      "de": "Smaragd bereit",
+      "en": "Emerald ready",
+      "ko": "에메랄드 준비됨"
+    },
+    {
       "de": "Sonde braucht Taste 12 der ersten Leiste frei.",
       "en": "Probe needs key 12 on the first bar to be free.",
       "ko": "측정하려면 첫 단축바 12번 키가 비어 있어야 함."
@@ -3377,6 +3647,11 @@
       "de": "Spieler",
       "en": "Players",
       "ko": "플레이어"
+    },
+    {
+      "de": "Spieler nicht gefunden.",
+      "en": "Player not found.",
+      "ko": "플레이어를 찾을 수 없음."
     },
     {
       "de": "Spielerdaten noch nicht bereit.",
@@ -3499,9 +3774,19 @@
       "ko": "레벨 {level}. 다음 레벨까지 경험치 {left}."
     },
     {
+      "de": "Stumm",
+      "en": "Inactive",
+      "ko": "꺼짐"
+    },
+    {
       "de": "Suche den Flugweg.",
       "en": "Searching for a flight route.",
       "ko": "비행 경로 탐색 중."
+    },
+    {
+      "de": "Suche gestartet.",
+      "en": "Search started.",
+      "ko": "검색 시작됨."
     },
     {
       "de": "Suche nach einer neuen Fassung.",
@@ -3512,6 +3797,11 @@
       "de": "Suche.",
       "en": "Search.",
       "ko": "검색."
+    },
+    {
+      "de": "Suche: {category}.",
+      "en": "Searching: {category}.",
+      "ko": "검색: {category}."
     },
     {
       "de": "Suchpunkt {index} von {count}, {distance}, {direction}.",
@@ -3552,6 +3842,21 @@
       "de": "Südwesten",
       "en": "Southwest",
       "ko": "남서"
+    },
+    {
+      "de": "TTS Geschwindigkeit",
+      "en": "TTS speed",
+      "ko": "TTS 속도"
+    },
+    {
+      "de": "TTS Lautstärke",
+      "en": "TTS volume",
+      "ko": "TTS 음량"
+    },
+    {
+      "de": "TTS Stimme",
+      "en": "TTS voice",
+      "ko": "TTS 음성"
     },
     {
       "de": "Tasche {label}",
@@ -3629,6 +3934,11 @@
       "ko": "토파즈"
     },
     {
+      "de": "Topas bereit",
+      "en": "Topaz ready",
+      "ko": "토파즈 준비됨"
+    },
+    {
       "de": "Tragbar {classes}.",
       "en": "Wearable {classes}.",
       "ko": "착용 가능 {classes}."
@@ -3637,6 +3947,11 @@
       "de": "Truhe {name}",
       "en": "Chest {name}",
       "ko": "{name} 보관함"
+    },
+    {
+      "de": "Tänzer",
+      "en": "Dancer",
+      "ko": "무도가"
     },
     {
       "de": "Töne",
@@ -3737,6 +4052,11 @@
       "de": "Violett",
       "en": "violet",
       "ko": "청보라"
+    },
+    {
+      "de": "Viper",
+      "en": "Viper",
+      "ko": "바이퍼"
     },
     {
       "de": "Von hier aus führt kein Weg zur Übergangsstelle.",
@@ -3854,6 +4174,11 @@
       "ko": "부드러운 소리"
     },
     {
+      "de": "Weiser",
+      "en": "Sage",
+      "ko": "현자"
+    },
+    {
       "de": "Weiter",
       "en": "Next",
       "ko": "다음"
@@ -3874,6 +4199,11 @@
       "ko": "흰색"
     },
     {
+      "de": "Weißmagier",
+      "en": "White Mage",
+      "ko": "백마도사"
+    },
+    {
       "de": "Welt",
       "en": "World",
       "ko": "필드"
@@ -3889,6 +4219,11 @@
       "ko": "서"
     },
     {
+      "de": "Wirkungen ({count})",
+      "en": "Effects ({count})",
+      "ko": "효과 ({count})"
+    },
+    {
       "de": "Wohngebiet. Wegenetz wird neu gebaut, damit die Häuser darin stehen.",
       "en": "Housing ward. Rebuilding the navigation mesh so it includes the houses.",
       "ko": "하우징 구역. 집이 포함되도록 길 정보를 다시 만드는 중."
@@ -3902,6 +4237,11 @@
       "de": "Zauberfeld {position}.",
       "en": "Spell tile {position}.",
       "ko": "기술 칸 {position}."
+    },
+    {
+      "de": "Zeit {FormatBuddyClock(currentSec)} von {FormatBuddyClock(maxSec)}",
+      "en": "Time {FormatBuddyClock(currentSec)} of {FormatBuddyClock(maxSec)}",
+      "ko": "시간 {FormatBuddyClock(maxSec)} 중 {FormatBuddyClock(currentSec)}"
     },
     {
       "de": "Ziegelrot",
@@ -4024,6 +4364,16 @@
       "ko": "키 선택으로 돌아감, 키 {count}개."
     },
     {
+      "de": "Zustand {percent} Prozent",
+      "en": "condition {percent} percent",
+      "ko": "내구도 {percent} 퍼센트"
+    },
+    {
+      "de": "Zustand: {condition}.",
+      "en": "Condition: {condition}.",
+      "ko": "상태: {condition}."
+    },
+    {
       "de": "Zuweisungs-Menü geschlossen.",
       "en": "Assignment menu closed.",
       "ko": "배정 메뉴 닫힘."
@@ -4047,6 +4397,11 @@
       "de": "aktiv",
       "en": "active",
       "ko": "적용 중"
+    },
+    {
+      "de": "alle drei bereit",
+      "en": "all three ready",
+      "ko": "셋 다 준비됨"
     },
     {
       "de": "alle geladen",
@@ -4097,6 +4452,11 @@
       "de": "blasses",
       "en": "pale",
       "ko": "옅은"
+    },
+    {
+      "de": "dazu {count} weitere Rezepte",
+      "en": "plus {count} more recipes",
+      "ko": "그 밖에 제작법 {count}개 더"
     },
     {
       "de": "deine",
@@ -4369,6 +4729,11 @@
       "ko": "{zone} 지역."
     },
     {
+      "de": "in deiner Gruppe",
+      "en": "in your group",
+      "ko": "파티에 있음"
+    },
+    {
       "de": "in der Instanz {duty}.",
       "en": "in the duty {duty}.",
       "ko": "{duty} 임무에 있음."
@@ -4494,6 +4859,11 @@
       "ko": "불러오지 않음"
     },
     {
+      "de": "nicht in deiner Gruppe",
+      "en": "not in your group",
+      "ko": "파티에 없음"
+    },
+    {
       "de": "nicht verfügbar",
       "en": "unavailable",
       "ko": "입찰 불가"
@@ -4507,6 +4877,16 @@
       "de": "nichts",
       "en": "none",
       "ko": "없음"
+    },
+    {
+      "de": "noch nie gesammelt, Bonus für die erste Ernte",
+      "en": "not gathered yet, first-time bonus",
+      "ko": "아직 채집 안 함, 첫 채집 보너스 있음"
+    },
+    {
+      "de": "noch nie hergestellt, Bonus für das erste Mal",
+      "en": "not crafted yet, first-time bonus",
+      "ko": "아직 제작 안 함, 첫 제작 보너스 있음"
     },
     {
       "de": "noch {seconds} Sekunden",
@@ -4589,14 +4969,69 @@
       "ko": "빨강"
     },
     {
+      "de": "schaltet '{name}' frei",
+      "en": "unlocks '{name}'",
+      "ko": "'{name}' 개방"
+    },
+    {
+      "de": "schaltet das Dungeon '{name}' frei",
+      "en": "unlocks the dungeon '{name}'",
+      "ko": "던전 '{name}' 개방"
+    },
+    {
+      "de": "schaltet die Aktion '{name}' frei",
+      "en": "unlocks the action '{name}'",
+      "ko": "기술 '{name}' 개방"
+    },
+    {
+      "de": "schaltet die Emote '{name}' frei",
+      "en": "unlocks the emote '{name}'",
+      "ko": "감정 표현 '{name}' 개방"
+    },
+    {
+      "de": "schaltet ein Dungeon frei",
+      "en": "unlocks a dungeon",
+      "ko": "던전 개방"
+    },
+    {
+      "de": "schaltet eine Aktion frei",
+      "en": "unlocks an action",
+      "ko": "기술 개방"
+    },
+    {
+      "de": "schaltet eine Emote frei",
+      "en": "unlocks an emote",
+      "ko": "감정 표현 개방"
+    },
+    {
+      "de": "schaltet eine Klasse oder einen Job frei",
+      "en": "unlocks a class or job",
+      "ko": "클래스 또는 직업 개방"
+    },
+    {
+      "de": "schaltet etwas Neues frei",
+      "en": "unlocks something new",
+      "ko": "무언가 새로 개방"
+    },
+    {
       "de": "schokobraun",
       "en": "chocolate brown",
       "ko": "초콜릿 갈색"
     },
     {
+      "de": "schon gesammelt",
+      "en": "already gathered",
+      "ko": "이미 채집함"
+    },
+    {
       "de": "schon gewürfelt",
       "en": "already rolled",
       "ko": "이미 입찰함"
+    },
+    {
+      "de": "schon hergestellt",
+      "en": "already crafted",
+      "ko": "이미 제작함"
     },
     {
       "de": "schwarz",
@@ -4677,6 +5112,11 @@
       "de": "südöstlich",
       "en": "southeast",
       "ko": "남동"
+    },
+    {
+      "de": "unbekanntem Gebiet",
+      "en": "an unknown area",
+      "ko": "알 수 없는 지역"
     },
     {
       "de": "unverändert",
@@ -4767,6 +5207,11 @@
       "de": "{category}, {count} {(count == 1 ? \"Nachricht\" : \"Nachrichten\")}",
       "en": "{category}, {count} {(count == 1 ? \"message\" : \"messages\")}",
       "ko": "{category}, 메시지 {count}개{(count == 1 ? \"\" : \"\")}"
+    },
+    {
+      "de": "{clientText} Keine Zeilen in der Liste - ein Filter kann sie ausblenden.",
+      "en": "{clientText} No rows in the list - a filter may be hiding them.",
+      "ko": "{clientText} 목록에 줄 없음. 필터가 숨겼을 수 있음."
     },
     {
       "de": "{confirm} oder {cancel}? Links und rechts wechseln, Enter wählt aus.",
@@ -5069,6 +5514,11 @@
       "ko": "{name} 꺼짐으로 변경됨."
     },
     {
+      "de": "{name} bereit",
+      "en": "{name} ready",
+      "ko": "{name} 준비됨"
+    },
+    {
       "de": "{name} bereit, {charges} von {maxCharges} Ladungen.",
       "en": "{name} ready, {charges} of {maxCharges} charges.",
       "ko": "{name} 준비됨, 충전 {maxCharges}회 중 {charges}회."
@@ -5082,6 +5532,11 @@
       "de": "{name} bleibt an - es ist die letzte eingeschaltete Kategorie.",
       "en": "{name} stays on - it is the last category left switched on.",
       "ko": "{name} 켜짐 유지. 마지막으로 켜져 있는 분류임."
+    },
+    {
+      "de": "{name} gemeldet in {zone}. Menü und Laufen brauchen ihn hier geladen.",
+      "en": "{name} reported in {zone}. Menu and walk need them loaded here.",
+      "ko": "{zone}에 {name} 있다고 나옴. 메뉴와 이동은 이 지역에 불러와져 있어야 함."
     },
     {
       "de": "{name} hat keine Einstellungen.",
@@ -5112,6 +5567,16 @@
       "de": "{name} mal {quantity}{hqSuffix}",
       "en": "{name} times {quantity}{hqSuffix}",
       "ko": "{name} {quantity}개{hqSuffix}"
+    },
+    {
+      "de": "{name} nicht gefunden — nicht geladen und nicht in Freunde, Gruppe oder FG.",
+      "en": "{name} not found — not loaded and not in friends, party, or free company.",
+      "ko": "{name} 찾을 수 없음. 불러오지 않았고 친구, 파티, 자유부대에도 없음."
+    },
+    {
+      "de": "{name} voll",
+      "en": "{name} full",
+      "ko": "{name} 가득 참"
     },
     {
       "de": "{name} {(on ? \"an\" : \"aus\")}.",
@@ -5254,6 +5719,11 @@
       "ko": "{owner}: 현재 {now}, 그 뒤 {after}."
     },
     {
+      "de": "{points} Fertigkeitspunkte",
+      "en": "{points} skill points",
+      "ko": "기술 포인트 {points}개"
+    },
+    {
       "de": "{prefix} von {sender}: {message}",
       "en": "{prefix} from {sender}: {message}",
       "ko": "{sender} {prefix}: {message}"
@@ -5344,6 +5814,11 @@
       "ko": "{target}에 닿을 수 없음. 그리로 가는 길이 없음."
     },
     {
+      "de": "{title}. Kein Begleit-Chocobo.",
+      "en": "{title}. No companion chocobo.",
+      "ko": "{title}. 초코보 없음."
+    },
+    {
       "de": "{total} Plugins, {state}.",
       "en": "{total} plugins, {state}.",
       "ko": "플러그인 {total}개, {state}."
@@ -5367,6 +5842,11 @@
       "de": "Änderungen verworfen",
       "en": "Changes discarded",
       "ko": "변경 취소됨"
+    },
+    {
+      "de": "Ätherfluss",
+      "en": "Aetherflow",
+      "ko": "에테르 순환"
     },
     {
       "de": "Ätherfluss bereit",

@@ -10,72 +10,101 @@
     {
       "de": " Dabei {up:F0} Meter aufwärts und {down:F0} Meter abwärts.",
       "kind": "나열",
-      "faults": ["쉼표"],
+      "faults": [
+        "쉼표"
+      ],
       "why": "und가 두 항목을 잇는다. 한국어는 쉼표로 잇는다",
       "when": "2026-09-13"
     },
     {
       "de": " Erholungsbonus für {percent} Prozent einer Stufe.",
       "kind": "보류",
-      "faults": ["쉼표"],
+      "faults": [
+        "쉼표"
+      ],
       "why": "쉼표를 지우면 '휴식 보너스 한 레벨의'가 붙어 읽힌다",
       "when": "2026-09-13"
     },
     {
       "de": " Zwischen {before} und {after}.",
       "kind": "나열",
-      "faults": ["쉼표"],
+      "faults": [
+        "쉼표"
+      ],
       "why": "und가 두 항목을 잇는다. 한국어는 쉼표로 잇는다",
       "when": "2026-09-13"
     },
     {
       "de": "Bedarf, Gier oder Passen möglich",
       "kind": "나열",
-      "faults": ["쉼표"],
+      "faults": [
+        "쉼표"
+      ],
       "why": "oder가 나열 마지막 항목을 잇는다",
       "when": "2026-09-13"
     },
     {
       "de": "Gegner wirkt {action} auf dich.",
       "kind": "보류",
-      "faults": ["쉼표"],
+      "faults": [
+        "쉼표"
+      ],
       "why": "쉼표를 지우면 '적 나에게'가 붙어 읽힌다",
       "when": "2026-09-13"
     },
     {
       "de": "Hier kann nicht geflogen werden. In Städten, Dungeons und Innenräumen gibt es keine Flugstrecken.",
       "kind": "나열",
-      "faults": ["쉼표"],
+      "faults": [
+        "쉼표"
+      ],
       "why": "und가 세 항목 나열의 마지막을 잇는다",
       "when": "2026-09-13"
     },
     {
       "de": "Ich komme nicht weiter, {blocker} steht im Weg. Noch {MetersRemaining(distance)}. Auto-Lauf beendet.",
       "kind": "보류",
-      "faults": ["마침표"],
+      "faults": [
+        "마침표"
+      ],
       "why": "원문의 두 문장을 합쳤는데 가르려면 연결어미 '남기고'를 종결형으로 바꿔야 한다",
       "when": "2026-09-13"
     },
     {
       "de": "Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.",
       "kind": "나열",
-      "faults": ["쉼표"],
+      "faults": [
+        "쉼표"
+      ],
       "why": "oder가 명령 넷 나열의 마지막을 잇는다",
       "when": "2026-09-13"
     },
     {
       "de": "{label} abgelegt auf Platz {index}.",
       "kind": "보류",
-      "faults": ["쉼표"],
+      "faults": [
+        "쉼표"
+      ],
       "why": "쉼표를 지우면 '놓음 {index}번 자리'가 붙어 읽힌다",
       "when": "2026-09-13"
     },
     {
       "de": "{label} bleibt auf {index} von {count}.",
       "kind": "보류",
-      "faults": ["쉼표"],
+      "faults": [
+        "쉼표"
+      ],
       "why": "쉼표를 지우면 '그대로 {count} 중'이 붙어 읽힌다",
       "when": "2026-09-13"
+    },
+    {
+      "de": "{name} nicht gefunden — nicht geladen und nicht in Freunde, Gruppe oder FG.",
+      "kind": "나열",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "oder가 나열 세 항목의 마지막을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-09-20"
     }
   ]
 }

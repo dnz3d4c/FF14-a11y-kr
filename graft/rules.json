@@ -459,6 +459,18 @@
       ]
     },
     {
+      "name": "strings-nav-category-fates-open",
+      "why": "이 분류 목록의 형제 열다섯이 전부 갈림길인데 이 한 줄만 맨 리터럴이라 대장이 못 들어간다. 그래서 한국어 사용자가 '돌발 임무' 대신 'FATEs'를 듣고, 같은 파일의 다른 자리는 이미 '돌발 임무'로 나가서 한 화면에서 두 이름이 섞인다. 양쪽을 같은 값으로 갈라 두면 스캐너가 자리로 읽고 대장의 한국어를 세 번째 인자로 넣는다. 독일어와 영어가 듣는 것은 한 자도 안 달라진다 - 형제 EventAreas가 이미 같은 모양이다(IsGerman ? \"Events\" : \"Events\").",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "phase": "before",
+      "find": [
+        "        NavCategory.Fates            => \"FATEs\","
+      ],
+      "replace": [
+        "        NavCategory.Fates            => IsGerman ? \"FATEs\" : \"FATEs\","
+      ]
+    },
+    {
       "name": "strings-quest-object-count-flatten",
       "why": "삼항이 세 겹이라 scanner의 unnest가 안 편다 - 안쪽 갈래가 또 삼항이면 갈래가 넷이 되어 짝이 안 맞으므로 그대로 둔다. 그래서 세 갈래가 통째로 영어로 나가는데 미적용에도 안 잡힌다. 개수 조건을 언어 갈림길 밖으로 빼면 갈래 셋이 전부 리터럴 쌍이 되어 대장이 읽는다. 뜻은 그대로다 - 같은 조건이 같은 순서로 갈린다.",
       "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
