@@ -11,7 +11,7 @@ inputs:
   release-tag:
     description: 어셈블리 여섯이 붙어 있는 이 저장소의 릴리스 태그.
     required: false
-    default: dalamud-kr-15.0.3.3
+    default: dalamud-kr-15.0.3.5
   path:
     description: 여섯을 모아 둘 디렉토리. 저장소 루트 기준 상대 경로다.
     required: false
