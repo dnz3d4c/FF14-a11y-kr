@@ -43,9 +43,13 @@
 ## 언제 도나
 
 `docs/dev/release-notes-rules.md`의 "언제 도나" 절은 이번 판 노트를
-스테이징하면 커밋 훅에서도 돈다고 정한다. **이 저장소에는 그 훅이 없다** -
-`.git/hooks`가 비어 있고 `core.hooksPath`도 안 걸려 있다. `--current-only`가
-그 훅이 쓸 자리이고 지금은 아무도 안 부른다.
+스테이징하면 커밋 훅에서도 돈다고 정하고, `.githooks/pre-commit`이 그것이다.
+`--current-only`가 그 훅이 부르는 자리다 - 준 파일 중 이번 판 노트만 골라
+검사하고 없으면 건너뛰므로, 훅 쪽에 판정이 한 벌 더 생기지 않는다.
+
+**클론마다 `git config core.hooksPath .githooks`가 필요하다.** 안 걸어도
+`tools/pack/release.py`의 게이트가 같은 검사를 부르므로 어긴 노트는 발행에서
+막힌다. 훅은 최종 방어선이 아니라 더 이른 경보다.
 
 사용법:
     uv run python tools/notes-check/notes_check.py --rules
