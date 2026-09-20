@@ -10,7 +10,7 @@
 
 ## 무엇이 이 파일을 판정하나
 
-- **기계가 재는 것**: `docs/dev/release-notes-rules.md`의 N1~N27. 검사기가 그 목록을 `--rules`로 내므로 명세가 두 벌이 되지 않는다.
+- **기계가 재는 것**: `docs/dev/release-notes-rules.md`의 N1~N28. 검사기가 그 목록을 `--rules`로 내므로 명세가 두 벌이 되지 않는다.
 - **사람이 재는 것**: `ko-release-notes` 스킬. 문체와 절 구성과 발행 전 승인 절차를 그쪽이 갖는다.
 
 ## 지우지 않는다

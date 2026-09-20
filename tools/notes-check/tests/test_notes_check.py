@@ -1251,6 +1251,65 @@ def test_N27_사용자가_고친_판은_안_걸린다():
     assert "N27" not in codes(USER_EDITED)
 
 
+# ------------------------------------------------------------ N28
+
+# **`6.8.20.0`이 원본 PR 참조 열한 자리를 백틱으로 감싼 채 나갔다.** 사용자가 릴리스
+# 페이지에서 잡았고 검사는 통과였다 - N12는 백틱 안 한글만 보고, 링크가 죽었는지는
+# 아무 규칙도 안 봤다.
+#
+# 판정은 GitHub 렌더러로 쟀다(`gh api markdown --mode gfm`). 백틱 안은 `<code>`가
+# 되고 밖은 `pull` 주소를 가진 `<a>`가 된다. **N9와 짝이다** - 인라인 링크를 막았으니
+# 자동 링크가 참조를 거는 유일한 길이고, 그것을 백틱이 죽인다.
+
+_PR_ITEM = "- 설치 프로그램이 .NET 10 데스크톱 런타임을 자동으로 내려받아 설치하도록 함."
+
+
+def test_N28_백틱_안의_다른_저장소_참조가_걸린다():
+    assert "N28" in codes(
+        swap(
+            _PR_ITEM, "- 버디 창을 읽음 (`derbruedi/ff14-accessibility#27`). 탭 이름을 음성 출력함."
+        )
+    )
+
+
+def test_N28_백틱_안의_우리_저장소_이슈가_걸린다():
+    # 같은 저장소 참조도 GitHub이 자동 링크하므로 백틱이 똑같이 죽인다.
+    assert "N28" in codes(swap(_PR_ITEM, "- 버디 창을 읽음 (`#27`). 탭 이름을 음성 출력함."))
+
+
+def test_N28_GH_꼴도_걸린다():
+    # GitHub이 `GH-27`도 자동 링크한다.
+    assert "N28" in codes(swap(_PR_ITEM, "- 버디 창을 읽음 (`GH-27`). 탭 이름을 음성 출력함."))
+
+
+def test_N28_백틱_밖의_참조는_통과한다():
+    """이것이 옳은 모양이다. 렌더러가 PR 링크로 만든다."""
+    assert "N28" not in codes(
+        swap(_PR_ITEM, "- 버디 창을 읽음 (derbruedi/ff14-accessibility#27). 탭 이름을 음성 출력함.")
+    )
+
+
+def test_N28_백틱_안의_단축키와_파일_이름은_통과한다():
+    """백틱의 정당한 쓰임이다. 발행본 여섯의 백틱 안 내용 전수에 `#숫자`가 0건이라
+    오탐 여지가 없는 것을 확인하고 넣었다."""
+    for quoted in ("`Ctrl+Shift+F10`", "`Numpad3`", "`v5.88.0.1`", "`FF14Accessibility.zip`"):
+        assert "N28" not in codes(swap(_PR_ITEM, f"- {quoted}로 무엇을 읽음.")), quoted
+
+
+def test_N28_산문_절도_본다():
+    """백틱 안이면 산문 절에서도 링크가 똑같이 죽는다."""
+    assert "N28" in codes(
+        swap(
+            "- 방향 안내에 할당된 `N` 키가 게임의 제작 메뉴와 겹칩니다",
+            "- 원본 모드의 결함입니다. `derbruedi/ff14-accessibility#20`에 보고했습니다",
+        )
+    )
+
+
+def test_N28_사용자가_고친_판은_안_걸린다():
+    assert "N28" not in codes(USER_EDITED)
+
+
 # ------------------------------------------------------------ 저장소의 노트
 
 

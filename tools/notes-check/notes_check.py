@@ -14,7 +14,7 @@
 커밋 트레일러 한 줄(`Release-Note:`)의 문법은 `commit_lint`가 갖는다. 그 줄들을
 모아 **노트 전체를 조립하는 단계**에 소유자가 없었고, 이 검사기가 그 자리다.
 
-기계가 재는 규칙 N1~N27의 명세는 `docs/dev/release-notes-rules.md`가 갖는다.
+기계가 재는 규칙 N1~N28의 명세는 `docs/dev/release-notes-rules.md`가 갖는다.
 **여기 베끼지 않는다** - `--rules`가 그 문서를 읽어 목록을 내고, 문서에 있는
 번호와 이 파일이 실제로 내는 번호가 어긋나면 같이 말한다.
 
@@ -287,6 +287,24 @@ _LIST_CLAUSE = re.compile(r"[,.]")
 _LIST_JOINED = re.compile(r"[가-힣A-Za-z0-9]+[와과]$")
 _LIST_MIN = 2
 _SPEECH_MARK = "음성 출력"
+
+#: 백틱 안에 들어가면 안 되는 GitHub 상호 참조(N28).
+#:
+#: **백틱 안은 코드라 GitHub이 자동 링크를 안 만든다.** `6.8.20.0`이 원본 PR 참조
+#: 열한 자리를 그렇게 감싼 채 나갔고 사용자가 릴리스 페이지에서 잡았다. 검사는
+#: 통과였다 - N12는 백틱 안 한글만 보고, **링크가 죽었는지는 아무 규칙도 안 봤다.**
+#:
+#: 판정은 추측이 아니라 GitHub 렌더러로 쟀다(`gh api markdown --mode gfm`, 2026-09-20).
+#: 백틱 안은 `<code>`가 되고 밖은 `.../pull/27` 주소를 가진 `<a>`가 된다.
+#:
+#: **N9와 짝이다.** 인라인 링크를 막았으니 자동 링크가 참조를 거는 유일한 길이고,
+#: 그것을 백틱이 죽인다. 한쪽만 있으면 참조를 걸 방법이 아예 없어진다.
+#:
+#: 잡는 꼴 셋 다 GitHub이 자동 링크하는 것이다 - 다른 저장소(`owner/repo#27`),
+#: 같은 저장소(`#27`), 그리고 `GH-27`. **오탐 여지가 없는 것을 세고 넣었다** - 발행본
+#: 여섯과 본의 백틱 안 내용 전수에 `#숫자`가 0건이고, 단축키(`Ctrl+Shift+F10`)와
+#: 버전(`v5.88.0.1`)과 파일 이름은 `#`을 안 갖는다.
+_CROSS_REF = re.compile(r"(?:[\w.-]+/[\w.-]+)?#\d+|GH-\d+")
 
 #: 변경사항 절에서 목록을 가르는 표지로 쓸 수 있는 줄(N25).
 SECTION_MARKS = (KO_PREFIX, MOD_PREFIX)
@@ -739,6 +757,21 @@ def check(text: str, version: str, upstream: str = "") -> list[Violation]:
         if dropped is not None:
             violations.append(
                 Violation("N20", f"릴리스에 없는 자산을 가리킨다: `{quoted}`. {dropped}")
+            )
+
+    # N28 - 백틱 안에 든 GitHub 상호 참조. **노트 전체를 본다** - 산문 절에서도
+    # 링크가 똑같이 죽는다.
+    for quoted in re.findall(r"`([^`]*)`", text):
+        refs = _CROSS_REF.findall(quoted)
+        if refs:
+            violations.append(
+                Violation(
+                    "N28",
+                    f"백틱 안에 GitHub 참조가 있다: `{quoted}`. 백틱을 벗겨라 - "
+                    "백틱 안은 코드로 렌더링돼 자동 링크가 안 걸리고, N9가 인라인 링크를 "
+                    "막으므로 자동 링크가 참조를 거는 유일한 길이다. "
+                    "`6.8.20.0`이 열한 자리를 그렇게 내보냈고 그때 검사는 통과했다",
+                )
             )
 
     # N12 - 백틱 안 한글. 사용자가 손에 쥐는 파일 이름만 그 자리에 온다.
