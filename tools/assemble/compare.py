@@ -64,8 +64,13 @@ class Change:
             or any(before != after for before, after in self.counts.values())
         )
 
-    def as_markdown(self) -> str:
-        """PR 본문과 잡 요약에 그대로 들어갈 글."""
+    def as_markdown(self, limit: int | None = None) -> str:
+        """사람이 읽을 글. `limit`을 주면 목록마다 그만큼만 적고 나머지는 개수로 말한다.
+
+        **길면 아무도 안 읽는다.** 한 번에 여러 버전을 얹으면 새 미적용이 147곳까지
+        나오는데, 그대로 적으면 본문이 378줄이 되어 무엇을 봐야 하는지가 그 안에
+        묻힌다. 전체는 조립 보고 산출물이 갖는다.
+        """
         if not self.moved:
             return "조립 결과에 달라진 것이 없다.\n"
 
@@ -75,26 +80,28 @@ class Change:
             lines.append("")
             lines.append("업스트림이 이 문장을 고쳤다는 신호다. 대장을 맞춰야 한다.")
             lines.append("")
-            for de, en in self.new_orphans:
-                lines.append(f"- `{en}` (독일어 `{de}`)")
+            lines += _capped(
+                [f"- `{en}` (독일어 `{de}`)" for de, en in self.new_orphans], limit, "행"
+            )
             lines.append("")
         if self.gone_orphans:
             lines.append("### 사라진 고아")
             lines.append("")
-            for de, en in self.gone_orphans:
-                lines.append(f"- `{en}` (독일어 `{de}`)")
+            lines += _capped(
+                [f"- `{en}` (독일어 `{de}`)" for de, en in self.gone_orphans], limit, "행"
+            )
             lines.append("")
         if self.new_unreadable:
             lines.append("### 새로 생긴 못 읽음")
             lines.append("")
             lines.append("업스트림이 파서 손 밖인 모양을 더했다는 신호다. 미적용에도 안 잡힌다.")
             lines.append("")
-            lines += [_blind_line(site) for site in self.new_unreadable]
+            lines += _capped([_blind_line(site) for site in self.new_unreadable], limit, "곳")
             lines.append("")
         if self.gone_unreadable:
             lines.append("### 사라진 못 읽음")
             lines.append("")
-            lines += [_blind_line(site) for site in self.gone_unreadable]
+            lines += _capped([_blind_line(site) for site in self.gone_unreadable], limit, "곳")
             lines.append("")
 
         lines.append("### 숫자")
@@ -109,15 +116,33 @@ class Change:
         lines.append("### 새로 생긴 미적용")
         lines.append("")
         if self.new_untranslated:
-            lines.append("영어로 나가고 모드가 로그에 남긴다.")
+            lines.append("영어로 나가고 모드가 로그에 남긴다. `korean/strings.json`에 옮겨야 한다.")
             lines.append("")
-            for site in self.new_untranslated:
-                where = f"{site['file']}:{site['line']}"
-                lines.append(f"- `{where}` {site['name'] or '(이름 없음)'} - {site['en']}")
+            lines += _capped(
+                [
+                    f"- `{site['file']}:{site['line']}` "
+                    f"{site['name'] or '(이름 없음)'} - {site['en']}"
+                    for site in self.new_untranslated
+                ],
+                limit,
+                "곳",
+            )
         else:
             lines.append("없다.")
         lines.append("")
         return "\n".join(lines)
+
+
+def _capped(lines: list[str], limit: int | None, unit: str) -> list[str]:
+    """목록을 상한까지만 적고, 잘린 만큼을 개수로 말한다.
+
+    **잘린 것을 조용히 버리지 않는다.** 꼬리 한 줄이 몇 곳이 더 있는지와 전체가
+    어디 있는지를 말하므로, 짧은 글을 읽고도 무엇을 안 봤는지 안다.
+    """
+    if limit is None or len(lines) <= limit:
+        return lines
+    rest = len(lines) - limit
+    return [*lines[:limit], f"- …그 밖에 {rest}{unit}. 전체는 조립 보고 산출물에 있다"]
 
 
 def _pairs(report: dict[str, Any]) -> list[tuple[str, str]]:
@@ -199,13 +224,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("before", type=Path, help="옛 핀으로 조립한 보고")
     parser.add_argument("after", type=Path, help="새 태그로 조립한 보고")
     parser.add_argument("--out", type=Path, help="글을 적을 파일. 없으면 화면에만 낸다")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="목록마다 적을 최대 개수. 넘으면 나머지를 개수로 말한다. 없으면 다 적는다",
+    )
     args = parser.parse_args(argv)
 
     change = compare(
         json.loads(args.before.read_text(encoding="utf-8")),
         json.loads(args.after.read_text(encoding="utf-8")),
     )
-    body = change.as_markdown()
+    body = change.as_markdown(limit=args.limit)
     print(body)
     if args.out is not None:
         args.out.write_text(body, encoding="utf-8")

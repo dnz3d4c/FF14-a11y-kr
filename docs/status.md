@@ -100,9 +100,7 @@
 
 **액션 넷이 Node.js 20을 대상으로 해서 러너가 경고를 낸다.** `actions/checkout@v4` 계열이고 우리 잘못이 아니지만, 언젠가 강제로 끊기면 CI가 통째로 선다.
 
-**원본 `v6.08.20`을 아직 안 얹었다.** 동기화가 draft PR([#2](https://github.com/dnz3d4c/FF14-a11y-kr/pull/2))로 제안해 두었고, 그 버전이 데려오는 경고 둘을 본문 맨 앞에 이름으로 적는다 — `Plugin.cs`의 죽은 필드 하나가 내는 CS0169와 CS8618이다. `master`의 `build.yml`은 `-warnaserror`로 재므로 **얹는 순간 그 둘이 빨강이 된다.** 번역 잔량과 귀 판정까지 같이 보고 나중에 정한다.
-
-**동기화가 연 PR의 검사는 승인해야 돈다.** `GITHUB_TOKEN`으로 만든 PR이라 `pull_request` 실행이 `action_required`로 멈춘다. `gh api -X POST repos/dnz3d4c/FF14-a11y-kr/actions/runs/<번호>/approve`로 푼다. 승인 전에는 `gh pr checks`가 "no checks reported"로 보여서 **검사가 아예 안 붙은 것처럼 읽힌다.**
+**원본 `v6.08.20`을 아직 안 얹었다.** 얹으면 한국어 미적용이 4곳에서 151곳이 되고, 원본이 들여온 죽은 필드 하나가 CS0169·CS8618을 낸다. 기본 가지는 `-warnaserror`로 빌드하므로 그대로 얹으면 **빌드가 실패한 상태로 남고 발행도 못 한다.** 번역 잔량과 귀 판정까지 같이 보고 나중에 정한다. 현황은 `upstream-status` 라벨이 붙은 이슈가 매일 갱신한다 (D-16).
 
 ## CI에서만 드러난 결함 열
 
