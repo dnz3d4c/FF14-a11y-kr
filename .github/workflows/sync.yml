@@ -291,7 +291,7 @@ jobs:
             echo "4. \`docs/status.md\`의 원본 버전과 번역 잔량 숫자를 맞춘다. \`tools/docs-check\`가 산출물과 대조한다"
             echo "5. \`docs/changelog.md\`에 한 줄 적는다"
             echo "6. \`korean/version.json\`의 \`kr_revision\`을 올린다"
-            echo "7. \`docs/release-notes/<버전>.md\`를 쓴다. \`tools/notes-check\`가 N1~N26을 잰다"
+            echo "7. \`docs/release-notes/<버전>.md\`를 쓴다. \`tools/notes-check\`가 N1~N27을 잰다"
             echo "8. 인게임에서 귀로 판정한다"
             echo "9. 발행은 \`release.yml\`을 손으로 돌린다. 러너가 못 재는 게이트 셋을 입력으로 선언한다"
             echo

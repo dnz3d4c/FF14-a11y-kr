@@ -62,7 +62,7 @@
 
 - 사용자가 읽는 문서(가이드·설치 안내·사용법)는 [ko-user-guide 스킬](.claude/skills/ko-user-guide/SKILL.md)이 규칙을 갖는다. 파판14 공식 가이드의 형식과 문체를 따른다.
 - 모드가 **말하는** 문장은 [ko-localization 스킬](.claude/skills/ko-localization/SKILL.md)이다. 명사형·해라체이고 사람이 읽는 문서와 반대다.
-- 릴리스 노트는 [ko-release-notes 스킬](.claude/skills/ko-release-notes/SKILL.md)과 [release-notes-rules.md](docs/dev/release-notes-rules.md)다. `tools/notes-check`가 N1~N26을 잰다.
+- 릴리스 노트는 [ko-release-notes 스킬](.claude/skills/ko-release-notes/SKILL.md)과 [release-notes-rules.md](docs/dev/release-notes-rules.md)다. `tools/notes-check`가 N1~N27을 잰다.
 - **이름은 지어내지 않는다.** 게임 용어의 원천은 `korean/terms.json`이고, 없으면 `not_found`에 근거를 남긴다. 못 찾았으면 **못 찾았다고 적고 묻는다.**
 
 ## 나머지는 문서가 소유한다

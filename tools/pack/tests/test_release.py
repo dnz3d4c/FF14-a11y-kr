@@ -213,7 +213,7 @@ def test_탈출구가_비어_있으면_그대로_잰다(tmp_path):
 
 
 def test_승인이_없으면_선다(tmp_path, monkeypatch):
-    """기계가 보는 N1~N26은 형식만 본다. 항목이 빠졌는지는 여기서만 걸린다."""
+    """기계가 보는 N1~N27은 형식만 본다. 항목이 빠졌는지는 여기서만 걸린다."""
     monkeypatch.delenv(release.NOTES_APPROVED_VARIABLE, raising=False)
     assert release.approval(context(tmp_path)) == 1
 

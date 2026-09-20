@@ -14,7 +14,7 @@
 커밋 트레일러 한 줄(`Release-Note:`)의 문법은 `commit_lint`가 갖는다. 그 줄들을
 모아 **노트 전체를 조립하는 단계**에 소유자가 없었고, 이 검사기가 그 자리다.
 
-기계가 재는 규칙 N1~N26의 명세는 `docs/dev/release-notes-rules.md`가 갖는다.
+기계가 재는 규칙 N1~N27의 명세는 `docs/dev/release-notes-rules.md`가 갖는다.
 **여기 베끼지 않는다** - `--rules`가 그 문서를 읽어 목록을 내고, 문서에 있는
 번호와 이 파일이 실제로 내는 번호가 어긋나면 같이 말한다.
 
@@ -262,6 +262,32 @@ _SPEECH_BANNED_RE = {
     word: re.compile(rf"(?<!라고 ){re.escape(word)}") for word in NOTE_SPEECH_BANNED
 }
 
+#: 발화 항목을 `와`/`과`로 이어 나열한 자리(N27).
+#:
+#: **사용자가 `6.8.20.0`에서 셋을 고쳤다.** 원문도 모드가 발화하는 문장도 쉼표인데
+#: 노트를 쓰면서 `와` 연쇄로 지어냈다. `ko-release-notes` 스킬이 이미 "모드가
+#: 발화하는 고정 표현은 `korean/strings.json`에서 확인하고 그대로 쓴다"고 정해
+#: 뒀는데 안 지켜졌고, N24가 그랬듯 **문서에만 있는 규칙은 되돌아간다.**
+#:
+#: **발화 문장을 직접 대조하지 않는다.** 그 방법을 먼저 쟀는데 고친 셋 중 제작 창
+#: 하나만 잡혔다 - `strings.json`에 `품질 … HQ 확률 … 작업량 … 내구도 … 제작 공정`이
+#: 한 문장으로 있어서다. 버디 창과 효과는 발화가 조각으로 나뉘어 있어 대조할 한
+#: 문장이 아예 없다. 그래서 **서술어로 가른다**: 한 절이 발화를 서술하면서 그 안에
+#: `와`/`과`로 끝나는 어절이 둘 이상이면 나열이다.
+#:
+#: **절로 자르는 것이 규칙의 절반이다.** 쉼표와 마침표를 넘지 않으므로, 앞 문장이
+#: 발화를 말하고 뒤 문장이 딴것을 나열하는 자리가 안 걸린다 - `5.95.0.0`의
+#: `… 음성 출력함. 피부와 머리와 눈과 … 색이 … 나옴.`이 그 모양이고 정당하다.
+#: 사용자가 `6.8.20.0`에서 그대로 둔 `낚시터와 던전과 돌발 임무처럼`과 `음성과
+#: 속도와 음량을 설정에서 정하며`도 그 절에 발화 서술이 없어서 빠진다.
+#:
+#: **셋부터 나열이다.** 둘을 `와`로 잇는 것은 정상이고 `직업과 레벨을 같이 음성
+#: 출력함`이 그대로 나간다. 그래서 세는 하한이 어절 둘이다.
+_LIST_CLAUSE = re.compile(r"[,.]")
+_LIST_JOINED = re.compile(r"[가-힣A-Za-z0-9]+[와과]$")
+_LIST_MIN = 2
+_SPEECH_MARK = "음성 출력"
+
 #: 변경사항 절에서 목록을 가르는 표지로 쓸 수 있는 줄(N25).
 SECTION_MARKS = (KO_PREFIX, MOD_PREFIX)
 
@@ -491,6 +517,22 @@ def _section_mark_problem(body: list[str]) -> str | None:
     return None
 
 
+def _list_mark_problem(note: str) -> str | None:
+    """변경 항목이 발화 항목을 `와`/`과`로 이어 나열했나. 없으면 None."""
+    for clause in _LIST_CLAUSE.split(note):
+        if _SPEECH_MARK not in clause:
+            continue
+        joined = [word for word in clause.split() if _LIST_JOINED.match(word)]
+        if len(joined) < _LIST_MIN:
+            continue
+        return (
+            f"발화 항목을 `와`/`과`로 이어 나열했다({', '.join(joined)}). "
+            f"쉼표로 갈라라 - 원문도 `{ko_lexicon.DEFAULT_PATHS['mod'][0].name}`의 발화 "
+            "문장도 쉼표이고, `와` 연쇄는 어디까지가 한 항목인지를 소리로 못 가르게 만든다"
+        )
+    return None
+
+
 def check(text: str, version: str, upstream: str = "") -> list[Violation]:
     """어긴 것 목록. 비어 있으면 통과.
 
@@ -626,6 +668,16 @@ def check(text: str, version: str, upstream: str = "") -> list[Violation]:
                         "인용하는 `~라고 말함`만 살아 있다",
                     )
                 )
+
+    # N27 - 발화 항목 나열의 구분 부호. **변경 항목만 본다** - 제한사항과 미검증
+    # 절은 습니다체 산문이라 `와` 연쇄가 정상이고 발행본 여섯이 다 갖고 있다.
+    for line in body_of.get(changes, []):
+        item = _ITEM.match(line)
+        if item is None:
+            continue
+        problem = _list_mark_problem(item.group(1).strip())
+        if problem:
+            violations.append(Violation("N27", problem))
 
     # N25 - 목록을 가르는 표지가 규칙 밖으로 느는 것.
     if changes in body_of:
