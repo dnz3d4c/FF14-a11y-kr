@@ -574,6 +574,11 @@
       "ko": "안내"
     },
     {
+      "de": "Ansehen",
+      "en": "Reputation",
+      "ko": "평판"
+    },
+    {
       "de": "Aschgrau",
       "en": "ashen grey",
       "ko": "잿빛 회색"
@@ -582,6 +587,11 @@
       "de": "Astrologe",
       "en": "Astrologian",
       "ko": "점성술사"
+    },
+    {
+      "de": "Attribute",
+      "en": "Attributes",
+      "ko": "능력치"
     },
     {
       "de": "Aufgaben.",
@@ -1119,9 +1129,19 @@
       "ko": "건너는 지점은 하층 갑판에만 있음. 지금은 다른 지역임."
     },
     {
+      "de": "Dieses Belegungsmenü ist nur für PvE. In einem PvE-Gebiet erneut versuchen.",
+      "en": "This assignment menu is for PvE. Try again in a PvE area.",
+      "ko": "이 배정 메뉴는 PvE 전용. PvE 지역에서 다시 시도."
+    },
+    {
       "de": "Dragoon",
       "en": "Dragoon",
       "ko": "용기사"
+    },
+    {
+      "de": "Dreieck, obere Aktionstaste",
+      "en": "Triangle, top face button",
+      "ko": "세모, 위쪽 버튼"
     },
     {
       "de": "Du",
@@ -1649,6 +1669,11 @@
       "ko": "기술 준비됨 안내 꺼짐."
     },
     {
+      "de": "Für Jagd-Rang {huntRank} brauchst du: {gcRank}.",
+      "en": "For hunting log rank {huntRank} you need: {gcRank}.",
+      "ko": "토벌수첩 {huntRank}단계에 필요: {gcRank}."
+    },
+    {
       "de": "Für diesen Job gibt es keine Anzeige.",
       "en": "This job has no gauge.",
       "ko": "이 직업은 게이지 없음."
@@ -1682,6 +1707,11 @@
       "de": "Garuda bereit",
       "en": "Garuda ready",
       "ko": "가루다 준비됨"
+    },
+    {
+      "de": "Gebiet {area}",
+      "en": "area {area}",
+      "ko": "{area} 지역"
     },
     {
       "de": "Gefahr",
@@ -1727,11 +1757,6 @@
       "de": "Gegner",
       "en": "Enemy",
       "ko": "적"
-    },
-    {
-      "de": "Gegner wirkt Aktion",
-      "en": "Enemy casting",
-      "ko": "적 기술 시전"
     },
     {
       "de": "Gegner wirkt {action} auf dich.",
@@ -1812,6 +1837,11 @@
       "de": "Geschlossen.",
       "en": "Closed.",
       "ko": "닫힘."
+    },
+    {
+      "de": "Gesellschaft {oneBased} von {total}",
+      "en": "grand company {oneBased} of {total}",
+      "ko": "총사령부 {total} 중 {oneBased}"
     },
     {
       "de": "Gil",
@@ -2144,6 +2174,11 @@
       "ko": "예"
     },
     {
+      "de": "Jagd-Rang {huntRank}: Gesellschaftsrang erreicht.",
+      "en": "Hunting log rank {huntRank}: grand company rank met.",
+      "ko": "토벌수첩 {huntRank}단계: 총사령부 계급 충족."
+    },
+    {
       "de": "Jagdziele",
       "en": "Hunting targets",
       "ko": "토벌 대상"
@@ -2154,14 +2189,14 @@
       "ko": "총사령부 토벌 대상"
     },
     {
-      "de": "Jagdziele: {total} offen, keines in diesem Gebiet.",
-      "en": "Hunting targets: {total} open, none in this area.",
-      "ko": "토벌 대상: 남은 것 {total}종, 이 지역 없음."
+      "de": "Jagdziele, Rang {rank}: {total} offen, keines in diesem Gebiet.",
+      "en": "Hunting targets, rank {rank}: {total} open, none in this area.",
+      "ko": "토벌 대상, {rank}단계: 남은 것 {total}종, 이 지역 없음."
     },
     {
-      "de": "Jagdziele: {total} offen, {here} in diesem Gebiet.",
-      "en": "Hunting targets: {total} open, {here} in this area.",
-      "ko": "토벌 대상: 남은 것 {total}종, 이 지역 {here}종."
+      "de": "Jagdziele, Rang {rank}: {total} offen, {here} in diesem Gebiet.",
+      "en": "Hunting targets, rank {rank}: {total} open, {here} in this area.",
+      "ko": "토벌 대상, {rank}단계: 남은 것 {total}종, 이 지역 {here}종."
     },
     {
       "de": "Japanisch",
@@ -2177,6 +2212,11 @@
       "de": "Jetzt herunterladen",
       "en": "Download now",
       "ko": "지금 다운로드"
+    },
+    {
+      "de": "Job oder Anmeldung geändert. Belegungsmenü erneut öffnen.",
+      "en": "Job or login changed. Reopen the assignment menu.",
+      "ko": "직업 또는 접속 변경됨. 배정 메뉴 다시 열기."
     },
     {
       "de": "Job-Anzeige Ton Lautstärke",
@@ -2664,6 +2704,11 @@
       "ko": "클래스"
     },
     {
+      "de": "Klassen und Jobs",
+      "en": "Classes and Jobs",
+      "ko": "클래스/잡"
+    },
+    {
       "de": "Knopf Zufälliges Aussehen nicht gefunden.",
       "en": "Random appearance button not found.",
       "ko": "무작위 외모 버튼을 찾을 수 없음."
@@ -2702,6 +2747,21 @@
       "de": "Kreis",
       "en": "circle",
       "ko": "원"
+    },
+    {
+      "de": "Kreis, rechte Aktionstaste",
+      "en": "Circle, right face button",
+      "ko": "동그라미, 오른쪽 버튼"
+    },
+    {
+      "de": "Kreuz, untere Aktionstaste",
+      "en": "Cross, bottom face button",
+      "ko": "엑스, 아래쪽 버튼"
+    },
+    {
+      "de": "Kreuzleiste {set}",
+      "en": "Crossbar {set}",
+      "ko": "{set}번 십자 단축바"
     },
     {
       "de": "Krieger",
@@ -2792,6 +2852,11 @@
       "de": "Lege empfohlene Ausrüstung an.",
       "en": "Applying recommended equipment.",
       "ko": "추천 장비 착용 중."
+    },
+    {
+      "de": "Leiste auswählen. Nummernblock 8 und 2 wechseln die Leiste, 0 öffnet ihre Tasten, Komma schließt.",
+      "en": "Choose a bar. Numpad 8 and 2 change bars, 0 opens its buttons, decimal closes.",
+      "ko": "단축바 선택. 숫자패드 8과 2는 단축바 전환, 0은 키 열기, 마침표는 닫기."
     },
     {
       "de": "Leiste {bar}, Slot {slot}",
@@ -3049,9 +3114,24 @@
       "ko": "보통"
     },
     {
+      "de": "Normale Kreuzleiste nicht verfügbar. Zum Auswählen /acc crossbar eingeben.",
+      "en": "Normal crossbar unavailable. Use /acc crossbar to choose a set.",
+      "ko": "일반 십자 단축바 사용 불가. 선택하려면 /acc crossbar 입력."
+    },
+    {
+      "de": "Nummernblock 8 und 2 lesen die Tasten, 4 und 6 wechseln die Leiste, 0 wählt eine Taste zum Belegen, Komma zurück.",
+      "en": "Numpad 8 and 2 read buttons, 4 and 6 change bars, 0 chooses a button to assign, decimal goes back.",
+      "ko": "숫자패드 8과 2는 키 읽기, 4와 6은 단축바 전환, 0은 배정할 키 선택, 마침표는 뒤로."
+    },
+    {
       "de": "Nächste Ebene",
       "en": "Next floor",
       "ko": "다음 층"
+    },
+    {
+      "de": "Nächster Rang: {nextRank}.",
+      "en": "Next rank: {nextRank}.",
+      "ko": "다음 계급: {nextRank}."
     },
     {
       "de": "Objekt",
@@ -3117,6 +3197,11 @@
       "de": "Ort",
       "en": "Place",
       "ko": "장소"
+    },
+    {
+      "de": "Ort {place}, Gebiet {area}",
+      "en": "place {place}, area {area}",
+      "ko": "{place} 장소, {area} 지역"
     },
     {
       "de": "Osten",
@@ -3199,6 +3284,11 @@
       "ko": "편지함"
     },
     {
+      "de": "Profil",
+      "en": "Profile",
+      "ko": "프로필"
+    },
+    {
       "de": "Prüfe den Weg zu {target}.",
       "en": "Checking the route to {target}.",
       "ko": "{target}까지 가는 길을 확인 중."
@@ -3207,6 +3297,11 @@
       "de": "Prüfung",
       "en": "trial",
       "ko": "토벌전"
+    },
+    {
+      "de": "Quadrat, linke Aktionstaste",
+      "en": "Square, left face button",
+      "ko": "네모, 왼쪽 버튼"
     },
     {
       "de": "Qualität maximal {value}",
@@ -3294,6 +3389,11 @@
       "ko": "레이드"
     },
     {
+      "de": "Rang der staatlichen Gesellschaft",
+      "en": "Grand company rank",
+      "ko": "총사령부 계급"
+    },
+    {
       "de": "Rang {rank}, alle {total} Einträge erledigt",
       "en": "Rank {rank}, all {total} entries complete",
       "ko": "{rank}단계, 항목 {total} 전부 완료"
@@ -3322,6 +3422,11 @@
       "de": "Register vorlesen",
       "en": "Read tab aloud",
       "ko": "탭 읽어 주기"
+    },
+    {
+      "de": "Registerkarte {zeroBasedIndex + 1}",
+      "en": "tab {zeroBasedIndex + 1}",
+      "ko": "{zeroBasedIndex + 1}번 탭"
     },
     {
       "de": "Reihenfolge",
@@ -3719,6 +3824,11 @@
       "ko": "대화 기록에는 그대로 남음."
     },
     {
+      "de": "Steuerkreuz {direction}",
+      "en": "D-pad {direction}",
+      "ko": "십자키 {direction}"
+    },
+    {
       "de": "Stimme",
       "en": "Voice",
       "ko": "목소리"
@@ -3867,6 +3977,11 @@
       "de": "Tasche, {count} Gegenstände: {joined}",
       "en": "Bag, {count} items: {joined}",
       "ko": "소지품, 아이템 {count}개: {joined}"
+    },
+    {
+      "de": "Tastaturleisten",
+      "en": "Keyboard hotbars",
+      "ko": "키보드 단축바"
     },
     {
       "de": "Taste {key}",
@@ -4229,6 +4344,11 @@
       "ko": "하우징 구역. 집이 포함되도록 길 정보를 다시 만드는 중."
     },
     {
+      "de": "Zauber-Ansagen",
+      "en": "Skill cast announcements",
+      "ko": "기술 시전 안내"
+    },
+    {
       "de": "Zauberbuch der Blaumagie, Reiter {tab} von {tabCount}.",
       "en": "Blue magic spellbook, tab {tab} of {tabCount}.",
       "ko": "청마도서, 탭 {tabCount}개 중 {tab}번째."
@@ -4377,6 +4497,11 @@
       "de": "Zuweisungs-Menü geschlossen.",
       "en": "Assignment menu closed.",
       "ko": "배정 메뉴 닫힘."
+    },
+    {
+      "de": "Zweige: {branches}",
+      "en": "Branches: {branches}",
+      "ko": "계통: {branches}"
     },
     {
       "de": "Zwischenablage konnte nicht beschrieben werden.",
@@ -4574,6 +4699,11 @@
       "ko": "거의 검은 갈색"
     },
     {
+      "de": "für diesen Job",
+      "en": "for this job",
+      "ko": "이 직업 전용"
+    },
+    {
       "de": "gebräunt",
       "en": "tan",
       "ko": "황갈색"
@@ -4617,6 +4747,11 @@
       "de": "gesperrt",
       "en": "locked",
       "ko": "미개방"
+    },
+    {
+      "de": "geteilt zwischen Jobs",
+      "en": "shared across jobs",
+      "ko": "직업 간 공유"
     },
     {
       "de": "gewohnt, feste Kanäle",
@@ -4924,6 +5059,11 @@
       "ko": "북"
     },
     {
+      "de": "oben",
+      "en": "up",
+      "ko": "위"
+    },
+    {
       "de": "oben {up}, rechts {right}, unten {down}, links {left}",
       "en": "top {up}, right {right}, bottom {down}, left {left}",
       "ko": "위 {up}, 오른쪽 {right}, 아래 {down}, 왼쪽 {left}"
@@ -5119,6 +5259,11 @@
       "ko": "알 수 없는 지역"
     },
     {
+      "de": "unten",
+      "en": "down",
+      "ko": "아래"
+    },
+    {
       "de": "unverändert",
       "en": "unmodified",
       "ko": "기본값"
@@ -5209,9 +5354,19 @@
       "ko": "{category}, 메시지 {count}개{(count == 1 ? \"\" : \"\")}"
     },
     {
+      "de": "{className}, Rang {rank}",
+      "en": "{className}, rank {rank}",
+      "ko": "{className}, {rank}단계"
+    },
+    {
       "de": "{clientText} Keine Zeilen in der Liste - ein Filter kann sie ausblenden.",
       "en": "{clientText} No rows in the list - a filter may be hiding them.",
       "ko": "{clientText} 목록에 줄 없음. 필터가 숨겼을 수 있음."
+    },
+    {
+      "de": "{company}. Dein Rang: {rank}.",
+      "en": "{company}. Your rank: {rank}.",
+      "ko": "{company}. 내 계급: {rank}."
     },
     {
       "de": "{confirm} oder {cancel}? Links und rechts wechseln, Enter wählt aus.",
@@ -5379,6 +5534,16 @@
       "ko": "{label}, 입력란: {typed}"
     },
     {
+      "de": "{label}, Rang {rank}: {total} offen, keines in diesem Gebiet.",
+      "en": "{label}, rank {rank}: {total} open, none in this area.",
+      "ko": "{label}, {rank}단계: {total}개 남음, 이 지역에는 없음."
+    },
+    {
+      "de": "{label}, Rang {rank}: {total} offen, {here} in diesem Gebiet.",
+      "en": "{label}, rank {rank}: {total} open, {here} in this area.",
+      "ko": "{label}, {rank}단계: {total}개 남음, 이 지역에 {here}개."
+    },
+    {
       "de": "{label}, Registerkarte {index} von {total}",
       "en": "{label}, tab {index} of {total}",
       "ko": "{label}, 탭 {total} 중 {index}"
@@ -5452,16 +5617,6 @@
       "de": "{label}: {here} im Gebiet.",
       "en": "{label}: {here} in this area.",
       "ko": "{label}: {here}."
-    },
-    {
-      "de": "{label}: {total} offen, keines in diesem Gebiet.",
-      "en": "{label}: {total} open, none in this area.",
-      "ko": "{label}: {total}개 남음, 이 지역에는 없음."
-    },
-    {
-      "de": "{label}: {total} offen, {here} in diesem Gebiet.",
-      "en": "{label}: {total} open, {here} in this area.",
-      "ko": "{label}: {total}개 남음, 이 지역에 {here}개."
     },
     {
       "de": "{level}, nicht tragbar, {reason}",
@@ -5817,6 +5972,11 @@
       "de": "{title}. Kein Begleit-Chocobo.",
       "en": "{title}. No companion chocobo.",
       "ko": "{title}. 초코보 없음."
+    },
+    {
+      "de": "{title}. {company}. Dein Rang: {rank}.",
+      "en": "{title}. {company}. Your rank: {rank}.",
+      "ko": "{title}. {company}. 내 계급: {rank}."
     },
     {
       "de": "{total} Plugins, {state}.",
