@@ -188,7 +188,15 @@ MOD_NONE = "없음."
 #:
 #: 갈라 놓지 않으면 한국어만 고친 판이 `모드 변경사항:` 아래로 들어가고,
 #: 듣는 사람은 원본 모드가 바뀐 것으로 읽는다. `v5.91.0.1`이 그렇게 나갔다.
-KO_PREFIX = "한국어 번역 문장 수정:"
+KO_PREFIX = "한국어 번역 문자열 수정:"
+
+#: 2026-09-26까지 쓴 표지. 옛 판 노트를 본으로 복사하면 따라오는데, 첫 항목보다
+#: 앞에 있어서 N25의 목록 구간에도 안 들어온다. 이름을 대고 막지 않으면 조용히 나간다.
+#:
+#: **나가 있는 판은 소급해 고치지 않으므로** 막는 것은 `KO_PREFIX_SINCE`부터다.
+#: 그 전 판에서는 두 표지를 같은 것으로 잰다.
+KO_PREFIX_OLD = "한국어 번역 문장 수정:"
+KO_PREFIX_SINCE = "6.8.33.0"
 
 #: 보충 표기. 공식 가이드가 쓰는 꼴이고 노트에서는 자산 안내 한 줄이다.
 NOTE_MARK = "※"
@@ -311,7 +319,7 @@ _SPEECH_MARK = "음성 출력"
 _CROSS_REF = re.compile(r"(?:[\w.-]+/[\w.-]+)?#\d+|GH-\d+")
 
 #: 변경사항 절에서 목록을 가르는 표지로 쓸 수 있는 줄(N25).
-SECTION_MARKS = (KO_PREFIX, MOD_PREFIX)
+SECTION_MARKS = (KO_PREFIX, KO_PREFIX_OLD, MOD_PREFIX)
 
 #: 미검증 절에 지어내면 안 되는 어구(N26).
 #:
@@ -475,37 +483,49 @@ def _mod_line_problem(body: list[str]) -> str | None:
     return None
 
 
-def _ko_line_problem(body: list[str]) -> str | None:
-    """변경사항 절의 `한국어 번역 문장 수정:` 줄 문제. 없으면 None.
+def _ko_line_problem(body: list[str], version: str) -> str | None:
+    """변경사항 절의 `한국어 번역 문자열 수정:` 줄 문제. 없으면 None.
 
     **줄 자체가 선택이다.** 한국어 문장을 안 고친 판에는 안 나온다 - 없는
     것으로 구분이 이미 서므로 `없음.`을 요구하지 않는다. `모드 변경사항:`이
     그것을 요구하는 것은 그쪽이 받는 방법을 가르는 신호라서다.
+
+    옛 표지(`KO_PREFIX_OLD`)도 같은 규칙으로 재고, `KO_PREFIX_SINCE`부터는 막는다.
     """
-    marks = [i for i, line in enumerate(body) if line.startswith(KO_PREFIX)]
+    since = tuple(int(part) for part in KO_PREFIX_SINCE.split("."))
+    if tuple(int(part) for part in version.split(".")) >= since:
+        if any(line.startswith(KO_PREFIX_OLD) for line in body):
+            return f"`{KO_PREFIX_OLD}`는 옛 표지다. `{KO_PREFIX}`로 적는다"
+
+    marks = [
+        (i, prefix)
+        for i, line in enumerate(body)
+        for prefix in (KO_PREFIX, KO_PREFIX_OLD)
+        if line.startswith(prefix)
+    ]
     if not marks:
         return None
     if len(marks) > 1:
         return f"`{KO_PREFIX}` 줄이 {len(marks)}개다. 있으면 하나만 둔다"
 
-    at = marks[0]
+    at, prefix = marks[0]
     mod = next((i for i, line in enumerate(body) if line.startswith(MOD_PREFIX)), None)
     if mod is not None and mod < at:
         return (
-            f"`{KO_PREFIX}` 줄이 `{MOD_PREFIX}` 줄보다 뒤에 있다. 앞에 둬라 - "
+            f"`{prefix}` 줄이 `{MOD_PREFIX}` 줄보다 뒤에 있다. 앞에 둬라 - "
             "받는 방법을 가르는 신호가 절의 마지막에 와야 목록에 안 묻힌다"
         )
 
-    value = body[at][len(KO_PREFIX) :].strip()
+    value = body[at][len(prefix) :].strip()
     if value:
         return (
-            f"`{KO_PREFIX} {value}`는 쓰지 않는다. "
+            f"`{prefix} {value}`는 쓰지 않는다. "
             "값을 비우고 아래에 목록을 적는다. 고친 것이 없으면 줄째로 뺀다"
         )
 
     rest = body[at + 1 :] if mod is None else body[at + 1 : mod]
     if not [line for line in rest if _ITEM.match(line)]:
-        return f"`{KO_PREFIX}` 줄 아래에 목록이 없다. 고친 것이 없으면 줄째로 뺀다"
+        return f"`{prefix}` 줄 아래에 목록이 없다. 고친 것이 없으면 줄째로 뺀다"
     return None
 
 
@@ -668,7 +688,7 @@ def check(text: str, version: str, upstream: str = "") -> list[Violation]:
 
     # N19 - 원본 모드가 바뀌었나를 가르는 줄. N8과 축이 다르다.
     if changes in body_of:
-        problem = _ko_line_problem(body_of[changes])
+        problem = _ko_line_problem(body_of[changes], version)
         if problem:
             violations.append(Violation("N19", problem))
 
@@ -850,7 +870,7 @@ def check(text: str, version: str, upstream: str = "") -> list[Violation]:
         if listed_body is None:
             continue
         first = next((line for line in listed_body if line.strip()), "")
-        if name == changes and first.startswith((MOD_PREFIX, KO_PREFIX)):
+        if name == changes and first.startswith(SECTION_MARKS):
             continue
         if not _ITEM.match(first):
             violations.append(
@@ -931,7 +951,7 @@ def our_items(text: str, version: str) -> list[str]:
     body = dict(split_sections(text)[1:]).get(changes, [])
     found = []
     for line in body:
-        if line.startswith((MOD_PREFIX, KO_PREFIX)):
+        if line.startswith(SECTION_MARKS):
             continue
         item = _ITEM.match(line)
         if item is not None:

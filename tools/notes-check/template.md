@@ -14,7 +14,7 @@ https://github.com/dnz3d4c/FF14-a11y-kr/blob/master/docs/korean/keys.md
 
 {{변경 항목}}
 
-한국어 번역 문장 수정:
+한국어 번역 문자열 수정:
 
 {{한국어 수정 목록}}
 
