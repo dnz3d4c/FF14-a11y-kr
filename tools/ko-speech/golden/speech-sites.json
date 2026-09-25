@@ -206,6 +206,24 @@
       "why": "발화가 아니라 사유 인자다. `Finish(string? spoken, string reason)`과 `EndFlightShort(Vector3, float, string reason)`의 `reason` 자리이고 로그로만 간다 - 실제로 말하는 것은 `AccessibilityStrings.FlightEndedRemaining`이 만든다."
     },
     {
+      "file": "Services/BeastmasterGaugeProbe.cs",
+      "rule": "speech",
+      "text": "Bestienbaendiger-Sonde. Job {job}, Stufe {level}. ",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v6.08.33이 들여온 마수조련사 게이지 탐침이고, `ActionSignalProbe.cs`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
+      "file": "Services/BeastmasterGaugeProbe.cs",
+      "rule": "speech",
+      "text": "Sonde nicht moeglich.",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v6.08.33이 들여온 마수조련사 게이지 탐침이고, `ActionSignalProbe.cs`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
+      "file": "Services/BeastmasterGaugeProbe.cs",
+      "rule": "speech",
+      "text": "{addonHits} Addon-Treffer, {statusHits} Statuszeilen. Rest im Log.",
+      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v6.08.33이 들여온 마수조련사 게이지 탐침이고, `ActionSignalProbe.cs`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
+    },
+    {
       "file": "Services/CollisionProbe.cs",
       "rule": "umlaut",
       "text": "Kollisionssonde: {found} Einträge im Log.",
