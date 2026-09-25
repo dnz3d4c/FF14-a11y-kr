@@ -17,15 +17,6 @@
       "when": "2026-09-13"
     },
     {
-      "de": " Erholungsbonus für {percent} Prozent einer Stufe.",
-      "kind": "보류",
-      "faults": [
-        "쉼표"
-      ],
-      "why": "쉼표를 지우면 '휴식 보너스 한 레벨의'가 붙어 읽힌다",
-      "when": "2026-09-13"
-    },
-    {
       "de": " Zwischen {before} und {after}.",
       "kind": "나열",
       "faults": [
