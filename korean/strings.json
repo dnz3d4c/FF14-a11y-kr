@@ -369,6 +369,16 @@
       "ko": "빈 홈 1개"
     },
     {
+      "de": "Abgeschlossene Inhalte",
+      "en": "Completed content",
+      "ko": "완료한 임무"
+    },
+    {
+      "de": "Absturz voraus",
+      "en": "Drop ahead",
+      "ko": "앞에 낙하"
+    },
+    {
       "de": "Achtung, diese Spur ueberwindet {MetersRemaining(drop)} Hoehe und gilt deshalb nur in Laufrichtung. Fuer den Rueckweg zeichne bitte eine eigene Spur auf.",
       "en": "Careful: this trail covers {MetersRemaining(drop)} of height, so it only counts in the direction you walked it. Record a separate trail for the way back.",
       "ko": "주의, 이 발자취는 높이 {MetersRemaining(drop)}를 내려가므로 걸어간 방향으로만 사용할 수 있음. 돌아오는 길은 따로 기록 필요."
@@ -577,6 +587,16 @@
       "de": "Ansehen",
       "en": "Reputation",
       "ko": "평판"
+    },
+    {
+      "de": "Anstoß",
+      "en": "Bump",
+      "ko": "부딪힘"
+    },
+    {
+      "de": "Anstoß- und Kantentöne",
+      "en": "Bump and ledge tones",
+      "ko": "부딪힘과 높낮이 알림음"
     },
     {
       "de": "Aschgrau",
@@ -824,6 +844,21 @@
       "ko": "토벌수첩 목록을 찾을 수 없음."
     },
     {
+      "de": "Bestien",
+      "en": "Beasts",
+      "ko": "마수"
+    },
+    {
+      "de": "Bestien: {total} fehlen, keine in diesem Gebiet.",
+      "en": "Beasts: {total} missing, none in this area.",
+      "ko": "마수: {total}종 미계약, 이 지역에는 없음."
+    },
+    {
+      "de": "Bestien: {total} fehlen, {here} in diesem Gebiet.",
+      "en": "Beasts: {total} missing, {here} in this area.",
+      "ko": "마수: {total}종 미계약, 이 지역에 {here}종."
+    },
+    {
       "de": "Bestätigen nimmt eine Zeile auf, hoch und runter verschiebt sie, Bestätigen legt sie wieder ab.",
       "en": "Confirm picks a row up, up and down move it, confirm puts it down again.",
       "ko": "숫자패드 0은 줄 이동 시작, 8과 2는 위아래 이동, 다시 0은 놓기."
@@ -842,6 +877,11 @@
       "de": "Beute",
       "en": "Loot",
       "ko": "전리품"
+    },
+    {
+      "de": "Beuteregeln",
+      "en": "Loot rules",
+      "ko": "전리품 규칙"
     },
     {
       "de": "Biss!",
@@ -1404,6 +1444,11 @@
       "ko": "조금 빠름"
     },
     {
+      "de": "Event-FATE dort machen, wenn es erscheint.",
+      "en": "Do the event FATE there when it appears.",
+      "ko": "그곳에서 이벤트 돌발 임무가 나타나면 수행."
+    },
+    {
       "de": "Events",
       "en": "Events",
       "ko": "이벤트"
@@ -1629,6 +1674,21 @@
       "ko": "길드 의뢰"
     },
     {
+      "de": "Freibriefe: angenommen {names}. Kein Kartenmarker — im Tagebuch unter Freibriefe „Neuer Versuch“ und dann „Beginnen“.",
+      "en": "Levequests: accepted {names}. No map marker — in the journal under Levequests use Retry, then Start.",
+      "ko": "길드 의뢰: {names} 수락됨. 지도에 표시 없음. 진행 중인 임무의 의뢰 탭에서 '재도전' 후 '시작' 필요."
+    },
+    {
+      "de": "Freibriefe: läuft {name}. Noch keine Freibrief-Gegner in der Nähe — zum Aufgabengebiet.",
+      "en": "Levequests: running {name}. No leve enemies nearby yet — go to the task area.",
+      "ko": "길드 의뢰: {name} 진행 중. 근처에 길드 의뢰 적 아직 없음. 의뢰 수행 지역으로 이동 필요."
+    },
+    {
+      "de": "Freibriefe: läuft {name}. {objective}. Noch keine Freibrief-Gegner in der Nähe — zum Aufgabengebiet.",
+      "en": "Levequests: running {name}. {objective}. No leve enemies nearby yet — go to the task area.",
+      "ko": "길드 의뢰: {name} 진행 중. {objective}. 근처에 길드 의뢰 적 아직 없음. 의뢰 수행 지역으로 이동 필요."
+    },
+    {
       "de": "Freibriefe: {enemies} Gegner, {givers} Geber, {goals} Ziele.",
       "en": "Levequests: {enemies} enemies, {givers} givers, {goals} goals.",
       "ko": "길드 의뢰: 적 {enemies}명, 의뢰인 {givers}명, 목표 지점 {goals}곳."
@@ -1709,6 +1769,11 @@
       "ko": "가루다 준비됨"
     },
     {
+      "de": "Garuda-Event Warp",
+      "en": "Garuda event Warp",
+      "ko": "가루다 이벤트 시프트 브레이크"
+    },
+    {
       "de": "Gebiet {area}",
       "en": "area {area}",
       "ko": "{area} 지역"
@@ -1737,6 +1802,11 @@
       "de": "Gegenstand {id}",
       "en": "Item {id}",
       "ko": "아이템 {id}"
+    },
+    {
+      "de": "Gegenstandsstufe",
+      "en": "Item level",
+      "ko": "아이템 레벨"
     },
     {
       "de": "Gegenstandsstufe {level}",
@@ -2639,6 +2709,11 @@
       "ko": "소지품에 사용할 수 있는 아이템 없음."
     },
     {
+      "de": "Keine fehlenden Bestien.",
+      "en": "No missing beasts.",
+      "ko": "미계약 마수 없음."
+    },
+    {
       "de": "Keine laufende Aufgabe.",
       "en": "No task running.",
       "ko": "달성 조건 없음."
@@ -2664,9 +2739,9 @@
       "ko": "소지품에 맞는 아이템 없음."
     },
     {
-      "de": "Keine zeitlichen Events. Yo-kai-Uhr fehlt — erst den Event-Auftrag machen.",
-      "en": "No timed events. Yo-kai Watch missing — finish the event quest first.",
-      "ko": "시간제 이벤트 없음. 요괴워치 없음 — 이벤트 퀘스트 먼저 수행 필요."
+      "de": "Keine zeitlichen Events.",
+      "en": "No timed events.",
+      "ko": "시간제 이벤트 없음."
     },
     {
       "de": "Keine {label} in {range:F0} Metern.",
@@ -2694,9 +2769,9 @@
       "ko": "장판 경고음"
     },
     {
-      "de": "Klangtest: Navigations-Ton von vorn, rechts, hinten, dann Wegpunkt und Ankunft, dann HP- und Mana-Töne.",
-      "en": "Sound test: navigation tone from ahead, right, behind, then waypoint and arrival, then HP and mana tones.",
-      "ko": "소리 확인: 길안내 알림음이 앞, 오른쪽, 뒤에서 차례로 난다. 그다음 경유지 알림음과 도착 알림음, 마지막으로 HP 알림음과 MP 알림음이 난다."
+      "de": "Klangtest: Navigations-Ton von vorn, rechts, hinten, dann Wegpunkt und Ankunft, Anstoß und Kante, dann HP- und Mana-Töne.",
+      "en": "Sound test: navigation tone from ahead, right, behind, then waypoint and arrival, bump and ledge, then HP and mana tones.",
+      "ko": "소리 확인: 길안내 알림음이 앞, 오른쪽, 뒤에서 차례로 난다. 그다음 경유지 알림음과 도착 알림음, 부딪힘 알림음과 높낮이 알림음, 마지막으로 HP 알림음과 MP 알림음이 난다."
     },
     {
       "de": "Klassen",
@@ -2717,6 +2792,11 @@
       "de": "Knopf Zufälliges Aussehen reagiert nicht.",
       "en": "Random appearance button not responding.",
       "ko": "무작위 외모 버튼 응답 없음."
+    },
+    {
+      "de": "Kommentar",
+      "en": "Comment",
+      "ko": "소개말"
     },
     {
       "de": "Kompatibilitätshinweis: ",
@@ -2817,6 +2897,11 @@
       "de": "Laut Spielstand fehlen dir hier noch Ätherströme.",
       "en": "According to your progress you are still missing aether currents here.",
       "ko": "진행 상황상 이 지역의 풍맥의 샘이 아직 부족함."
+    },
+    {
+      "de": "Lautstärke Anstoß und Kante",
+      "en": "Bump and ledge tone volume",
+      "ko": "부딪힘과 높낮이 알림음 음량"
     },
     {
       "de": "Lautstärke AoE-Warnung",
@@ -2922,6 +3007,11 @@
       "de": "Mana, Verbrauch",
       "en": "Mana, spent",
       "ko": "MP, 소모"
+    },
+    {
+      "de": "Manuell mit Ton",
+      "en": "Manual with sound",
+      "ko": "알림음 있는 수동"
     },
     {
       "de": "Markierung",
@@ -3119,6 +3209,16 @@
       "ko": "일반 십자 단축바 사용 불가. 선택하려면 /acc crossbar 입력."
     },
     {
+      "de": "Nr. {number}, {name}",
+      "en": "No. {number}, {name}",
+      "ko": "{number}번, {name}"
+    },
+    {
+      "de": "Nr. {number}.",
+      "en": "no. {number}.",
+      "ko": "{number}번."
+    },
+    {
       "de": "Nummernblock 8 und 2 lesen die Tasten, 4 und 6 wechseln die Leiste, 0 wählt eine Taste zum Belegen, Komma zurück.",
       "en": "Numpad 8 and 2 read buttons, 4 and 6 change bars, 0 chooses a button to assign, decimal goes back.",
       "ko": "숫자패드 8과 2는 키 읽기, 4와 6은 단축바 전환, 0은 배정할 키 선택, 마침표는 뒤로."
@@ -3217,6 +3317,11 @@
       "de": "Paladin",
       "en": "Paladin",
       "ko": "나이트"
+    },
+    {
+      "de": "Passwort",
+      "en": "Password",
+      "ko": "비밀번호"
     },
     {
       "de": "Peil-Ton an. Er wird mittig und ruhig, wenn du richtig stehst.",
@@ -3487,6 +3592,11 @@
       "de": "Ring",
       "en": "Ring",
       "ko": "반지"
+    },
+    {
+      "de": "Rollenplatz",
+      "en": "Role slot",
+      "ko": "역할 칸"
     },
     {
       "de": "Rosébeige",
@@ -3782,6 +3892,11 @@
       "de": "Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.",
       "en": "Choose a language with: /acc lang de, /acc lang en, /acc lang ko or /acc lang auto.",
       "ko": "언어를 선택하려면: /acc lang ko, /acc lang en, /acc lang de, /acc lang auto 중 하나를 입력한다."
+    },
+    {
+      "de": "Sprung voraus",
+      "en": "Jump ahead",
+      "ko": "앞에 점프"
     },
     {
       "de": "Spur geloescht: {name}.",
@@ -4117,6 +4232,11 @@
       "de": "Unerforscht {index}",
       "en": "Unexplored {index}",
       "ko": "미탐색 {index}번"
+    },
+    {
+      "de": "Untergebiet {area}",
+      "en": "area {area}",
+      "ko": "세부 지역 {area}"
     },
     {
       "de": "Verbindung {number}",
@@ -4579,6 +4699,11 @@
       "ko": "옅은"
     },
     {
+      "de": "das Spiel nennt keinen Fundort.",
+      "en": "the game names no habitat.",
+      "ko": "게임이 알려주는 출현 지역 없음."
+    },
+    {
       "de": "dazu {count} weitere Rezepte",
       "en": "plus {count} more recipes",
       "ko": "그 밖에 제작법 {count}개 더"
@@ -4832,6 +4957,11 @@
       "de": "hier in diesem Gebiet. Das Spiel nennt keine genauere Stelle, such den Träger über die Kategorie Gegner.",
       "en": "here in this area. The game names no closer spot; find the carrier via the enemy category.",
       "ko": "이 지역에 있음. 게임이 더 정확한 위치를 알려주지 않으므로 적 분류에서 보유 몬스터를 찾아야 함."
+    },
+    {
+      "de": "hier in diesem Gebiet. Wenn kein Exemplar geladen ist, such über die Kategorie Gegner.",
+      "en": "here in this area. If no specimen is loaded, look via the enemy category.",
+      "ko": "이 지역에 있음. 불러온 개체가 없으면 적 분류에서 찾아야 함."
     },
     {
       "de": "hinter links",
@@ -5459,6 +5589,11 @@
       "ko": "{heading}, 설정 {count}개{(count == 1 ? \"\" : \"\")}"
     },
     {
+      "de": "{head}, Fundort {habitat}.",
+      "en": "{head}, habitat {habitat}.",
+      "ko": "{head}, 주요 출현 지역 {habitat}."
+    },
+    {
       "de": "{head}, ausgewählt.",
       "en": "{head}, selected.",
       "ko": "{head}, 선택됨."
@@ -5694,6 +5829,11 @@
       "ko": "{zone}에 {name} 있다고 나옴. 메뉴와 이동은 이 지역에 불러와져 있어야 함."
     },
     {
+      "de": "{name} gibt es in {zone}. Dorthin führt kein Weg über Gebietsübergänge.",
+      "en": "{name} is found in {zone}. No route there over zone transitions.",
+      "ko": "{name} {zone}에 있음. 지역 이동으로 가는 길 없음."
+    },
+    {
       "de": "{name} hat keine Einstellungen.",
       "en": "{name} has no settings.",
       "ko": "{name} 설정 없음."
@@ -5807,6 +5947,11 @@
       "de": "{name}, {value}",
       "en": "{name}, {value}",
       "ko": "{name}, {value}"
+    },
+    {
+      "de": "{name}: Untergebiet {area} ist auf der Karte nicht verzeichnet.",
+      "en": "{name}: area {area} is not marked on the map.",
+      "ko": "{name}: 세부 지역 {area}의 위치가 지도에 표시되지 않음."
     },
     {
       "de": "{name}: {mine}, angelegt {equipped}",
