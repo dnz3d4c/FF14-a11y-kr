@@ -371,7 +371,7 @@
     {
       "de": "Abgeschlossene Inhalte",
       "en": "Completed content",
-      "ko": "완료한 임무"
+      "ko": "모집 참가 조건"
     },
     {
       "de": "Absturz voraus",
@@ -1676,7 +1676,7 @@
     {
       "de": "Freibriefe: angenommen {names}. Kein Kartenmarker — im Tagebuch unter Freibriefe „Neuer Versuch“ und dann „Beginnen“.",
       "en": "Levequests: accepted {names}. No map marker — in the journal under Levequests use Retry, then Start.",
-      "ko": "길드 의뢰: {names} 수락됨. 지도에 표시 없음. 진행 중인 임무의 의뢰 탭에서 '재도전' 후 '시작' 필요."
+      "ko": "길드 의뢰: {names} 수락됨. 지도에 표시 없음. 퀘스트 창의 의뢰 탭에서 '재도전' 후 '시작' 필요."
     },
     {
       "de": "Freibriefe: läuft {name}. Noch keine Freibrief-Gegner in der Nähe — zum Aufgabengebiet.",

@@ -13,8 +13,8 @@
 // 같은 문자열이므로, 아는 언어로 찾아 행을 잡고 그 행의 한국어를 읽는다.
 // 한국어를 짐작해서 찾지 않는다 - 그러면 짐작이 답이 되어 버린다.
 //
-// 시트가 다섯이다. UI 문자열은 Addon에 있지만 기술·소환수·상태·직업 이름은 거기
-// 없고 각각 Action·Pet·Status·ClassJob에 있다. **Addon에서 0건인 것은 "게임에
+// 시트가 여섯이다. UI 문자열은 Addon에 있지만 기술·소환수·상태·직업·메뉴 이름은 거기
+// 없고 각각 Action·Pet·Status·ClassJob·MainCommand에 있다. **Addon에서 0건인 것은 "게임에
 // 없다"가 아니라 "그 시트 밖"이다.** 열 이름도 시트마다 다르다 - Addon만 `Text`고
 // 나머지 넷은 `Name`이다 (Lumina.Excel.Sheets의 형 정의를 반사로 확인).
 //
@@ -26,7 +26,7 @@
 //     row <번호>           행 번호로 바로 본다
 //     dump <디렉토리>      전 행을 TSV로
 //
-//     --sheet <이름>       Addon(기본) | Action | Pet | Status | ClassJob | all
+//     --sheet <이름>       Addon(기본) | Action | Pet | Status | ClassJob | MainCommand | all
 
 using System.Text;
 using Lumina;
@@ -72,6 +72,9 @@ var known = new List<Sheet>
     Make<Pet>("Pet", r => r.Name.ExtractText()),
     Make<Status>("Status", r => r.Name.ExtractText()),
     Make<ClassJob>("ClassJob", r => r.Name.ExtractText()),
+    // 메인 메뉴 명령 이름. 창 제목은 Addon 행만으로 탭과 못 가르는데, 그 창을
+    // 여는 메뉴 항목의 이름은 여기 있다.
+    Make<MainCommand>("MainCommand", r => r.Name.ExtractText()),
 };
 
 // `--sheet`는 모드 앞뒤 어디에 와도 된다. 떼어 내고 나머지를 예전처럼 읽는다.

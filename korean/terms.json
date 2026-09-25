@@ -1,6 +1,6 @@
 {
   "note": "게임 한국어판이 실제로 쓰는 낱말. 지어내지 않는다 - 모든 줄에 시트 이름과 행 번호가 붙어 있고, tools/ko-terms가 게임 데이터에서 직접 뽑았다. 번역에서 쓰는 게임 낱말은 전부 여기 있어야 한다 - 없으면 검수자가 '확인하고 쓴 것'과 '지어낸 것'을 구분 못 한다. 줄에 'sheet'가 없으면 Addon 시트이고 행 번호는 'addon'에 있다.",
-  "method": "KR 클라이언트 sqpack을 Lumina로 읽는다. 게임을 켤 필요가 없다. 시트는 다섯이다 - Addon(UI 문자열)·Action(기술)·Pet(소환수)·Status(상태)·ClassJob(클래스와 직업). 다시 뽑기: dotnet run --project tools/ko-terms/koterms.csproj -c Release -- dump tools/ko-terms/out --sheet all",
+  "method": "KR 클라이언트 sqpack을 Lumina로 읽는다. 게임을 켤 필요가 없다. 시트는 여섯이다 - Addon(UI 문자열)·Action(기술)·Pet(소환수)·Status(상태)·ClassJob(클래스와 직업)·MainCommand(메인 메뉴 명령). 다시 뽑기: dotnet run --project tools/ko-terms/koterms.csproj -c Release -- dump tools/ko-terms/out --sheet all",
   "game_version": "2026.09.01.0000.0000",
   "dumped": "2026-09-09",
   "not_found": {
@@ -1375,10 +1375,18 @@
     },
     {
       "en": "Journal",
-      "ko": "진행 중인 임무",
-      "addon": 452,
-      "row_text": "진행 중인 임무",
-      "note": "퀘스트 창 블록이다 - 449가 그 창의 조작 안내, 453 '완료 목록', 454~455 탭 '퀘스트'·'의뢰', 467~470 버튼 '지도 표시'·'재도전'·'포기'·'시작'. 원본이 JournalDetail의 버튼을 'Entfernen/Neuer Versuch/Karte'라 적어 이 블록과 짝이 맞는다. 창 제목이 450 '퀘스트'인지 452인지는 행만으로 못 가른다"
+      "ko": "퀘스트",
+      "sheet": "MainCommand",
+      "row": 4,
+      "row_text": "퀘스트",
+      "note": "메인 메뉴에서 이 창을 여는 명령이다. 1 '무기 넣기/꺼내기'·2 '내 캐릭터'·3 '기술 목록' 다음이라 글로벌의 Draw Weapon·Character·Actions & Traits·Journal 차례와 맞물린다(글로벌 행 순서는 글로벌 클라로 대조하지 않았다). Addon 450 '퀘스트'가 창 블록의 첫 행인 것도 같은 쪽이다. 452 '진행 중인 임무'는 453 '완료 목록'과 짝인 탭 이름이라 창 이름이 아니다 - 처음에 이것으로 옮겼다가 고쳤다(2026-09-25). 창 안의 탭은 454 '퀘스트'·455 '의뢰', 버튼은 467~470 '지도 표시'·'재도전'·'포기'·'시작'"
+    },
+    {
+      "en": "Completed content (Party Finder condition dropdown)",
+      "ko": "모집 참가 조건",
+      "addon": 10932,
+      "row_text": "모집 참가 조건",
+      "note": "모드가 게임 라벨을 못 읽었을 때 쓰는 대체 라벨이다(UIReaderService.cs:5101). 뒤에 값 10933 '없음'·10934 '공략 완료'가 온다. 같은 창의 짝 라벨 '전리품 규칙'이 11060이고, 11064와 10938이 같은 '※ 이 설정은 파티 찾기 표시용입니다' 문장이라 두 블록이 같은 창이다. 2267 '완료 조건 설정'도 후보인데 그 블록(2265~2280)이 지금 창에 쓰이는지는 못 가른다 - 추정이고 귀 판정에서 바뀔 수 있다"
     },
     {
       "en": "Levequests (journal tab)",
