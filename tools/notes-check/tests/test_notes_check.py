@@ -837,6 +837,35 @@ def test_절_없는_원본은_되묻기도_안_낸다():
     assert [v.code for v in bad] == ["N21"]
 
 
+UP_V60834 = """## Summary
+- JournalAccept: Ablehnungsgrund nur, wenn Annehmen ausgegraut ist
+
+## Version
+- Gesprochen / Tag: 6.08.34
+
+## Hinweis
+Mahjong, BossMod, AutoDuty (Plugin) und AccessibleVendorSell sind nicht enthalten.
+"""
+
+
+def test_N21은_원본_고정_안내_절을_안_센다():
+    """`v6.08.34` 재현 - 변경이 하나뿐인 버전인데 `Version`·`Hinweis`까지 세서 막혔다.
+
+    두 절은 원본이 버전마다 붙이는 안내이지 변경이 아니다. 되묻기(N23)에는 남는다.
+    """
+    bad = notes_check.coverage(_ours(["하나 바뀜."]), UP_V60834, VERSION)
+    assert [v.code for v in bad] == ["N23"]
+    text = "\n".join(v.message for v in bad)
+    assert "Version" in text
+    assert "Hinweis" in text
+
+
+def test_N21은_고정_절을_빼고도_미달이면_걸린다():
+    up = UP_V60834.replace("## Version", "## Neues Feature\n- x\n\n## Version")
+    codes_ = [v.code for v in notes_check.coverage(_ours(["하나 바뀜."]), up, VERSION)]
+    assert "N21" in codes_
+
+
 def test_N21은_절_수만_센다():
     """항목까지 세면 절충 기준으로 제대로 쓴 판이 걸린다.
 

@@ -959,6 +959,12 @@ def our_items(text: str, version: str) -> list[str]:
     return found
 
 
+#: 원본이 버전마다 붙이는 안내 절. 변경이 아니라서 N21 개수에서만 뺀다 - N23
+#: 되묻기에는 남아 사람이 대조한다. **`v6.08.34`가 변경 하나에 `Version`·`Hinweis`가
+#: 붙어 절 셋이 됐고, 항목 하나인 노트가 개수 미달로 막혔다.**
+FIXED_UPSTREAM_SECTIONS = frozenset({"Version", "Hinweis", "Installation", "Nicht enthalten"})
+
+
 #: 대조했다고 사람이 선언해야 넘어가는 코드. **N21은 여기 없다** - 개수 미달은
 #: 선언으로 못 넘긴다.
 ASK_CODES = ("N22", "N23")
@@ -982,7 +988,7 @@ def coverage(text: str, upstream: str, version: str) -> list[Violation]:
     되묻는 쪽이 맡는다.
     """
     units = upstream_units(upstream)
-    want = len(units["sections"])
+    want = sum(1 for name in units["sections"] if name not in FIXED_UPSTREAM_SECTIONS)
     got = len(our_items(text, version))
 
     violations: list[Violation] = []
