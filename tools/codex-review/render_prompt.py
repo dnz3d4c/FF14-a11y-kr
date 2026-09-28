@@ -20,6 +20,38 @@ EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 MAX_DIFF_LINES = 5000
 PLACEHOLDER = re.compile(r"\{\{([A-Z_]+)\}\}")
 NO_CONTEXT = "(저장소 맥락 없음)"
+UNTRACKED_EMPTY = "(none)"
+KO_ONLY_EMPTY = "(이번 변경에 새로 더해진 한국어 문장이 없다)"
+UPSTREAM_NOTES_EMPTY = "(원본 릴리스 노트를 못 받았다 — 대조 없이 판정한다)"
+# diff에서 더해진 대장 줄의 `"ko": "..."` 값. 줄 머리에 있어야 한다 - 테스트나 문서가
+# 예시로 든 "ko"까지 잡으면 리뷰어가 그것을 번역으로 읽는다. 뒤에 쉼표가 붙어도 잡는다.
+KO_ADDED = re.compile(r'^\+\s*"ko"\s*:\s*"((?:[^"\\]|\\.)*)"')
+
+
+def compose(template: str, fields: dict[str, str], diff: str) -> str:
+    """diff에서 뽑는 자리까지 채워 프롬프트를 만든다."""
+    return render(template, {**fields, "KO_ONLY": ko_only_block(diff)}, diff)
+
+
+def untracked_block(paths: list[str]) -> str:
+    """diff에 없는 새 파일 목록. 내용은 codex가 작업 트리에서 직접 읽는다."""
+    return "\n".join(f"- {p}" for p in paths) if paths else UNTRACKED_EMPTY
+
+
+def ko_only_block(diff: str) -> str:
+    """diff에 더해진 한국어 문장만 번호를 붙여 낸다.
+
+    원문을 본 사람은 빠진 정보를 머리로 채워 읽으므로, 한국어만 읽어서 뜻이
+    서는지는 독일어와 영어를 가린 채로 판정해야 한다. 지워진 줄은 뺀다.
+    """
+    found: list[str] = []
+    for line in diff.splitlines():
+        match = KO_ADDED.search(line)
+        if match and match.group(1) and match.group(1) not in found:
+            found.append(match.group(1))
+    if not found:
+        return KO_ONLY_EMPTY
+    return "\n".join(f"{i}. {v}" for i, v in enumerate(found, 1))
 
 
 def render(template: str, fields: dict[str, str], diff: str) -> str:
@@ -47,6 +79,8 @@ def build_fields(
     plan: str,
     commit_messages: str = "(이번 범위에 커밋이 없다 — 미커밋 변경만 있다)",
     review_target: str = "(커밋 이전의 스테이징된 트리다)",
+    untracked: list[str] | None = None,
+    upstream_notes: str = UPSTREAM_NOTES_EMPTY,
 ) -> dict[str, str]:
     """저장소 맥락을 읽어 치환 값을 모은다."""
     return {
@@ -56,6 +90,8 @@ def build_fields(
         "REPO_CONTEXT": read_repo_context(root),
         "COMMIT_MESSAGES": commit_messages,
         "STASH_SHA": review_target,
+        "UNTRACKED_FILES": untracked_block(untracked or []),
+        "UPSTREAM_NOTES": upstream_notes,
     }
 
 
@@ -119,12 +155,28 @@ def main(argv: list[str] | None = None) -> int:
         "--template", default="review.md", help="~/.claude/codex-prompts 아래의 템플릿 이름"
     )
     parser.add_argument("--root", default=".", help="저장소 루트")
+    parser.add_argument(
+        "--upstream-notes", default=None, help="원본 릴리스 노트 파일. 노트 리뷰의 대조 근거다"
+    )
     args = parser.parse_args(argv)
 
     root = Path(args.root).resolve()
     template = (TEMPLATE_ROOT / args.template).read_text(encoding="utf-8")
-    fields = build_fields(root, intent=args.intent, hypothesis=args.hypothesis, plan=args.plan)
-    text = render(template, fields, collect_diff(root, args.base))
+    notes = (
+        Path(args.upstream_notes).read_text(encoding="utf-8")
+        if args.upstream_notes
+        else UPSTREAM_NOTES_EMPTY
+    )
+    untracked = git(root, "ls-files", "--others", "--exclude-standard").splitlines()
+    fields = build_fields(
+        root,
+        intent=args.intent,
+        hypothesis=args.hypothesis,
+        plan=args.plan,
+        untracked=untracked,
+        upstream_notes=notes,
+    )
+    text = compose(template, fields, collect_diff(root, args.base))
 
     out = Path(tempfile.gettempdir()) / f"codex-review-prompt-{root.name}.txt"
     out.write_text(text, encoding="utf-8")
