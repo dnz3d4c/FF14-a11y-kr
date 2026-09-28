@@ -51,6 +51,14 @@ def test_움라우트가_없는_외국어는_이_갈래로_안_잡는다():
     assert texts('class T { void M() { type = "Aethernet"; } }') == []
 
 
+@pytest.mark.parametrize("word", ["AusrÃ¼stung", "MenÃ¼", "GewÃ¶lbe", "Ã„ra", "GrÃ¶ÃŸe"])
+def test_이중_인코딩된_움라우트도_잡는다(word):
+    # 원본 v6.08.35의 Plugin.cs가 UTF-8을 한 번 더 인코딩해서 ü가 Ã¼로 왔다.
+    # 이 모양을 못 보면 그 파일이 이 갈래의 사각지대가 된다 (docs/decisions.md D-18).
+    got = rules(f'class T {{ void M() {{ type = "{word}"; }} }}')
+    assert got == [ko_speech.UMLAUT], got
+
+
 # --- 갈래 3: 발화 싱크에 바로 들어가는 리터럴 -------------------------------
 
 
