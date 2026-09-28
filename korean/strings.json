@@ -1094,6 +1094,16 @@
       "ko": "독일어"
     },
     {
+      "de": "Diagonale links oben nach rechts unten",
+      "en": "Diagonal top-left to bottom-right",
+      "ko": "왼쪽 위에서 오른쪽 아래 대각선"
+    },
+    {
+      "de": "Diagonale rechts oben nach links unten",
+      "en": "Diagonal top-right to bottom-left",
+      "ko": "오른쪽 위에서 왼쪽 아래 대각선"
+    },
+    {
       "de": "Dialog.",
       "en": "Dialog.",
       "ko": "대화 상자."
@@ -1532,6 +1542,16 @@
       "de": "Feine Ziel-Lebenspunkte im Freibrief",
       "en": "Fine target health during levequests",
       "ko": "길드 의뢰 중 대상 HP 자세히"
+    },
+    {
+      "de": "Feld Zeile {row}, Spalte {col}, verdeckt",
+      "en": "Cell row {row}, column {col}, covered",
+      "ko": "{row}행 {col}열, 안 긁음"
+    },
+    {
+      "de": "Feld Zeile {row}, Spalte {col}, {digit}",
+      "en": "Cell row {row}, column {col}, {digit}",
+      "ko": "{row}행 {col}열, {digit}"
     },
     {
       "de": "Feld {cell}, {content}",
@@ -3069,6 +3089,11 @@
       "ko": "특징"
     },
     {
+      "de": "Mini-Glückskaktor.",
+      "en": "Mini Cactpot.",
+      "ko": "일일 복권."
+    },
+    {
       "de": "Mitstreiter",
       "en": "Companion",
       "ko": "버디"
@@ -3739,6 +3764,11 @@
       "ko": "{total}개 중 {changed}개 더 나쁨."
     },
     {
+      "de": "Schließen",
+      "en": "Close",
+      "ko": "닫기"
+    },
+    {
       "de": "Schließen-Knopf reagiert nicht.",
       "en": "Close button not responding.",
       "ko": "닫기 버튼 응답 없음."
@@ -3854,6 +3884,11 @@
       "ko": "기타: "
     },
     {
+      "de": "Spalte {n}",
+      "en": "Column {n}",
+      "ko": "{n}열"
+    },
+    {
       "de": "Spieler",
       "en": "Player",
       "ko": "플레이어"
@@ -3937,6 +3972,11 @@
       "de": "Steht weiter zum Nachlesen bereit.",
       "en": "Still available in the history.",
       "ko": "대화 기록에는 그대로 남음."
+    },
+    {
+      "de": "Stelle {slot}, {digit}, {state}",
+      "en": "Position {slot}, {digit}, {state}",
+      "ko": "{slot}번 칸, {digit}, {state}"
     },
     {
       "de": "Steuerkreuz {direction}",
@@ -4479,6 +4519,11 @@
       "ko": "기술 칸 {position}."
     },
     {
+      "de": "Zeile {n}",
+      "en": "Row {n}",
+      "ko": "{n}행"
+    },
+    {
       "de": "Zeit {FormatBuddyClock(currentSec)} von {FormatBuddyClock(maxSec)}",
       "en": "Time {FormatBuddyClock(currentSec)} of {FormatBuddyClock(maxSec)}",
       "ko": "시간 {FormatBuddyClock(maxSec)} 중 {FormatBuddyClock(currentSec)}"
@@ -4552,6 +4597,16 @@
       "de": "Zielwechsel",
       "en": "Target changes",
       "ko": "대상 변경"
+    },
+    {
+      "de": "Ziffer {digit}",
+      "en": "Digit {digit}",
+      "ko": "숫자 {digit}"
+    },
+    {
+      "de": "Ziffer {digit}, Stelle {slot}",
+      "en": "Digit {digit}, position {slot}",
+      "ko": "숫자 {digit}, {slot}번 칸"
     },
     {
       "de": "Zu kurz, keine Spur gespeichert.",
@@ -5474,6 +5529,11 @@
       "ko": "{blocker} 때문에 막힘."
     },
     {
+      "de": "{buyLabel}, Nummer {number}",
+      "en": "{buyLabel}, number {number}",
+      "ko": "{buyLabel}, 번호 {number}"
+    },
+    {
       "de": "{category}, leer",
       "en": "{category}, empty",
       "ko": "{category}, 비어 있음"
@@ -5752,6 +5812,16 @@
       "de": "{label}: {here} im Gebiet.",
       "en": "{label}: {here} in this area.",
       "ko": "{label}: {here}."
+    },
+    {
+      "de": "{lane}, {digits}, Summe {sum}, {mgp} MGP, {state}",
+      "en": "{lane}, {digits}, sum {sum}, {mgp} MGP, {state}",
+      "ko": "{lane}, {digits}, 합계 {sum}, {mgp} MGP, {state}"
+    },
+    {
+      "de": "{lane}, {digits}, Summe {sum}, {state}",
+      "en": "{lane}, {digits}, sum {sum}, {state}",
+      "ko": "{lane}, {digits}, 합계 {sum}, {state}"
     },
     {
       "de": "{level}, nicht tragbar, {reason}",
