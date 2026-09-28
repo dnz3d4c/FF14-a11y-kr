@@ -101,9 +101,9 @@
     {
       "name": "plugin-drop-dead-chatplayer-field",
       "file": "FF14Accessibility/Plugin.cs",
-      "why": "원본 전체에서 ChatPlayerService가 나오는 곳은 셋뿐이다 - 이 필드 선언, 클래스 선언, 생성자 선언. new ChatPlayerService(...)가 어디에도 없다. Plugin은 sealed이고 partial이 아닌 단일 파일이며 필드가 private이라 컴파일러의 CS0169가 곧 전수 증거다. 항상 null이고 아무도 읽지 않으므로 지워도 동작이 안 바뀐다. 우리는 -warnaserror로 빌드하므로 놔두면 CS0169와 CS8618이 빌드를 세운다. 원본이 나중에 이 필드를 실제로 배선하면 앵커가 안 맞아 조립이 규칙 이름을 대고 멈춘다 - 무른 채로 잊히지 않는다. 결함 자체는 upstream-reports/chat-sender-menu-never-wired.md로 원본에 보낸다.",
+      "why": "원본 전체에서 ChatPlayerService가 나오는 곳은 셋뿐이다 - 이 필드 선언, 클래스 선언, 생성자 선언. new ChatPlayerService(...)가 어디에도 없다. Plugin은 sealed이고 partial이 아닌 단일 파일이며 필드가 private이라 컴파일러의 CS0169가 곧 전수 증거다. 항상 null이고 아무도 읽지 않으므로 지워도 동작이 안 바뀐다. 우리는 -warnaserror로 빌드하므로 놔두면 CS0169와 CS8618이 빌드를 세운다. 원본이 나중에 이 필드를 실제로 배선하면 앵커가 안 맞아 조립이 규칙 이름을 대고 멈춘다 - 무른 채로 잊히지 않는다. 결함 자체는 upstream-reports/chat-sender-menu-never-wired.md로 원본에 보낸다. 첫 줄의 KontextmenÃ¼는 오타가 아니다 - v6.08.35에서 원본 Plugin.cs 전체가 UTF-8을 한 번 더 인코딩한 바이트로 올라왔고 앵커는 그 바이트를 그대로 잡는다(upstream-reports/plugin-cs-double-encoded.md). 원본이 인코딩을 고치면 앵커가 다시 안 맞아 조립이 멈추고, 그때 Kontextmenü로 되돌린다.",
       "find": [
-        "    // [Chat-Absender] Kontextmenü / Anvisieren aus der Nachlese-Zeile.",
+        "    // [Chat-Absender] KontextmenÃ¼ / Anvisieren aus der Nachlese-Zeile.",
         "    private readonly ChatPlayerService _chatPlayer;"
       ],
       "replace": []
