@@ -65,8 +65,10 @@ STRINGS_FILE = REPO / "korean" / "strings.json"
 #: 사람이 판정해 뺀 행. 규약은 그 파일의 `note`·`rule`이 갖는다.
 HELD_FILE = REPO / "korean" / "punctuation.json"
 
-#: 판정 갈래. `나열`은 영구 면제이고 `보류`는 사용자 판정을 기다리는 빚이다.
-KINDS = ("나열", "보류")
+#: 판정 갈래. `나열`과 `형식`은 영구 면제이고 `보류`는 사용자 판정을 기다리는
+#: 빚이다. `형식`은 사용자가 정한 숫자 형식(`HP 45000, 최대 91051`)이 원문
+#: `von`을 쉼표로 옮기는 자리다(2026-09-29).
+KINDS = ("나열", "형식", "보류")
 
 #: 재는 부호 갈래. 판정 목록은 **행이 아니라 이 갈래 단위로** 뺀다 - 행을
 #: 통째로 빼면 그 줄에 다른 결함이 생겨도 영영 안 보인다. 실측에서 나열
@@ -223,9 +225,10 @@ def main(argv: list[str]) -> int:
 
     rows = load_rows()
     held = load_held()
-    pending = sum(1 for entry in held.values() if entry["kind"] == "보류")
+    by_kind = Counter(entry["kind"] for entry in held.values())
+    breakdown = ", ".join(f"{kind} {by_kind[kind]}" for kind in KINDS)
     print(f"통과 - 대장 {len(rows)}행의 구두점이 원문을 따른다")
-    print(f"  판정으로 뺀 것 {len(held)}건 (나열 {len(held) - pending}, 보류 {pending})")
+    print(f"  판정으로 뺀 것 {len(held)}건 ({breakdown})")
     print("  이 검사는 부호만 본다. 낱말·어순·내용 누락은 안 본다")
     return 0
 

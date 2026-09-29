@@ -112,9 +112,51 @@ def test_판정_목록이_있다():
     assert ko_punct.HELD_FILE.is_file(), f"{ko_punct.HELD_FILE}가 없다"
 
 
-def test_판정_목록의_갈래가_둘뿐이다():
+def test_판정_목록의_갈래가_정해진_것뿐이다():
     for entry in ko_punct.load_held().values():
         assert entry["kind"] in ko_punct.KINDS, entry
+
+
+# --- 형식 - 사용자가 정한 숫자 형식이 쉼표를 늘린다 ------------------------
+
+
+def test_형식은_판정_갈래다():
+    """`HP 45000, 최대 91051`은 원문 `von`을 쉼표로 옮긴다. 2026-09-29 사용자 결정이다."""
+    assert "형식" in ko_punct.KINDS
+
+
+def test_형식으로_뺀_행은_쉼표가_늘어도_통과한다():
+    rows = [{"de": "HP {hp} von {max}.", "en": "", "ko": "HP {hp}, 최대 {max}."}]
+    held = {"HP {hp} von {max}.": {"kind": "형식", "faults": ["쉼표"], "why": "x", "when": "y"}}
+    assert ko_punct.check_strings(rows=rows, held=held) == []
+    assert ko_punct.check_held(rows=rows, held=held) == []
+
+
+def test_형식으로_뺀_행도_다른_부호_결함은_걸린다():
+    rows = [{"de": "HP: {hp} von {max}.", "en": "", "ko": "HP {hp}, 최대 {max}"}]
+    held = {"HP: {hp} von {max}.": {"kind": "형식", "faults": ["쉼표"], "why": "x", "when": "y"}}
+    problems = ko_punct.check_strings(rows=rows, held=held)
+    assert any("콜론" in p and "마침표" in p for p in problems), problems
+
+
+def test_통과_보고가_갈래마다_센다(monkeypatch, capsys):
+    """세 번째 갈래가 생기면 '전체에서 보류를 뺀 수'는 나열이 아니다."""
+    rows = [
+        {"de": "a und b.", "en": "", "ko": "가, 나."},
+        {"de": "HP {hp} von {max}.", "en": "", "ko": "HP {hp}, 최대 {max}."},
+        {"de": "Tab {i} von {n}.", "en": "", "ko": "탭 {i}, 전체 {n}."},
+    ]
+    held = {
+        "a und b.": {"kind": "나열", "faults": ["쉼표"], "why": "x", "when": "y"},
+        "HP {hp} von {max}.": {"kind": "형식", "faults": ["쉼표"], "why": "x", "when": "y"},
+        "Tab {i} von {n}.": {"kind": "형식", "faults": ["쉼표"], "why": "x", "when": "y"},
+    }
+    monkeypatch.setattr(ko_punct, "load_rows", lambda *a, **k: rows)
+    monkeypatch.setattr(ko_punct, "load_held", lambda *a, **k: held)
+
+    assert ko_punct.main([]) == 0
+    out = capsys.readouterr().out
+    assert "나열 1" in out and "형식 2" in out and "보류 0" in out, out
 
 
 def test_판정_목록에_사유와_날짜와_면제_갈래가_있다():
