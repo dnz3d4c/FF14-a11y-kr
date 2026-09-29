@@ -46,8 +46,8 @@ WORDS = {
 #: NumberVoiceBank의 음높이 사다리: -35..35 퍼센트, 5 간격, 배율 = 1 + 퍼센트/100.
 PITCH_PERCENTS = range(-35, 40, 5)
 
-#: 원본 영어 숫자의 RMS가 -13.4~-13.9dB다. 한국어가 다른 소리보다 작게 들리지 않게 맞춘다.
-TARGET_RMS_DB = -13.5
+#: 꼭짓점이 넘치지 않는 선에서 최대로 키운다(2026-09-29 사용자 요청). mp3 인코딩이
+#: 꼭짓점을 조금 넘길 수 있어서 0이 아니라 -1dBFS에서 멈춘다.
 CEILING_DB = -1.0
 
 #: 원본 NumberVoiceBank.Trim과 같은 문턱. 적재할 때 한 번 더 자르지만 파일도 맞춰 둔다.
@@ -73,9 +73,12 @@ def plan() -> list[Clip]:
     return clips
 
 
-def gain_db(rms_db: float, peak_db: float, target_rms_db: float, ceiling_db: float) -> float:
-    """RMS를 목표로 올리거나 내리되 꼭짓점이 천장을 넘지 않게 한다."""
-    return min(target_rms_db - rms_db, ceiling_db - peak_db)
+def gain_db(peaks_db: list[float], ceiling_db: float) -> float:
+    """한 낱말의 모든 음높이 단계 중 가장 큰 꼭짓점이 천장에 닿게 하는 증폭.
+
+    단계마다 따로 키우면 같은 낱말이 음높이에 따라 크기가 달라진다. 그래서 한 값을 쓴다.
+    """
+    return ceiling_db - max(peaks_db)
 
 
 def with_baseline(recorded: dict[str, Any], digests: dict[str, str]) -> dict[str, Any]:
@@ -104,15 +107,13 @@ def _synthesize(work: Path) -> None:
     _run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(script)])
 
 
-def _levels(path: Path) -> tuple[float, float]:
-    """전체 채널의 (RMS dB, 꼭짓점 dB)."""
+def peak_db(path: Path) -> float:
+    """전체 채널의 꼭짓점 dB."""
     out = _run(["ffmpeg", "-hide_banner", "-i", str(path), "-af", "astats", "-f", "null", "-"])
-    overall = out.split("Overall", 1)[1]
-    rms = re.search(r"RMS level dB: (-?[\d.]+)", overall)
-    peak = re.search(r"Peak level dB: (-?[\d.]+)", overall)
-    if rms is None or peak is None:
-        raise RuntimeError(f"음량을 못 읽었다 - {path}")
-    return float(rms.group(1)), float(peak.group(1))
+    found = re.search(r"Peak level dB: (-?[\d.]+)", out.split("Overall", 1)[1])
+    if found is None:
+        raise RuntimeError(f"꼭짓점을 못 읽었다 - {path}")
+    return float(found.group(1))
 
 
 def _pitch(factor: float) -> str:
@@ -121,57 +122,32 @@ def _pitch(factor: float) -> str:
     return f"rubberband=pitch={factor}:transients=crisp:formant=preserved:window=short,"
 
 
-def _encode(src: Path, dst: Path, filters: str) -> None:
-    _run(
-        [
-            "ffmpeg",
-            "-y",
-            "-v",
-            "error",
-            "-i",
-            str(src),
-            "-af",
-            filters,
-            "-map_metadata",
-            "-1",
-            "-fflags",
-            "+bitexact",
-            "-flags:a",
-            "+bitexact",
-            "-c:a",
-            "libmp3lame",
-            "-q:a",
-            "2",
-            str(dst),
-        ]
-    )
+def _ffmpeg(src: Path, dst: Path, filters: str, *codec: str) -> None:
+    _run(["ffmpeg", "-y", "-v", "error", "-i", str(src), "-af", filters, *codec, str(dst)])
+
+
+MP3 = (
+    "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:a", "+bitexact",
+    "-c:a", "libmp3lame", "-q:a", "2",
+)  # fmt: skip
 
 
 def build(out_dir: Path, work: Path) -> None:
     _synthesize(work)
 
-    gains: dict[str, float] = {}
-    for key in WORDS:
-        natural = work / f"natural_{key}.wav"
-        _run(
-            [
-                "ffmpeg",
-                "-y",
-                "-v",
-                "error",
-                "-i",
-                str(work / f"raw_{key}.wav"),
-                "-af",
-                f"{TRIM},{FORMAT}",
-                str(natural),
-            ]
-        )
-        gains[key] = gain_db(*_levels(natural), TARGET_RMS_DB, CEILING_DB)
+    # 증폭 전의 단계별 소리를 먼저 만들어 꼭짓점을 잰다. 음높이를 옮기면 꼭짓점이 바뀐다.
+    staged: dict[str, Path] = {}
+    peaks: dict[str, list[float]] = {key: [] for key in WORDS}
+    for clip in plan():
+        wav = work / clip.name.replace(".mp3", ".wav")
+        _ffmpeg(work / f"raw_{clip.word}.wav", wav, f"{_pitch(clip.factor)}{TRIM},{FORMAT}")
+        staged[clip.name] = wav
+        peaks[clip.word].append(peak_db(wav))
 
     out_dir.mkdir(parents=True, exist_ok=True)
     for clip in plan():
-        filters = f"{_pitch(clip.factor)}{TRIM},volume={gains[clip.word]:.2f}dB,{FORMAT}"
-        _encode(work / f"raw_{clip.word}.wav", out_dir / clip.name, filters)
+        gain = gain_db(peaks[clip.word], CEILING_DB)
+        _ffmpeg(staged[clip.name], out_dir / clip.name, f"volume={gain:.2f}dB", *MP3)
 
 
 def record_baseline() -> None:

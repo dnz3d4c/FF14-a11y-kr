@@ -36,23 +36,13 @@ def test_dead_and_full_stay_at_natural_pitch() -> None:
     assert WORDS["full"] == "가득"
 
 
-def test_gain_lifts_a_quiet_word_to_the_target_loudness() -> None:
-    assert gain_db(rms_db=-24.0, peak_db=-12.0, target_rms_db=-13.5, ceiling_db=-1.0) == (
-        pytest.approx(10.5)
-    )
+def test_gain_lifts_the_loudest_pitch_level_to_the_ceiling() -> None:
+    # 한 낱말의 15단계에 같은 증폭을 쓴다. 가장 큰 단계(-3)가 천장(-1)에 닿는다.
+    assert gain_db(peaks_db=[-12.0, -3.0, -8.0], ceiling_db=-1.0) == pytest.approx(2.0)
 
 
-def test_gain_stops_before_the_peak_clips() -> None:
-    # RMS로는 12dB를 올려야 하지만 꼭짓점이 -5라 4dB에서 멈춘다.
-    assert gain_db(rms_db=-25.5, peak_db=-5.0, target_rms_db=-13.5, ceiling_db=-1.0) == (
-        pytest.approx(4.0)
-    )
-
-
-def test_gain_may_turn_a_loud_word_down() -> None:
-    assert gain_db(rms_db=-10.0, peak_db=-2.0, target_rms_db=-13.5, ceiling_db=-1.0) == (
-        pytest.approx(-3.5)
-    )
+def test_gain_turns_down_a_word_already_over_the_ceiling() -> None:
+    assert gain_db(peaks_db=[-4.0, -0.2], ceiling_db=-1.0) == pytest.approx(-0.8)
 
 
 def test_baseline_keeps_other_entries_and_adds_the_audio() -> None:
