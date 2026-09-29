@@ -24,3 +24,6 @@ __pycache__/
 
 # 로컬 전용 설정
 .claude/settings.local.json
+
+# 임시 작업 폴더. 귀 판정용 시안 따위를 사용자가 보기 편한 자리에 둔다.
+temp/
