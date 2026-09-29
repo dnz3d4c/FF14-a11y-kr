@@ -189,11 +189,16 @@ def test_저장소_주소를_두_벌로_안_갖는다():
 # ── 설치 모양 ──────────────────────────────────────────────────────────────
 
 
-def install(tmp_path, version_dir: str = VERSION, **manifest_overrides):
+def install(tmp_path, version_dir: str = VERSION, *, voices: bool = True, **manifest_overrides):
     root = tmp_path / "installedPlugins" / "FF14Accessibility"
     target = root / version_dir
     target.mkdir(parents=True)
     (target / "FF14Accessibility.dll").write_bytes(b"dll")
+    if voices:
+        voice_dir = target / "assets" / "partymonitor"
+        voice_dir.mkdir(parents=True)
+        for name in pack_check.party_monitor_voice_names():
+            (voice_dir / name).write_bytes(b"mp3")
     fields = {
         "InternalName": "FF14Accessibility",
         "AssemblyVersion": version_dir,
@@ -254,6 +259,33 @@ def test_버전_폴더가_둘이면_잡는다(tmp_path):
 def test_신원이_비면_잡는다(tmp_path):
     root = install(tmp_path, WorkingPluginId="")
     assert any("WorkingPluginId" in p for p in pack_check.installed_layout_problems(root))
+
+
+def test_힐_모니터가_읽는_이름을_원본과_같은_식으로_만든다():
+    # NumberVoiceBank.Load가 여는 이름: 자리 1~8 x 음높이 +35..-35(5 간격), dead, full.
+    names = pack_check.party_monitor_voice_names()
+    assert len(names) == 122
+    assert {"1_35.mp3", "1_0.mp3", "8_-35.mp3", "dead.mp3", "full.mp3"} <= set(names)
+    assert all(pack_check.PARTY_MONITOR_MP3.match(f"assets/partymonitor/{n}") for n in names)
+
+
+def test_힐_모니터_음성_폴더가_통째로_없으면_잡는다(tmp_path):
+    # 2026-09-29 실측: 설치 프로그램이 압축의 하위 폴더를 버려서 설치본에
+    # assets가 없었고, 힐 모니터는 소리 없이 "불러오는 중"에서 멈췄다.
+    root = install(tmp_path, voices=False)
+    problems = pack_check.installed_layout_problems(root)
+    assert any("partymonitor" in p for p in problems)
+
+
+def test_빠진_음성_파일을_이름으로_댄다(tmp_path):
+    root = install(tmp_path)
+    voice_dir = root / VERSION / "assets" / "partymonitor"
+    (voice_dir / "3_-15.mp3").unlink()
+    (voice_dir / "dead.mp3").unlink()
+    problems = pack_check.installed_layout_problems(root)
+    joined = "\n".join(problems)
+    assert "3_-15.mp3" in joined and "dead.mp3" in joined
+    assert "1_0.mp3" not in joined
 
 
 def test_버전_파싱():

@@ -157,6 +157,39 @@ SPEECH_RID = re.compile(r"^runtimes/win/lib/net\d+\.\d+/System\.Speech\.dll$")
 #: 자리에서 빨개진다.
 PARTY_MONITOR_MP3 = re.compile(r"^assets/partymonitor/(?:[1-8]_-?\d+|dead|full)\.mp3$")
 
+#: 설치본 안에서 힐 모니터 음성이 있어야 하는 자리. 원본이 DLL 옆에서 찾는다
+#: (`Plugin.cs`의 `PartyMonitorService` 생성).
+PARTY_MONITOR_DIR = Path("assets") / "partymonitor"
+
+
+def party_monitor_voice_names() -> list[str]:
+    """`NumberVoiceBank.Load`가 여는 파일 이름 전부.
+
+    **압축 검사와 달리 여기서는 이름을 못박는다.** 설치본에서 하나라도 빠지면
+    음성 뱅크가 통째로 실패하고, 힐 모니터는 재시도 없이 무음으로 남는다.
+    식은 `NumberVoiceBank.PitchPercentForStep`과 같다 - 자리 1~8, 단계 0~14,
+    음높이 `-(단계*5 - 35)`.
+    """
+    names = [f"{pos}_{-(step * 5 - 35)}.mp3" for pos in range(1, 9) for step in range(15)]
+    return names + ["dead.mp3", "full.mp3"]
+
+
+def party_monitor_problems(version_dir: Path) -> list[str]:
+    """설치본에 힐 모니터 음성이 다 있나. 빠진 이름을 하나하나 댄다.
+
+    **설치 프로그램이 압축의 하위 폴더를 버린 적이 있다**(2026-09-29). DLL과
+    매니페스트만 재던 동안은 이 검사가 통과했고, 사용자 쪽에서는 힐 모니터가
+    "불러오는 중"에서 멈춘 채 소리를 안 냈다.
+    """
+    voice_dir = version_dir / PARTY_MONITOR_DIR
+    if not voice_dir.is_dir():
+        return [f"힐 모니터 음성 폴더가 없다: {voice_dir}. 힐 모니터가 소리를 못 낸다"]
+    missing = [name for name in party_monitor_voice_names() if not (voice_dir / name).is_file()]
+    if missing:
+        return [f"힐 모니터 음성이 {len(missing)}개 빠졌다: {', '.join(missing)}"]
+    return []
+
+
 #: 배포물에 있으면 안 되는 것. 설치 프로그램이 설치할 때 **붙이는** 필드라서,
 #: 압축 안에 이미 있으면 누군가 설치된 사본을 다시 압축했다는 뜻이다.
 LOCAL_ONLY_FIELDS = ("InstalledFromUrl", "WorkingPluginId", "Disabled", "ScheduledForDeletion")
@@ -280,6 +313,8 @@ def installed_layout_problems(plugin_root: Path) -> list[str]:
     dll = version_dir / f"{INTERNAL_NAME}.dll"
     if not dll.is_file():
         problems.append(f"DLL이 폴더 이름과 안 맞거나 없다: {dll}")
+
+    problems += party_monitor_problems(version_dir)
 
     manifest_path = version_dir / f"{INTERNAL_NAME}.json"
     if not manifest_path.is_file():
