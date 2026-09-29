@@ -21,7 +21,7 @@
     {
       "de": " Alle in vollem Zustand.",
       "en": " All at full condition.",
-      "ko": " 모두 내구도 정상."
+      "ko": " 모두 내구도 최대."
     },
     {
       "de": " Dabei {down:F0} Meter abwärts.",
@@ -61,7 +61,7 @@
     {
       "de": " Erholungsbonus für {percent} Prozent einer Stufe.",
       "en": " Rested bonus for {percent} percent of a level.",
-      "ko": " 한 레벨의 {percent} 퍼센트만큼 휴식 보너스."
+      "ko": " 한 레벨의 {percent}%만큼 휴식 보너스."
     },
     {
       "de": " Gegenstand: ",
@@ -101,12 +101,12 @@
     {
       "de": " Nummernblock 3 läuft zum Übergang.",
       "en": " Numpad 3 walks to the transition.",
-      "ko": " 숫자패드 3은 통로로 이동."
+      "ko": " 숫자패드 3은 지역 이동 지점으로 이동."
     },
     {
       "de": " Seite {current} von {total}.",
       "en": " Page {current} of {total}.",
-      "ko": " 페이지 {total} 중 {current}."
+      "ko": " 페이지 {current}, 전체 {total}."
     },
     {
       "de": " Vor {after}.",
@@ -146,7 +146,7 @@
     {
       "de": " {name}, HP {Percent(cur, max)} Prozent.",
       "en": " {name}, HP {Percent(cur, max)} percent.",
-      "ko": " {name}, HP {Percent(cur, max)} 퍼센트."
+      "ko": " {name}, HP {Percent(cur, max)}%."
     },
     {
       "de": " {stars} Sterne.",
@@ -161,7 +161,7 @@
     {
       "de": ", HP {Percent(cur, max)} Prozent",
       "en": ", HP {Percent(cur, max)} percent",
-      "ko": ", HP {Percent(cur, max)} 퍼센트"
+      "ko": ", HP {Percent(cur, max)}%"
     },
     {
       "de": ", Preis {count}",
@@ -206,7 +206,7 @@
     {
       "de": ", du hast {owned}",
       "en": ", you have {owned}",
-      "ko": ", 보유 화폐 {owned}"
+      "ko": ", 보유 {owned}"
     },
     {
       "de": ", erledigt",
@@ -306,12 +306,12 @@
     {
       "de": ", {current} von {needed}",
       "en": ", {current} of {needed}",
-      "ko": ", {needed} 중 {current}"
+      "ko": ", {current}, 필요 {needed}"
     },
     {
       "de": ", {firstRank} bis {lastRank}",
       "en": ", {firstRank} to {lastRank}",
-      "ko": ", {firstRank}~{lastRank}단계"
+      "ko": ", {firstRank}부터 {lastRank}까지"
     },
     {
       "de": ", {heightDiff:F0} Meter über dir",
@@ -321,12 +321,12 @@
     {
       "de": ", {hpPercent} Prozent",
       "en": ", {hpPercent} percent",
-      "ko": ", {hpPercent}퍼센트"
+      "ko": ", {hpPercent}%"
     },
     {
       "de": ", {percent} Prozent",
       "en": ", {percent} percent",
-      "ko": ", {percent}퍼센트"
+      "ko": ", {percent}%"
     },
     {
       "de": ", {required} gesucht",
@@ -351,7 +351,7 @@
     {
       "de": "1 Materia-Slot",
       "en": "1 materia slot",
-      "ko": "마테리아 1칸"
+      "ko": "마테리아 홈 1개"
     },
     {
       "de": "1 Sekunde",
@@ -501,7 +501,7 @@
     {
       "de": "An- und abschwellend",
       "en": "Swelling",
-      "ko": "물결"
+      "ko": "커졌다 작아지는 소리"
     },
     {
       "de": "Anderer Ring: {name}.",
@@ -556,7 +556,7 @@
     {
       "de": "Angelplätze: {count} im Gebiet.",
       "en": "Fishing spots: {count} in this area.",
-      "ko": "낚시터: {count}곳."
+      "ko": "낚시터: 이 지역에 {count}곳."
     },
     {
       "de": "Angezielt.",
@@ -706,7 +706,7 @@
     {
       "de": "Auto-Lauf nicht verfügbar. Das Plugin vnavmesh fehlt oder ist nicht geladen.",
       "en": "Auto-walk not available. The vnavmesh plugin is missing or not loaded.",
-      "ko": "자동 이동을 사용할 수 없음. vnavmesh 플러그인이 없거나 불러오지 못함."
+      "ko": "자동 이동을 사용할 수 없음. vnavmesh 플러그인이 없거나 불러와 있지 않음."
     },
     {
       "de": "Automatisch",
@@ -766,7 +766,7 @@
     {
       "de": "Belastbarkeit {current} von {max}",
       "en": "Integrity {current} of {max}",
-      "ko": "채집 횟수 {max} 중 {current}"
+      "ko": "채집 횟수 {current}, 최대 {max}"
     },
     {
       "de": "Belegen fehlgeschlagen, die Taste hat sich nicht geändert.",
@@ -821,12 +821,12 @@
     {
       "de": "Besser in {better}, schlechter in {worse}, von {total}.",
       "en": "Better in {better}, worse in {worse}, of {total}.",
-      "ko": "{total}개 중 {better}개 더 좋고 {worse}개 더 나쁨."
+      "ko": "더 좋음 {better}개, 더 나쁨 {worse}개, 전체 {total}개."
     },
     {
       "de": "Besser in {changed} von {total}.",
       "en": "Better in {changed} of {total}.",
-      "ko": "{total}개 중 {changed}개 더 좋음."
+      "ko": "더 좋음 {changed}개, 전체 {total}개."
     },
     {
       "de": "Bestiarium ist nicht geöffnet.",
@@ -931,7 +931,7 @@
     {
       "de": "Bonus {percent} Prozent",
       "en": "Bonus {percent} percent",
-      "ko": "보너스 {percent} 퍼센트"
+      "ko": "보너스 {percent}%"
     },
     {
       "de": "Boss",
@@ -946,7 +946,7 @@
     {
       "de": "Brett. Deine Karten {yours}, gegnerische {enemy}.",
       "en": "Board. Your cards {yours}, enemy {enemy}.",
-      "ko": "판에 놓인 카드. 내 것 {yours}장, 상대 것 {enemy}장."
+      "ko": "판에 놓인 카드. 내 카드 {yours}장, 상대 카드 {enemy}장."
     },
     {
       "de": "Bronze",
@@ -961,7 +961,7 @@
     {
       "de": "Chance {percent} Prozent",
       "en": "Chance {percent} percent",
-      "ko": "확률 {percent} 퍼센트"
+      "ko": "확률 {percent}%"
     },
     {
       "de": "Chat",
@@ -1016,7 +1016,7 @@
     {
       "de": "Chocobo Rang {rank}, {current} Erfahrungspunkte gesammelt.",
       "en": "Chocobo rank {rank}, {current} experience points earned.",
-      "ko": "초코보 랭크 {rank}, 경험치 {current} 획득."
+      "ko": "초코보 랭크 {rank}, 경험치 {current} 누적."
     },
     {
       "de": "Chocobo Rang {rank}. Noch {left} Erfahrungspunkte bis Rang {rank + 1}.",
@@ -1071,7 +1071,7 @@
     {
       "de": "Das bist du selbst.",
       "en": "That is you.",
-      "ko": "대상이 나 자신임. 따라갈 수 없음."
+      "ko": "대상이 나 자신임."
     },
     {
       "de": "Datenzentrum wählen.",
@@ -1171,7 +1171,7 @@
     {
       "de": "Diese Taste gehört zum neuen Chatsystem.",
       "en": "That key belongs to the new chat system.",
-      "ko": "이 키는 신규 대화 시스템 전용이라 지금은 사용할 수 없음."
+      "ko": "이 키는 신규 대화 시스템 전용임."
     },
     {
       "de": "Diesen Übergang gibt es nur auf den Unteren Decks.",
@@ -1181,7 +1181,7 @@
     {
       "de": "Dieses Belegungsmenü ist nur für PvE. In einem PvE-Gebiet erneut versuchen.",
       "en": "This assignment menu is for PvE. Try again in a PvE area.",
-      "ko": "이 배정 메뉴는 PvE 전용. PvE 지역에서 다시 시도."
+      "ko": "이 배정 메뉴는 PvE 전용. PvE 지역에서 다시 시도 필요."
     },
     {
       "de": "Dragoon",
@@ -1291,12 +1291,12 @@
     {
       "de": "Dungeon-Wege, {files} geladen",
       "en": "Dungeon routes, {files} loaded",
-      "ko": "던전 경로, {files}개 있음"
+      "ko": "던전 경로, {files}개 다운로드됨"
     },
     {
       "de": "Dungeon: {total} Stationen, weiter bei {next}.",
       "en": "Dungeon: {total} stations, continuing at {next}.",
-      "ko": "던전: 지점 {total}개, 지금 {next}번."
+      "ko": "던전: 지점 {total}개, {next}번부터 계속."
     },
     {
       "de": "Dunkelritter",
@@ -1481,7 +1481,7 @@
     {
       "de": "FATEs dort mit der Yo-kai-Uhr machen.",
       "en": "Do FATEs there with the Yo-kai Watch on.",
-      "ko": "해당 지역에서 요괴워치를 켜고 돌발 임무 수행."
+      "ko": "해당 지역에서 요괴워치를 착용하고 돌발 임무 수행."
     },
     {
       "de": "FATEs: {active} aktiv, {preparing} starten gleich.",
@@ -1626,7 +1626,7 @@
     {
       "de": "Flüstern an {target} nicht möglich.",
       "en": "Cannot set tell target {target}.",
-      "ko": "{target}에게 귓속말을 걸 수 없음."
+      "ko": "{target}에게 귓속말을 보낼 수 없음."
     },
     {
       "de": "Flüstert",
@@ -1761,7 +1761,7 @@
     {
       "de": "Für diesen Ort ist kein Weg hinterlegt.",
       "en": "No route is stored for this place.",
-      "ko": "해당 던전 경로 파일 없음."
+      "ko": "이 장소에 저장된 경로 없음."
     },
     {
       "de": "Für {monster} ist kein Ort bekannt.",
@@ -1851,7 +1851,7 @@
     {
       "de": "Gegner wirkt {action} auf dich.",
       "en": "Enemy casts {action} on you.",
-      "ko": "적, 나에게 {action} 시전."
+      "ko": "적이 나에게 {action} 시전."
     },
     {
       "de": "Gegner wirkt {action}.",
@@ -1871,12 +1871,12 @@
     {
       "de": "Gehhilfe an: {name}.",
       "en": "Walk guide on: {name}.",
-      "ko": "길안내 켜짐: 목적지 {name}."
+      "ko": "길안내 켜짐: {name}."
     },
     {
       "de": "Gehhilfe an: {name}. Liegt unter einem Vorsprung, führe bis auf {metres:F0} Meter heran.",
       "en": "Walk guide on: {name}. It is under an overhang, guiding to within {metres:F0} meters of it.",
-      "ko": "길안내 켜짐: 목적지 {name}. 위쪽이 막힌 곳이라 {metres:F0}미터 앞까지 안내함."
+      "ko": "길안내 켜짐: {name}. 위쪽이 막힌 곳이라 {metres:F0}미터 앞까지 안내함."
     },
     {
       "de": "Gehhilfe aus.",
@@ -1931,7 +1931,7 @@
     {
       "de": "Gesellschaft {oneBased} von {total}",
       "en": "grand company {oneBased} of {total}",
-      "ko": "총사령부 {total} 중 {oneBased}"
+      "ko": "총사령부 {oneBased}, 전체 {total}"
     },
     {
       "de": "Gil",
@@ -1991,12 +1991,12 @@
     {
       "de": "HP {hp} von {hpMax}, MP {Percent(mp, mpMax)} Prozent.",
       "en": "HP {hp} of {hpMax}, MP {Percent(mp, mpMax)} percent.",
-      "ko": "HP {hpMax} 중 {hp}, MP {Percent(mp, mpMax)} 퍼센트."
+      "ko": "HP {hp}, 최대 {hpMax}, MP {Percent(mp, mpMax)}%."
     },
     {
       "de": "HP {hp} von {hpMax}.",
       "en": "HP {hp} of {hpMax}.",
-      "ko": "HP {hpMax} 중 {hp}."
+      "ko": "HP {hp}, 최대 {hpMax}."
     },
     {
       "de": "HP, Heilung",
@@ -2016,7 +2016,7 @@
     {
       "de": "HP: {cur} von {max}.",
       "en": "HP: {cur} of {max}.",
-      "ko": "HP: {max} 중 {cur}."
+      "ko": "HP: {cur}, 최대 {max}."
     },
     {
       "de": "HQ-Materialien ließen sich nicht übernehmen - im Notizbuch hat sich nichts geändert.",
@@ -2046,7 +2046,7 @@
     {
       "de": "Handkarte {index} von {count}, {sides}",
       "en": "Hand card {index} of {count}, {sides}",
-      "ko": "카드 {count} 중 {index}, {sides}"
+      "ko": "손에 든 카드 {index}, 전체 {count}, {sides}"
     },
     {
       "de": "Handwerker-Notizbuch, {jobAndLevel}",
@@ -2201,12 +2201,12 @@
     {
       "de": "Ich komme nicht weiter, {blocker} steht im Weg. Noch {MetersRemaining(distance)}. Auto-Lauf beendet.",
       "en": "I cannot get any further, {blocker} is in the way. {MetersRemaining(distance)} remaining. Auto-walk ended.",
-      "ko": "{blocker} 때문에 더 못 감. 목적지까지 {MetersRemaining(distance)} 남기고 자동 이동 종료."
+      "ko": "{blocker} 때문에 더 못 감. {MetersRemaining(distance)} 남음. 자동 이동 종료."
     },
     {
       "de": "Ich stecke fest, noch {MetersRemaining(distance)}. Auto-Lauf beendet.",
       "en": "I'm stuck, {MetersRemaining(distance)} remaining. Auto-walk ended.",
-      "ko": "길이 막혀 더 못 감. 목적지까지 {MetersRemaining(distance)} 남기고 자동 이동 종료."
+      "ko": "걸려서 더 못 감. {MetersRemaining(distance)} 남음. 자동 이동 종료."
     },
     {
       "de": "Ifrit bereit",
@@ -2281,12 +2281,12 @@
     {
       "de": "Jagdziele, Rang {rank}: {total} offen, keines in diesem Gebiet.",
       "en": "Hunting targets, rank {rank}: {total} open, none in this area.",
-      "ko": "토벌 대상, {rank}단계: 남은 것 {total}종, 이 지역 없음."
+      "ko": "토벌 대상, {rank}단계: {total}종 남음, 이 지역에는 없음."
     },
     {
       "de": "Jagdziele, Rang {rank}: {total} offen, {here} in diesem Gebiet.",
       "en": "Hunting targets, rank {rank}: {total} open, {here} in this area.",
-      "ko": "토벌 대상, {rank}단계: 남은 것 {total}종, 이 지역 {here}종."
+      "ko": "토벌 대상, {rank}단계: {total}종 남음, 이 지역에 {here}종."
     },
     {
       "de": "Japanisch",
@@ -2296,7 +2296,7 @@
     {
       "de": "Jetzt herstellbar: {count} von {total} Rezepten",
       "en": "Craftable now: {count} of {total} recipes",
-      "ko": "지금 제작 가능: 제작법 {total}개 중 {count}개"
+      "ko": "지금 제작 가능: 제작법 {count}개, 전체 {total}개"
     },
     {
       "de": "Jetzt herunterladen",
@@ -2321,7 +2321,7 @@
     {
       "de": "Job-Anzeige wieder verfügbar",
       "en": "Job gauge back up",
-      "ko": "직업 게이지 복구됨"
+      "ko": "직업 게이지 다시 사용 가능"
     },
     {
       "de": "Job: ",
@@ -2401,7 +2401,7 @@
     {
       "de": "Kein Angelplatz nah genug. Nächster: {name}, {distance:F0} Meter. Stell dich an die Angelstelle und drück erneut.",
       "en": "No fishing spot close enough. Nearest: {name}, {distance:F0} meters. Stand at the fishing spot and press again.",
-      "ko": "충분히 가까운 낚시터 없음. 가장 가까운 곳: {name}, {distance:F0}미터. 낚시 자리에 서서 다시 시도 필요."
+      "ko": "충분히 가까운 낚시터 없음. 가장 가까운 곳: {name}, {distance:F0}미터. 낚시터에 서서 키 다시 누르기."
     },
     {
       "de": "Kein Ausrüstungs-Vergleich offen.",
@@ -2426,7 +2426,7 @@
     {
       "de": "Kein Fenster fokussiert. {visibleCount} Fenster sichtbar, Liste im Log.",
       "en": "No window focused. {visibleCount} windows visible, list written to log.",
-      "ko": "활성 창 없음. 보이는 창 {visibleCount}개, 전체 목록은 로그에."
+      "ko": "활성 창 없음. 보이는 창 {visibleCount}개, 목록은 로그에."
     },
     {
       "de": "Kein Flugweg gefunden, ich laufe.",
@@ -2516,7 +2516,7 @@
     {
       "de": "Kein Ziel gewählt. Erst ein Ziel anvisieren oder im Objekt-Browser auswählen.",
       "en": "No destination selected. Target something first, or pick it in the object browser.",
-      "ko": "선택한 목적지 없음. 먼저 대상 지정이나 사물 목록에서 선택 필요."
+      "ko": "선택한 대상 없음. 먼저 대상 지정이나 사물 목록에서 선택 필요."
     },
     {
       "de": "Kein Ziel zum Folgen. Erst ein Ziel anwählen.",
@@ -2531,7 +2531,7 @@
     {
       "de": "Kein aktives Addon für Dump gefunden.",
       "en": "No active addon found to dump.",
-      "ko": "덤프할 창을 찾을 수 없음."
+      "ko": "덤프할 활성 창을 찾을 수 없음."
     },
     {
       "de": "Kein aktives Menü.",
@@ -2551,7 +2551,7 @@
     {
       "de": "Kein bekanntes Fenster. {count} sichtbare Fenster gedumpt, Liste im Log.",
       "en": "No known window. Dumped {count} visible windows, list in the log.",
-      "ko": "모드가 모르는 창임. 보이는 창 {count}개를 덤프함. 목록은 로그에."
+      "ko": "아는 창 없음. 보이는 창 {count}개를 덤프함. 목록은 로그에."
     },
     {
       "de": "Kein sicherer Weg gefunden.",
@@ -2571,7 +2571,7 @@
     {
       "de": "Keine Angelplätze in diesem Gebiet.",
       "en": "No fishing spots in this area.",
-      "ko": "낚시터 없음."
+      "ko": "이 지역에 낚시터 없음."
     },
     {
       "de": "Keine Ausrüstung angelegt.",
@@ -2596,7 +2596,7 @@
     {
       "de": "Keine FATEs in diesem Gebiet.",
       "en": "No FATEs in this area.",
-      "ko": "돌발 임무 없음."
+      "ko": "이 지역에 돌발 임무 없음."
     },
     {
       "de": "Keine Freibriefe. Erst bei einem Freibrief-Geber annehmen.",
@@ -2661,12 +2661,12 @@
     {
       "de": "Keine Sammelpunkte. SP gibt es nur als Sammler.",
       "en": "No gathering points. GP only exists for gatherers.",
-      "ko": "현재 직업에는 GP가 없음. GP는 채집가에게만 있음."
+      "ko": "GP 없음. GP는 채집가에게만 있음."
     },
     {
       "de": "Keine Sammelstellen für deinen Beruf in dieser Zone.",
       "en": "No gathering spots for your job in this area.",
-      "ko": "현재 직업으로 채집할 곳 없음."
+      "ko": "이 지역에 현재 직업의 채집 지점 없음."
     },
     {
       "de": "Keine Skills gefunden.",
@@ -2686,17 +2686,17 @@
     {
       "de": "Keine Sprachausgabe des Systems verfügbar. Die Kampfwarnungen kommen über den Screenreader.",
       "en": "No system speech available. Combat warnings go through the screen reader.",
-      "ko": "시스템 음성 없음. 전투 경고는 스크린 리더로 출력."
+      "ko": "시스템 음성 출력을 사용할 수 없음. 전투 경고는 스크린 리더로 출력."
     },
     {
       "de": "Keine Spuren in diesem Gebiet.",
       "en": "No trails in this area.",
-      "ko": "발자취 없음."
+      "ko": "이 지역에 발자취 없음."
     },
     {
       "de": "Keine Wegpunkte in diesem Gebiet gefunden.",
       "en": "No waypoints found in this area.",
-      "ko": "경유지를 찾을 수 없음."
+      "ko": "이 지역에서 경유지를 찾을 수 없음."
     },
     {
       "de": "Keine Wirkungen auf dir.",
@@ -2771,7 +2771,7 @@
     {
       "de": "Keine Ätheryten in diesem Gebiet gefunden.",
       "en": "No aetherytes found in this area.",
-      "ko": "에테라이트를 찾을 수 없음."
+      "ko": "이 지역에서 에테라이트를 찾을 수 없음."
     },
     {
       "de": "Keins von {total} Rezepten ist mit dem Beutelinhalt herstellbar",
@@ -2791,7 +2791,7 @@
     {
       "de": "Klangtest: Navigations-Ton von vorn, rechts, hinten, dann Wegpunkt und Ankunft, Anstoß und Kante, dann HP- und Mana-Töne.",
       "en": "Sound test: navigation tone from ahead, right, behind, then waypoint and arrival, bump and ledge, then HP and mana tones.",
-      "ko": "소리 확인: 길안내 알림음이 앞, 오른쪽, 뒤에서 차례로 난다. 그다음 경유지 알림음과 도착 알림음, 부딪힘 알림음과 높낮이 알림음, 마지막으로 HP 알림음과 MP 알림음이 난다."
+      "ko": "소리 확인: 길안내 신호음이 앞, 오른쪽, 뒤에서 차례로 난다. 그다음 경유지 알림음과 도착 알림음, 부딪힘 알림음과 높낮이 알림음, 마지막으로 HP 신호음과 MP 신호음이 난다."
     },
     {
       "de": "Klassen",
@@ -2881,7 +2881,7 @@
     {
       "de": "LP {current} von {max}",
       "en": "HP {current} of {max}",
-      "ko": "HP {max} 중 {current}"
+      "ko": "HP {current}, 최대 {max}"
     },
     {
       "de": "Lade Fassung {version}. Einen Moment.",
@@ -2916,7 +2916,7 @@
     {
       "de": "Laut Spielstand fehlen dir hier noch Ätherströme.",
       "en": "According to your progress you are still missing aether currents here.",
-      "ko": "이 지역에 아직 개방하지 않은 풍맥의 샘이 있음."
+      "ko": "게임 기록상 이 지역에 아직 개방하지 않은 풍맥의 샘이 있음."
     },
     {
       "de": "Lautstärke Anstoß und Kante",
@@ -2931,7 +2931,7 @@
     {
       "de": "Lautstärke Leben und Mana",
       "en": "Health and mana tone volume",
-      "ko": "HP MP 신호음 음량"
+      "ko": "HP와 MP 신호음 음량"
     },
     {
       "de": "Lautstärke Peil-Ton",
@@ -3201,7 +3201,7 @@
     {
       "de": "Noch {seconds} Sekunden zum Beitreten.",
       "en": "{seconds} seconds left to join.",
-      "ko": "참가까지 {seconds}초 남음."
+      "ko": "참가 가능 시간 {seconds}초 남음."
     },
     {
       "de": "Norden",
@@ -3361,7 +3361,7 @@
     {
       "de": "Peil-Ton beim Laufen",
       "en": "Navigation beacon",
-      "ko": "길안내 신호음"
+      "ko": "이동 중 길안내 신호음"
     },
     {
       "de": "Pfeil hoch und runter zum Wechseln, Enter zum Bestätigen, Escape zurück, Strg+F1 für Hilfe.",
@@ -3376,7 +3376,7 @@
     {
       "de": "Pfirsich",
       "en": "peach",
-      "ko": "살구색"
+      "ko": "복숭아색"
     },
     {
       "de": "Pictomancer",
@@ -3441,12 +3441,12 @@
     {
       "de": "Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von {maxDurability}, Schritt {step}.",
       "en": "Quality {quality} of {maxQuality}, HQ chance {hqPercent} percent, progress {progress} of {maxProgress}, durability {durability} of {maxDurability}, step {step}.",
-      "ko": "품질 {maxQuality} 중 {quality}, HQ 확률 {hqPercent} 퍼센트, 작업량 {maxProgress} 중 {progress}, 내구도 {maxDurability} 중 {durability}, 제작 공정 {step}."
+      "ko": "품질 {quality}, 최대 {maxQuality}, HQ 확률 {hqPercent}%, 작업량 {progress}, 최대 {maxProgress}, 내구도 {durability}, 최대 {maxDurability}, 제작 공정 {step}."
     },
     {
       "de": "Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von {maxDurability}.",
       "en": "Quality {quality} of {maxQuality}, HQ chance {hqPercent} percent, progress {progress} of {maxProgress}, durability {durability} of {maxDurability}.",
-      "ko": "품질 {maxQuality} 중 {quality}, HQ 확률 {hqPercent} 퍼센트, 작업량 {maxProgress} 중 {progress}, 내구도 {maxDurability} 중 {durability}."
+      "ko": "품질 {quality}, 최대 {maxQuality}, HQ 확률 {hqPercent}%, 작업량 {progress}, 최대 {maxProgress}, 내구도 {durability}, 최대 {maxDurability}."
     },
     {
       "de": "Quest",
@@ -3526,17 +3526,17 @@
     {
       "de": "Rang {rank}, alle {total} Einträge erledigt",
       "en": "Rank {rank}, all {total} entries complete",
-      "ko": "{rank}단계, 항목 {total} 전부 완료"
+      "ko": "{rank}단계, 항목 {total}개 전부 완료"
     },
     {
       "de": "Rang {rank}, {done} von {total} Einträgen erledigt",
       "en": "Rank {rank}, {done} of {total} entries done",
-      "ko": "{rank}단계, 항목 {total} 중 {done} 완료"
+      "ko": "{rank}단계, 항목 {done}개 완료, 전체 {total}개"
     },
     {
       "de": "Rangstufe {index} von {count}{range}",
       "en": "Rank tier {index} of {count}{range}",
-      "ko": "{count}단계 중 {index}단계{range}"
+      "ko": "{index}단계, 전체 {count}단계{range}"
     },
     {
       "de": "Raum {index}",
@@ -3581,7 +3581,7 @@
     {
       "de": "Reiter gedrückt, aber kein Seitenwechsel erkannt.",
       "en": "Tab pressed, but no page change detected.",
-      "ko": "탭을 눌렀지만 페이지가 바뀌지 않음."
+      "ko": "탭을 눌렀지만 페이지 전환이 감지되지 않음."
     },
     {
       "de": "Reiter reagiert nicht.",
@@ -3591,7 +3591,7 @@
     {
       "de": "Reiter {index} von {count}.",
       "en": "Tab {index} of {count}.",
-      "ko": "탭 {count} 중 {index}."
+      "ko": "탭 {index}, 전체 {count}."
     },
     {
       "de": "Reittier",
@@ -3691,7 +3691,7 @@
     {
       "de": "SP {Percent(cur, max)} Prozent.",
       "en": "GP {Percent(cur, max)} percent.",
-      "ko": "GP {Percent(cur, max)} 퍼센트."
+      "ko": "GP {Percent(cur, max)}%."
     },
     {
       "de": "Sag Schrägstrich acc trails zum Auflisten, oder Schrägstrich acc trail del und die Nummer zum Löschen.",
@@ -3761,7 +3761,7 @@
     {
       "de": "Schlechter in {changed} von {total}.",
       "en": "Worse in {changed} of {total}.",
-      "ko": "{total}개 중 {changed}개 더 나쁨."
+      "ko": "더 나쁨 {changed}개, 전체 {total}개."
     },
     {
       "de": "Schließen",
@@ -3821,7 +3821,7 @@
     {
       "de": "Seite {page}",
       "en": "Page {page}",
-      "ko": "{page}페이지"
+      "ko": "페이지 {page}"
     },
     {
       "de": "Seite {page}.",
@@ -4036,7 +4036,7 @@
     {
       "de": "Stufe {level}. Noch {left} Erfahrungspunkte bis zur nächsten Stufe.",
       "en": "Level {level}. {left} experience points to the next level.",
-      "ko": "레벨 {level}. 다음 레벨까지 경험치 {left}."
+      "ko": "레벨 {level}. 다음 레벨까지 경험치 {left} 남음."
     },
     {
       "de": "Stumm",
@@ -4071,12 +4071,12 @@
     {
       "de": "Suchpunkt {index} von {count}, {distance}, {direction}.",
       "en": "search point {index} of {count}, {distance}, {direction}.",
-      "ko": "탐색 지점 {count}개 중 {index}번째, {distance}, {direction}."
+      "ko": "탐색 지점 {index}, 전체 {count}, {distance}, {direction}."
     },
     {
       "de": "Suchpunkt {index} von {count}, {spotName}, {distance}, {direction}.",
       "en": "search point {index} of {count}, {spotName}, {distance}, {direction}.",
-      "ko": "탐색 지점 {count}개 중 {index}번째, {spotName}, {distance}, {direction}."
+      "ko": "탐색 지점 {index}, 전체 {count}, {spotName}, {distance}, {direction}."
     },
     {
       "de": "System",
@@ -4196,7 +4196,7 @@
     {
       "de": "Ton-Beacon nicht verfügbar.",
       "en": "Audio beacon not available.",
-      "ko": "알림음을 사용할 수 없음."
+      "ko": "길안내 신호음을 사용할 수 없음."
     },
     {
       "de": "Topas",
@@ -4231,7 +4231,7 @@
     {
       "de": "Töne für Leben und Mana",
       "en": "Health and mana tones",
-      "ko": "HP MP 신호음"
+      "ko": "HP와 MP 신호음"
     },
     {
       "de": "Türkis",
@@ -4256,12 +4256,12 @@
     {
       "de": "Unbekannter Befehl. Tippe /acc help für Hilfe.",
       "en": "Unknown command. Type /acc help for help.",
-      "ko": "모르는 명령. 도움말은 /acc help."
+      "ko": "알 수 없는 명령어. 도움말은 /acc help 입력."
     },
     {
       "de": "Unbekannter Gegenstand, Icon {iconId}",
       "en": "Unknown item, icon {iconId}",
-      "ko": "모르는 아이템, 아이콘 {iconId}"
+      "ko": "알 수 없는 아이템, 아이콘 {iconId}"
     },
     {
       "de": "Unbenanntes Plugin",
@@ -4396,7 +4396,7 @@
     {
       "de": "Wegenetz lädt noch, {percent:F0} Prozent. Gleich nochmal versuchen.",
       "en": "Navmesh still loading, {percent:F0} percent. Try again shortly.",
-      "ko": "길 정보 불러오는 중, {percent:F0} 퍼센트. 잠시 뒤 다시 시도 필요."
+      "ko": "길 정보 불러오는 중, {percent:F0}%. 잠시 뒤 다시 시도 필요."
     },
     {
       "de": "Wegenetz wird geladen.",
@@ -4406,7 +4406,7 @@
     {
       "de": "Wegenetz {percent} Prozent.",
       "en": "Navmesh {percent} percent.",
-      "ko": "길 정보 {percent} 퍼센트."
+      "ko": "길 정보 {percent}%."
     },
     {
       "de": "Wegenetz-Aufbau abgebrochen.",
@@ -4421,7 +4421,7 @@
     {
       "de": "Wegpunkt",
       "en": "waypoint",
-      "ko": "경로 지점"
+      "ko": "경유지"
     },
     {
       "de": "Wegpunkt- und Ankunftston",
@@ -4436,12 +4436,12 @@
     {
       "de": "Wegpunkte: {count} im Gebiet, davon {exits} Übergänge.",
       "en": "Waypoints: {count} in this area, {exits} of them exits.",
-      "ko": "경유지: {count}곳, 다른 지역으로 넘어가는 통로 {exits}곳."
+      "ko": "경유지: 이 지역에 {count}곳, 그중 지역 이동 {exits}곳."
     },
     {
       "de": "Wegpunkte: {count} im Gebiet.",
       "en": "Waypoints: {count} in this area.",
-      "ko": "경유지: {count}곳."
+      "ko": "경유지: 이 지역에 {count}곳."
     },
     {
       "de": "Weich",
@@ -4511,7 +4511,7 @@
     {
       "de": "Zauberbuch der Blaumagie, Reiter {tab} von {tabCount}.",
       "en": "Blue magic spellbook, tab {tab} of {tabCount}.",
-      "ko": "청마도서, 탭 {tabCount}개 중 {tab}번째."
+      "ko": "청마도서, 탭 {tab}, 전체 {tabCount}."
     },
     {
       "de": "Zauberfeld {position}.",
@@ -4526,7 +4526,7 @@
     {
       "de": "Zeit {FormatBuddyClock(currentSec)} von {FormatBuddyClock(maxSec)}",
       "en": "Time {FormatBuddyClock(currentSec)} of {FormatBuddyClock(maxSec)}",
-      "ko": "시간 {FormatBuddyClock(maxSec)} 중 {FormatBuddyClock(currentSec)}"
+      "ko": "시간 {FormatBuddyClock(currentSec)}, 최대 {FormatBuddyClock(maxSec)}"
     },
     {
       "de": "Ziegelrot",
@@ -4541,7 +4541,7 @@
     {
       "de": "Ziel HP: {Percent(cur, max)} Prozent.",
       "en": "Target HP: {Percent(cur, max)} percent.",
-      "ko": "대상 HP: {Percent(cur, max)} 퍼센트."
+      "ko": "대상 HP: {Percent(cur, max)}%."
     },
     {
       "de": "Ziel erreicht: {name}.",
@@ -4551,7 +4551,7 @@
     {
       "de": "Ziel unbekannt",
       "en": "target unknown",
-      "ko": "목적지 모름"
+      "ko": "목적지 알 수 없음"
     },
     {
       "de": "Ziel weit entfernt, führe in Etappen.",
@@ -4571,7 +4571,7 @@
     {
       "de": "Ziel-Leiste {bar}, {filled} von {total} belegt{(anyKey ? \"\" : \", keine Tasten zugewiesen\")}.",
       "en": "Target bar {bar}, {filled} of {total} filled{(anyKey ? \"\" : \", no keys assigned\")}.",
-      "ko": "{bar}번 대상 단축바, {total} 중 {filled}칸 채워짐{(anyKey ? \"\" : \", 키 없음\")}."
+      "ko": "{bar}번 대상 단축바, {filled}칸 채워짐, 전체 {total}칸{(anyKey ? \"\" : \", 키 없음\")}."
     },
     {
       "de": "Ziel-{slotLabel}: {current}",
@@ -4661,7 +4661,7 @@
     {
       "de": "Zustand {percent} Prozent",
       "en": "condition {percent} percent",
-      "ko": "내구도 {percent} 퍼센트"
+      "ko": "내구도 {percent}%"
     },
     {
       "de": "Zustand: {condition}.",
@@ -4976,7 +4976,7 @@
     {
       "de": "helles Aschgrau",
       "en": "pale ashen",
-      "ko": "옅은 잿빛"
+      "ko": "밝은 잿빛"
     },
     {
       "de": "helles Beige",
@@ -4986,17 +4986,17 @@
     {
       "de": "helles Blaugrau",
       "en": "pale blue grey",
-      "ko": "옅은 청회색"
+      "ko": "밝은 청회색"
     },
     {
       "de": "helles Rosé",
       "en": "pale rose",
-      "ko": "옅은 장밋빛"
+      "ko": "밝은 장밋빛"
     },
     {
       "de": "helles Seegrün",
       "en": "pale sea green",
-      "ko": "옅은 바다 초록"
+      "ko": "밝은 바다 초록"
     },
     {
       "de": "hellgrau",
@@ -5076,7 +5076,7 @@
     {
       "de": "kein Fundort in der Welt, Belohnung aus dem Maskierten Karneval oder Startzauber.",
       "en": "no location in the world; a Masked Carnivale reward or the starting spell.",
-      "ko": "세계에 위치 없음. Masked Carnivale 보상이거나 처음부터 체득하는 기술."
+      "ko": "필드에 출현 지역 없음. Masked Carnivale 보상이거나 처음부터 체득하는 기술."
     },
     {
       "de": "kein Laufweg dorthin.",
@@ -5401,7 +5401,7 @@
     {
       "de": "sehr helles Grau",
       "en": "off white",
-      "ko": "흰빛 회색"
+      "ko": "아주 밝은 회색"
     },
     {
       "de": "silber",
@@ -5451,7 +5451,7 @@
     {
       "de": "unverändert",
       "en": "unmodified",
-      "ko": "기본값"
+      "ko": "기본형"
     },
     {
       "de": "veraltet",
@@ -5506,7 +5506,7 @@
     {
       "de": "{(int)MathF.Round(volume * 100)} Prozent",
       "en": "{(int)MathF.Round(volume * 100)} percent",
-      "ko": "{(int)MathF.Round(volume * 100)} 퍼센트"
+      "ko": "{(int)MathF.Round(volume * 100)}%"
     },
     {
       "de": "{ObjectKindName(kind)} ohne Namen",
@@ -5561,7 +5561,7 @@
     {
       "de": "{confirm} oder {cancel}? Links und rechts wechseln, Enter wählt aus.",
       "en": "{confirm} or {cancel}? Left and right to switch, Enter to select.",
-      "ko": "{confirm} 또는 {cancel}? 좌우 화살표는 선택, 엔터는 확정."
+      "ko": "{confirm} 또는 {cancel}? 좌우 화살표는 전환, 엔터는 선택."
     },
     {
       "de": "{conflictCount} Tastenkonflikte.",
@@ -5586,7 +5586,7 @@
     {
       "de": "{count} Spuren in diesem Gebiet.",
       "en": "{count} trails in this area.",
-      "ko": "발자취 {count}개."
+      "ko": "이 지역에 발자취 {count}개."
     },
     {
       "de": "{count} Verlosungen. {joined}",
@@ -5641,7 +5641,7 @@
     {
       "de": "{group}, {index} von {count}",
       "en": "{group}, {index} of {count}",
-      "ko": "{group}, {count} 중 {index}"
+      "ko": "{group}, {index}, 전체 {count}"
     },
     {
       "de": "{heading}, {count} {(count == 1 ? \"Einstellung\" : \"Einstellungen\")}",
@@ -5686,22 +5686,22 @@
     {
       "de": "{item}, {index} von {count}",
       "en": "{item}, {index} of {count}",
-      "ko": "{item}, {count} 중 {index}"
+      "ko": "{item}, {index}, 전체 {count}"
     },
     {
       "de": "{label} abgelegt auf Platz {index}.",
       "en": "{label} dropped at position {index}.",
-      "ko": "{label} 놓음, {index}번 자리."
+      "ko": "{index}번 자리에 {label} 놓음."
     },
     {
       "de": "{label} aufgenommen, {index} von {count}.",
       "en": "{label} picked up, {index} of {count}.",
-      "ko": "{label} 이동 시작, {count} 중 {index}."
+      "ko": "{label} 이동 시작, {index}, 전체 {count}."
     },
     {
       "de": "{label} bleibt auf {index} von {count}.",
       "en": "{label} stays at {index} of {count}.",
-      "ko": "{label} 그대로, {count} 중 {index}."
+      "ko": "{label} 그대로, {index}, 전체 {count}."
     },
     {
       "de": "{label} {number}, {(on ? \"an\" : \"aus\")}",
@@ -5741,7 +5741,7 @@
     {
       "de": "{label}, Registerkarte {index} von {total}",
       "en": "{label}, tab {index} of {total}",
-      "ko": "{label}, 탭 {total} 중 {index}"
+      "ko": "{label}, 탭 {index}, 전체 {total}"
     },
     {
       "de": "{label}, Regler, {value}, von {min} bis {max}.",
@@ -5751,7 +5751,7 @@
     {
       "de": "{label}, Tab {index} von {count}",
       "en": "{label}, tab {index} of {count}",
-      "ko": "{label}, 탭 {count} 중 {index}"
+      "ko": "{label}, 탭 {index}, 전체 {count}"
     },
     {
       "de": "{label}, Taste {string.Join(\", \", keys)}",
@@ -5761,7 +5761,7 @@
     {
       "de": "{label}, jetzt {index} von {count}.",
       "en": "{label}, now {index} of {count}.",
-      "ko": "{label}, 지금 {count} 중 {index}."
+      "ko": "{label}, 지금 {index}, 전체 {count}."
     },
     {
       "de": "{label}, keine Taste",
@@ -5781,27 +5781,27 @@
     {
       "de": "{label}, {value} %",
       "en": "{label}, {value}%",
-      "ko": "{label}, {value} 퍼센트"
+      "ko": "{label}, {value}%"
     },
     {
       "de": "{label}, {value} von 100",
       "en": "{label}, {value} of 100",
-      "ko": "{label}, 100 중 {value}"
+      "ko": "{label}, {value}, 최대 100"
     },
     {
       "de": "{label}, {value} von 100, {low} bis {high}",
       "en": "{label}, {value} of 100, {low} to {high}",
-      "ko": "{label}, 100 중 {value}, {low}부터 {high}까지"
+      "ko": "{label}, {value}, 최대 100, {low}부터 {high}까지"
     },
     {
       "de": "{label}, {value}, {index} von {count}",
       "en": "{label}, {value}, {index} of {count}",
-      "ko": "{label}, {value}, {count} 중 {index}"
+      "ko": "{label}, {value}, {index}, 전체 {count}"
     },
     {
       "de": "{label}: {count} in der Nähe.",
       "en": "{label}: {count} nearby.",
-      "ko": "{label}: {count}."
+      "ko": "{label}: 근처에 {count}."
     },
     {
       "de": "{label}: {here} im Gebiet, {away} in anderen Gebieten.",
@@ -5811,7 +5811,7 @@
     {
       "de": "{label}: {here} im Gebiet.",
       "en": "{label}: {here} in this area.",
-      "ko": "{label}: {here}."
+      "ko": "{label}: 이 지역에 {here}."
     },
     {
       "de": "{lane}, {digits}, Summe {sum}, {mgp} MGP, {state}",
@@ -5861,12 +5861,12 @@
     {
       "de": "{monster}, {killed} von {required} erlegt",
       "en": "{monster}, {killed} of {required} killed",
-      "ko": "{monster}, {required} 중 {killed} 처치"
+      "ko": "{monster}, 처치 {killed}, 필요 {required}"
     },
     {
       "de": "{name} auf {(int)MathF.Round(volume * 100)} Prozent.",
       "en": "{name} at {(int)MathF.Round(volume * 100)} percent.",
-      "ko": "{name} {(int)MathF.Round(volume * 100)} 퍼센트로 변경됨."
+      "ko": "{name} {(int)MathF.Round(volume * 100)}%로 변경됨."
     },
     {
       "de": "{name} aus.",
@@ -5881,7 +5881,7 @@
     {
       "de": "{name} bereit, {charges} von {maxCharges} Ladungen.",
       "en": "{name} ready, {charges} of {maxCharges} charges.",
-      "ko": "{name} 준비됨, 충전 {maxCharges}회 중 {charges}회."
+      "ko": "{name} 준비됨, 충전 {charges}회, 최대 {maxCharges}회."
     },
     {
       "de": "{name} bereit.",
@@ -5891,7 +5891,7 @@
     {
       "de": "{name} bleibt an - es ist die letzte eingeschaltete Kategorie.",
       "en": "{name} stays on - it is the last category left switched on.",
-      "ko": "{name} 켜짐 유지. 마지막으로 켜져 있는 분류임."
+      "ko": "{name} 켜짐 유지. 켜진 분류가 하나뿐임."
     },
     {
       "de": "{name} gemeldet in {zone}. Menü und Laufen brauchen ihn hier geladen.",
@@ -5966,7 +5966,7 @@
     {
       "de": "{name}, Stufe {level}, {(preparing ? \"startet gleich\" : $\"{progress} Prozent\")}",
       "en": "{name}, level {level}, {(preparing ? \"starting soon\" : $\"{progress} percent\")}",
-      "ko": "{name}, 레벨 {level}, {(preparing ? \"곧 시작\" : $\"{progress} 퍼센트\")}"
+      "ko": "{name}, 레벨 {level}, {(preparing ? \"곧 시작\" : $\"{progress}%\")}"
     },
     {
       "de": "{name}, Stufe {level}, {distance:F0} Meter {compass}",
@@ -5981,7 +5981,7 @@
     {
       "de": "{name}, Stufe {level}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
       "en": "{name}, level {level}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
-      "ko": "{name}, 레벨 {level}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+      "ko": "{name}, 레벨 {level}{(location != null ? $\", {location}에 있음\" : \"\")}, {index}, 전체 {count}"
     },
     {
       "de": "{name}, aus",
@@ -5991,7 +5991,7 @@
     {
       "de": "{name}, {(int)MathF.Round(volume * 100)} Prozent",
       "en": "{name}, {(int)MathF.Round(volume * 100)} percent",
-      "ko": "{name}, {(int)MathF.Round(volume * 100)} 퍼센트"
+      "ko": "{name}, {(int)MathF.Round(volume * 100)}%"
     },
     {
       "de": "{name}, {(on ? \"an\" : \"aus\")}",
@@ -6011,7 +6011,7 @@
     {
       "de": "{name}, {quantity} Stück{(castTime > 0 ? $\", Wirkzeit {castTime} Sekunden\" : \"\")}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
       "en": "{name}, {quantity}{(castTime > 0 ? $\", cast time {castTime} seconds\" : \"\")}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
-      "ko": "{name}, {quantity}{(castTime > 0 ? $\", 시전 시간 {castTime}초\" : \"\")}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+      "ko": "{name}, {quantity}개{(castTime > 0 ? $\", 시전 시간 {castTime}초\" : \"\")}{(location != null ? $\", {location}에 있음\" : \"\")}, {index}, 전체 {count}"
     },
     {
       "de": "{name}, {value}",
@@ -6031,7 +6031,7 @@
     {
       "de": "{name}{(command.Length > 0 ? $\", Befehl {command}\" : \"\")}, {index} von {count}",
       "en": "{name}{(command.Length > 0 ? $\", command {command}\" : \"\")}, {index} of {count}",
-      "ko": "{name}{(command.Length > 0 ? $\", 명령어 {command}\" : \"\")}, {count} 중 {index}"
+      "ko": "{name}{(command.Length > 0 ? $\", 명령어 {command}\" : \"\")}, {index}, 전체 {count}"
     },
     {
       "de": "{name}{(count > 1 ? $\" mal {count}\" : \"\")}, {options}{(ownRoll.Length > 0 ? $\", {ownRoll}\" : \"\")}",
@@ -6041,17 +6041,17 @@
     {
       "de": "{name}{(isHq ? HighQuality : \"\")}, {quantity} Stück{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
       "en": "{name}{(isHq ? HighQuality : \"\")}, {quantity}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
-      "ko": "{name}{(isHq ? HighQuality : \"\")}, {quantity}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+      "ko": "{name}{(isHq ? HighQuality : \"\")}, {quantity}개{(location != null ? $\", {location}에 있음\" : \"\")}, {index}, 전체 {count}"
     },
     {
       "de": "{name}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
       "en": "{name}{(location != null ? $\", on {location}\" : \"\")}, {index} of {count}",
-      "ko": "{name}{(location != null ? $\", {location}에 있음\" : \"\")}, {count} 중 {index}"
+      "ko": "{name}{(location != null ? $\", {location}에 있음\" : \"\")}, {index}, 전체 {count}"
     },
     {
       "de": "{number} von {total}",
       "en": "{number} of {total}",
-      "ko": "{total}개 중 {number}번"
+      "ko": "{number}번, 전체 {total}개"
     },
     {
       "de": "{number}: {name}, {MetersRemaining(length)}, {(bothWays ? \"in beide Richtungen\" : \"nur in Laufrichtung\")}.",
@@ -6061,7 +6061,7 @@
     {
       "de": "{n} Materia-Slots",
       "en": "{n} materia slots",
-      "ko": "마테리아 {n}칸"
+      "ko": "마테리아 홈 {n}개"
     },
     {
       "de": "{n} gesperrt",
@@ -6081,7 +6081,7 @@
     {
       "de": "{option}, {index} von {count}{(selected ? \", ausgewählt\" : \"\")}",
       "en": "{option}, {index} of {count}{(selected ? \", selected\" : \"\")}",
-      "ko": "{option}, {count} 중 {index}{(selected ? \", 선택됨\" : \"\")}"
+      "ko": "{option}, {index}, 전체 {count}{(selected ? \", 선택됨\" : \"\")}"
     },
     {
       "de": "{owner}: derzeit {now}, danach {after}.",
@@ -6116,7 +6116,7 @@
     {
       "de": "{row}, {index} von {total}",
       "en": "{row}, {index} of {total}",
-      "ko": "{row}, {total} 중 {index}"
+      "ko": "{row}, {index}, 전체 {total}"
     },
     {
       "de": "{selection}, {count} Einträge",
@@ -6126,7 +6126,7 @@
     {
       "de": "{shape} um dich, {meters} Meter",
       "en": "{shape} on you, {meters} meters",
-      "ko": "내 자리에 {shape}, {meters}미터"
+      "ko": "내 주위에 {shape}, {meters}미터"
     },
     {
       "de": "{shape}, {meters} Meter",
@@ -6141,7 +6141,7 @@
     {
       "de": "{slotLabel}, {current}, {index} von {count}",
       "en": "{slotLabel}, {current}, {index} of {count}",
-      "ko": "{slotLabel}, {current}, {count} 중 {index}"
+      "ko": "{slotLabel}, {current}, {index}, 전체 {count}"
     },
     {
       "de": "{slot}: {action}",
@@ -6241,7 +6241,7 @@
     {
       "de": "Ätheryten: {count} im Gebiet.",
       "en": "Aetherytes: {count} in this area.",
-      "ko": "에테라이트: {count}곳."
+      "ko": "에테라이트: 이 지역에 {count}곳."
     },
     {
       "de": "Übergang",
@@ -6256,7 +6256,7 @@
     {
       "de": "Übergang nach {name}",
       "en": "Transition to {name}",
-      "ko": "{name} 방향 통로"
+      "ko": "{name} 방향 지역 이동"
     },
     {
       "de": "Übergang zu {target}",

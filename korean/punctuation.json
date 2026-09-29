@@ -36,30 +36,12 @@
       "when": "2026-09-13"
     },
     {
-      "de": "Gegner wirkt {action} auf dich.",
-      "kind": "보류",
-      "faults": [
-        "쉼표"
-      ],
-      "why": "쉼표를 지우면 '적 나에게'가 붙어 읽힌다",
-      "when": "2026-09-13"
-    },
-    {
       "de": "Hier kann nicht geflogen werden. In Städten, Dungeons und Innenräumen gibt es keine Flugstrecken.",
       "kind": "나열",
       "faults": [
         "쉼표"
       ],
       "why": "und가 세 항목 나열의 마지막을 잇는다",
-      "when": "2026-09-13"
-    },
-    {
-      "de": "Ich komme nicht weiter, {blocker} steht im Weg. Noch {MetersRemaining(distance)}. Auto-Lauf beendet.",
-      "kind": "보류",
-      "faults": [
-        "마침표"
-      ],
-      "why": "원문의 두 문장을 합쳤는데 가르려면 연결어미 '남기고'를 종결형으로 바꿔야 한다",
       "when": "2026-09-13"
     },
     {
@@ -72,22 +54,13 @@
       "when": "2026-09-13"
     },
     {
-      "de": "{label} abgelegt auf Platz {index}.",
-      "kind": "보류",
-      "faults": [
-        "쉼표"
-      ],
-      "why": "쉼표를 지우면 '놓음 {index}번 자리'가 붙어 읽힌다",
-      "when": "2026-09-13"
-    },
-    {
       "de": "{label} bleibt auf {index} von {count}.",
-      "kind": "보류",
+      "kind": "형식",
       "faults": [
         "쉼표"
       ],
-      "why": "쉼표를 지우면 '그대로 {count} 중'이 붙어 읽힌다",
-      "when": "2026-09-13"
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
     },
     {
       "de": "{name} nicht gefunden — nicht geladen und nicht in Freunde, Gruppe oder FG.",
@@ -97,6 +70,384 @@
       ],
       "why": "oder가 나열 세 항목의 마지막을 잇는다. 한국어는 쉼표로 잇는다",
       "when": "2026-09-20"
+    },
+    {
+      "de": " Seite {current} von {total}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": ", {current} von {needed}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Belastbarkeit {current} von {max}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Besser in {changed} von {total}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Gesellschaft {oneBased} von {total}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "HP {hp} von {hpMax}, MP {Percent(mp, mpMax)} Prozent.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "HP {hp} von {hpMax}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "HP: {cur} von {max}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Handkarte {index} von {count}, {sides}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Jetzt herstellbar: {count} von {total} Rezepten",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "LP {current} von {max}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von {maxDurability}, Schritt {step}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von {maxDurability}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Rang {rank}, {done} von {total} Einträgen erledigt",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Rangstufe {index} von {count}{range}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Reiter {index} von {count}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Schlechter in {changed} von {total}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Suchpunkt {index} von {count}, {distance}, {direction}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Suchpunkt {index} von {count}, {spotName}, {distance}, {direction}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Zauberbuch der Blaumagie, Reiter {tab} von {tabCount}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Zeit {FormatBuddyClock(currentSec)} von {FormatBuddyClock(maxSec)}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "Ziel-Leiste {bar}, {filled} von {total} belegt{(anyKey ? \"\" : \", keine Tasten zugewiesen\")}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{group}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{item}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{label} aufgenommen, {index} von {count}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{label}, Registerkarte {index} von {total}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{label}, Tab {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{label}, jetzt {index} von {count}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{label}, {value} von 100",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{label}, {value} von 100, {low} bis {high}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{label}, {value}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{monster}, {killed} von {required} erlegt",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{name} bereit, {charges} von {maxCharges} Ladungen.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{name}, Stufe {level}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{name}, {quantity} Stück{(castTime > 0 ? $\", Wirkzeit {castTime} Sekunden\" : \"\")}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{name}{(command.Length > 0 ? $\", Befehl {command}\" : \"\")}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{name}{(isHq ? HighQuality : \"\")}, {quantity} Stück{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{name}{(location != null ? $\", liegt auf {location}\" : \"\")}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{number} von {total}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{option}, {index} von {count}{(selected ? \", ausgewählt\" : \"\")}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{row}, {index} von {total}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
+    },
+    {
+      "de": "{slotLabel}, {current}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
+      "when": "2026-09-29"
     }
   ]
 }
