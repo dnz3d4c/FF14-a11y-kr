@@ -556,7 +556,7 @@
     {
       "de": "Angelplätze: {count} im Gebiet.",
       "en": "Fishing spots: {count} in this area.",
-      "ko": "낚시터: 이 지역에 {count}곳."
+      "ko": "낚시터: 이 지역 {count}곳."
     },
     {
       "de": "Angezielt.",
@@ -856,7 +856,7 @@
     {
       "de": "Bestien: {total} fehlen, {here} in diesem Gebiet.",
       "en": "Beasts: {total} missing, {here} in this area.",
-      "ko": "마수: {total}종 미계약, 이 지역에 {here}종."
+      "ko": "마수: {total}종 미계약, 이 지역 {here}종."
     },
     {
       "de": "Bestätigen nimmt eine Zeile auf, hoch und runter verschiebt sie, Bestätigen legt sie wieder ab.",
@@ -921,7 +921,7 @@
     {
       "de": "Blaumagie: {total} Zauber fehlen, {here} in diesem Gebiet.",
       "en": "Blue magic: {total} spells missing, {here} in this area.",
-      "ko": "청마법: 기술 {total}개 미체득, 이 지역에 {here}개."
+      "ko": "청마법: 기술 {total}개 미체득, 이 지역 {here}개."
     },
     {
       "de": "Bodenmessung fertig. {hits} Treffer, davon {withoutMesh} ohne Wegenetz.",
@@ -1471,7 +1471,7 @@
     {
       "de": "Events: {total} Gebiete, {here} hier.",
       "en": "Events: {total} zones, {here} here.",
-      "ko": "이벤트: {total}개 지역, 이 지역에 {here}개."
+      "ko": "이벤트: {total}개 지역, 이 지역 {here}개."
     },
     {
       "de": "FATEs",
@@ -2216,7 +2216,7 @@
     {
       "de": "Im Beutel {value}",
       "en": "In bag {value}",
-      "ko": "소지품에 {value}"
+      "ko": "소지품 {value}"
     },
     {
       "de": "In der Nähe: {joined}",
@@ -2286,7 +2286,7 @@
     {
       "de": "Jagdziele, Rang {rank}: {total} offen, {here} in diesem Gebiet.",
       "en": "Hunting targets, rank {rank}: {total} open, {here} in this area.",
-      "ko": "토벌 대상, {rank}단계: {total}종 남음, 이 지역에 {here}종."
+      "ko": "토벌 대상, {rank}단계: {total}종 남음, 이 지역 {here}종."
     },
     {
       "de": "Japanisch",
@@ -2871,7 +2871,7 @@
     {
       "de": "Kristall, {needed} benötigt, {owned} im Beutel",
       "en": "Crystal, {needed} needed, {owned} in bag",
-      "ko": "크리스탈, {needed}개 필요, 소지품에 {owned}개"
+      "ko": "크리스탈, {needed}개 필요, 소지품 {owned}개"
     },
     {
       "de": "Kristalle, {count} Sorten: {joined}",
@@ -3491,17 +3491,17 @@
     {
       "de": "Quest-Objekte: {objects} Objekte, {triggers} Auslöser in der Nähe.",
       "en": "Quest objects: {objects} objects, {triggers} triggers nearby.",
-      "ko": "퀘스트 사물: 주변에 사물 {objects}개, 발동 지점 {triggers}개."
+      "ko": "퀘스트 사물: 주변 사물 {objects}개, 발동 지점 {triggers}개."
     },
     {
       "de": "Quest-Objekte: {objects} in der Nähe.",
       "en": "Quest objects: {objects} nearby.",
-      "ko": "퀘스트 사물: 주변에 {objects}개."
+      "ko": "퀘스트 사물: 주변 {objects}개."
     },
     {
       "de": "Quest-Objekte: {triggers} Auslöser in der Nähe.",
       "en": "Quest objects: {triggers} triggers nearby.",
-      "ko": "퀘스트 사물: 주변에 발동 지점 {triggers}개."
+      "ko": "퀘스트 사물: 주변 발동 지점 {triggers}개."
     },
     {
       "de": "Quest-Ziel",
@@ -4436,12 +4436,12 @@
     {
       "de": "Wegpunkte: {count} im Gebiet, davon {exits} Übergänge.",
       "en": "Waypoints: {count} in this area, {exits} of them exits.",
-      "ko": "경유지: 이 지역에 {count}곳, 그중 지역 이동 {exits}곳."
+      "ko": "경유지: 이 지역 {count}곳, 지역 이동 {exits}곳 포함."
     },
     {
       "de": "Wegpunkte: {count} im Gebiet.",
       "en": "Waypoints: {count} in this area.",
-      "ko": "경유지: 이 지역에 {count}곳."
+      "ko": "경유지: 이 지역 {count}곳."
     },
     {
       "de": "Weich",
@@ -5586,7 +5586,7 @@
     {
       "de": "{count} Spuren in diesem Gebiet.",
       "en": "{count} trails in this area.",
-      "ko": "이 지역에 발자취 {count}개."
+      "ko": "이 지역 발자취 {count}개."
     },
     {
       "de": "{count} Verlosungen. {joined}",
@@ -5676,7 +5676,7 @@
     {
       "de": "{here} in diesem Gebiet.",
       "en": "{here} in this area.",
-      "ko": "이 지역에 {here}개."
+      "ko": "이 지역 {here}개."
     },
     {
       "de": "{items.Count} passende Gegenstände: {string.Join(\", \", items)}. Auswählen und dann Übergeben drücken.",
@@ -5736,7 +5736,7 @@
     {
       "de": "{label}, Rang {rank}: {total} offen, {here} in diesem Gebiet.",
       "en": "{label}, rank {rank}: {total} open, {here} in this area.",
-      "ko": "{label}, {rank}단계: {total}개 남음, 이 지역에 {here}개."
+      "ko": "{label}, {rank}단계: {total}개 남음, 이 지역 {here}개."
     },
     {
       "de": "{label}, Registerkarte {index} von {total}",
@@ -5801,7 +5801,7 @@
     {
       "de": "{label}: {count} in der Nähe.",
       "en": "{label}: {count} nearby.",
-      "ko": "{label}: 근처에 {count}."
+      "ko": "{label}: 근처 {count}."
     },
     {
       "de": "{label}: {here} im Gebiet, {away} in anderen Gebieten.",
@@ -5811,7 +5811,7 @@
     {
       "de": "{label}: {here} im Gebiet.",
       "en": "{label}: {here} in this area.",
-      "ko": "{label}: 이 지역에 {here}."
+      "ko": "{label}: 이 지역 {here}."
     },
     {
       "de": "{lane}, {digits}, Summe {sum}, {mgp} MGP, {state}",
@@ -6241,7 +6241,7 @@
     {
       "de": "Ätheryten: {count} im Gebiet.",
       "en": "Aetherytes: {count} in this area.",
-      "ko": "에테라이트: 이 지역에 {count}곳."
+      "ko": "에테라이트: 이 지역 {count}곳."
     },
     {
       "de": "Übergang",
