@@ -808,6 +808,24 @@
         "        if (KrProfile.DalamudInstalled)",
         "            return true;"
       ]
+    },
+    {
+      "name": "notices-hm-voice-korean",
+      "file": "THIRD-PARTY-NOTICES.md",
+      "why": "한국어판은 힐 모니터 음성 122개를 Yuna 합성으로 갈아 끼운다(replace/). 원본 고지는 음성이 바이트까지 Sku의 것이라고 적는데, 그대로 두면 배포물의 고지가 사실과 다르다. 음높이 사다리와 파일 이름은 Sku의 것 그대로라 그 절의 나머지는 둔다.",
+      "find": [
+        "Renamed only, never re-encoded: Sku's `jus_<number>_100_<pitch>.mp3` became",
+        "`<number>_<pitch>.mp3`, and `jus_dead_100_0` / `jus_full_100_0` became",
+        "`dead.mp3` / `full.mp3`. The audio itself is byte-for-byte Sku's."
+      ],
+      "replace": [
+        "Korean edition: these 122 files are NOT Sku's recordings. They were replaced",
+        "with Korean words (il, i, sam, sa, o, yuk, chil, pal, jeontubulneung, gadeuk)",
+        "synthesised with the Windows voice \"Yuna\" (Nuance Communications) and",
+        "pitch-shifted with Rubber Band (transients crisp, formants preserved, short",
+        "window). Sku's pitch ladder and file names are kept; the audio is not Sku's.",
+        "The generator is `tools/hm-voice/hm_voice.py` in the Korean edition repository."
+      ]
     }
   ]
 }
