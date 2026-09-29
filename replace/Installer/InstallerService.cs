@@ -2200,6 +2200,35 @@ public sealed partial class InstallerService
             var dest = Path.Combine(targetDir, Path.GetFileName(file));
             File.Copy(file, dest, overwrite: true);
         }
+
+        DeployAssetTree(extractDir, targetDir);
+    }
+
+    /// <summary>
+    /// Copies <c>assets/</c> with its folder structure kept. The heal monitor
+    /// opens its voice clips from <c>assets\partymonitor</c> next to the DLL;
+    /// flattening them (or skipping them, as the root-only copy above does)
+    /// leaves the monitor silent for good - it does not retry a failed load.
+    /// <c>runtimes/</c> stays out on purpose: it only holds a duplicate of
+    /// System.Speech.dll that the build already placed at the root.
+    /// </summary>
+    private static void DeployAssetTree(string extractDir, string targetDir)
+    {
+        var source = Path.Combine(extractDir, "assets");
+        if (!Directory.Exists(source)) return;
+
+        var root = Path.GetFullPath(targetDir).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+        foreach (var file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
+        {
+            var relative = Path.GetRelativePath(extractDir, file);
+            var dest = Path.GetFullPath(Path.Combine(targetDir, relative));
+            // The archive is foreign input. Nothing may land outside the plugin folder.
+            if (!dest.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException($"Archive entry escapes the plugin folder: {relative}");
+
+            Directory.CreateDirectory(Path.GetDirectoryName(dest)!);
+            File.Copy(file, dest, overwrite: true);
+        }
     }
 
     // ── Versions-/Sonstige Helfer ──────────────────────────────────────────
