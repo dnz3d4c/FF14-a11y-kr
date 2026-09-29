@@ -1,13 +1,16 @@
 """힐 모니터가 말하는 숫자와 상태 낱말을 한국어로 만들어 `replace/`에 둔다.
 
-원본 음성 122개는 WoW 애드온 Sku의 영어 녹음이다. 한국어판은 윈도 음성 "Yuna"로 낱말을
-합성하고 rubberband로 음높이를 옮긴다. 원본 작성자가 기각한 조합(옛 영어 SAPI 음성 +
+원본 음성 122개는 WoW 애드온 Sku의 영어 녹음이다. 한국어판은 "Vocalizer Expressive Yuna"로
+낱말을 합성하고 rubberband로 음높이를 옮긴다. 원본 작성자가 기각한 조합(옛 영어 SAPI 음성 +
 위상 보코더)은 자음이 뭉개졌는데, rubberband의 과도음 처리(crisp)와 포먼트 보존과
 짧은 분석 창을 쓰면 사용자 귀 판정에서 통과했다(2026-09-29).
 
-**짧은 창이 필수다.** 낱말이 0.1초 남짓이라 기본 창은 0.65배를 0.83배까지만 내린다.
+**짧은 창이 필수다.** 옛 Yuna는 낱말이 0.1초 남짓이라 기본 창이 0.65배를 0.83배까지만 내렸다.
 
-Yuna가 깔린 머신에서만 돈다. 산출물 mp3는 커밋되므로 조립과 CI는 이 도구를 안 부른다.
+2026-09-30에 소리가 작다는 판정으로 옛 Nuance "Yuna"(낱말 0.03~0.14초)에서 지금 음성
+(0.2~0.3초, 영어 원본과 비슷)으로 옮겼다.
+
+그 음성이 깔린 머신에서만 돈다. 산출물 mp3는 커밋되므로 조립과 CI는 이 도구를 안 부른다.
 
     uv run python tools/hm-voice/hm_voice.py
 """
@@ -29,7 +32,7 @@ REPO = Path(__file__).resolve().parents[2]
 ASSET_DIR = "FF14Accessibility/assets/partymonitor"
 BASELINE = REPO / "replace" / "upstream-baseline.json"
 
-VOICE = "Yuna"
+VOICE = "Vocalizer Expressive Yuna Harpo 22kHz"
 WORDS = {
     "1": "일",
     "2": "이",
@@ -92,18 +95,34 @@ def _run(args: list[str]) -> str:
     return done.stdout + done.stderr
 
 
-def _synthesize(work: Path) -> None:
+def synth_script(work: Path) -> str:
+    """낱말마다 wav 하나를 녹음하는 PowerShell 스크립트.
+
+    System.Speech의 SelectVoice는 이 음성을 "설치되지 않음"으로 거부해서 SAPI COM을 쓴다.
+    COM은 이름이 안 맞으면 기본 음성으로 조용히 녹음하므로 선택을 확인하고 멈춘다.
+    """
     lines = [
-        "Add-Type -AssemblyName System.Speech",
-        "$s = New-Object System.Speech.Synthesis.SpeechSynthesizer",
-        f"$s.SelectVoice('{VOICE}')",
+        "$v = New-Object -ComObject SAPI.SpVoice",
+        "foreach ($t in $v.GetVoices()) {",
+        f"  if ($t.GetAttribute('Name') -eq '{VOICE}') {{ $v.Voice = $t }}",
+        "}",
+        f"if ($v.Voice.GetAttribute('Name') -ne '{VOICE}') {{ exit 3 }}",
     ]
     for key, text in WORDS.items():
-        lines.append(f"$s.SetOutputToWaveFile('{work / f'raw_{key}.wav'}'); $s.Speak('{text}')")
-    lines.append("$s.Dispose()")
+        lines += [
+            "$st = New-Object -ComObject SAPI.SpFileStream",
+            # 22 = SAFT22kHz16BitMono
+            "$fmt = New-Object -ComObject SAPI.SpAudioFormat; $fmt.Type = 22; $st.Format = $fmt",
+            f"$st.Open('{work / f'raw_{key}.wav'}', 3, $false); $v.AudioOutputStream = $st",
+            f"$v.Speak('{text}') | Out-Null; $st.Close()",
+        ]
+    return "\n".join(lines)
+
+
+def _synthesize(work: Path) -> None:
     script = work / "synth.ps1"
     # Windows PowerShell 5는 BOM 없는 UTF-8을 ANSI로 읽어 한글이 깨진다.
-    script.write_text("\n".join(lines), encoding="utf-8-sig")
+    script.write_text(synth_script(work), encoding="utf-8-sig")
     _run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(script)])
 
 

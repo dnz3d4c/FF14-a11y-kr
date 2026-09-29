@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from hm_voice import WORDS, gain_db, plan, with_baseline
+from hm_voice import VOICE, WORDS, gain_db, plan, synth_script, with_baseline
 
 
 def test_the_plan_covers_every_file_the_bank_loads() -> None:
@@ -57,3 +57,29 @@ def test_baseline_keeps_other_entries_and_adds_the_audio() -> None:
     }
     # 입력은 건드리지 않는다.
     assert recorded["files"] == {"FF14Accessibility/Loc.cs": "aa"}
+
+
+def test_synthesis_uses_sapi_com_with_the_vocalizer_voice(tmp_path) -> None:
+    # System.Speech의 SelectVoice는 Vocalizer Yuna를 "설치되지 않음"으로 거부한다.
+    script = synth_script(tmp_path)
+
+    assert "SAPI.SpVoice" in script
+    assert "System.Speech" not in script
+    assert f"-eq '{VOICE}'" in script
+    assert VOICE == "Vocalizer Expressive Yuna Harpo 22kHz"
+
+
+def test_synthesis_stops_when_the_voice_is_not_selected(tmp_path) -> None:
+    # 선택에 실패하면 SAPI는 기본 음성으로 조용히 녹음한다(2026-09-29 진단 파일이 그랬다).
+    script = synth_script(tmp_path)
+
+    guard = script.index("exit 3")
+    assert guard < script.index("Speak(")
+
+
+def test_synthesis_writes_one_wave_per_word(tmp_path) -> None:
+    script = synth_script(tmp_path)
+
+    for key, text in WORDS.items():
+        assert str(tmp_path / f"raw_{key}.wav") in script
+        assert f"Speak('{text}')" in script

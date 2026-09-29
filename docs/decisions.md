@@ -308,7 +308,7 @@ git -C upstream show <태그>:FF14Accessibility/Plugin.cs | grep -c 'Ã'
 
 ## D-19 힐 모니터 숫자 음성을 한국어 합성으로 갈아 끼운다
 
-**결정**: 원본의 Sku 영어 녹음 122개를 `replace/FF14Accessibility/assets/partymonitor/`의 한국어 합성음으로 대체한다. 낱말은 일~팔, `dead`는 전투불능, `full`은 가득이다. 윈도 음성 Yuna로 합성하고 rubberband로 음높이를 옮긴다(과도음 crisp, 포먼트 보존, 짧은 창). 생성기는 `tools/hm-voice/hm_voice.py`이고 다시 돌려도 바이트까지 같은 파일이 나온다 (2026-09-29 사용자 귀 판정).
+**결정**: 원본의 Sku 영어 녹음 122개를 `replace/FF14Accessibility/assets/partymonitor/`의 한국어 합성음으로 대체한다. 낱말은 일~팔, `dead`는 전투불능, `full`은 가득이다. 윈도 음성 "Vocalizer Expressive Yuna Harpo 22kHz"로 합성하고 rubberband로 음높이를 옮긴다(과도음 crisp, 포먼트 보존, 짧은 창). 생성기는 `tools/hm-voice/hm_voice.py`이고 다시 돌려도 바이트까지 같은 파일이 나온다 (2026-09-29 사용자 귀 판정).
 
 **원본이 기각한 방법과 다르다.** 원본은 옛 영어 SAPI 음성을 위상 보코더로 옮겼다가 자음이 뭉개져 버렸다(`NumberVoiceBank.cs:19-27`). 시안 셋을 귀로 비교해 포먼트 보존 rubberband를 골랐다. 포먼트를 안 보존하면 말끝이 잘려 들렸다. **짧은 창이 필수다** — 낱말이 0.1초 남짓이라 기본 창은 0.65배를 0.83배까지만 내렸다.
 
@@ -318,6 +318,8 @@ git -C upstream show <태그>:FF14Accessibility/Plugin.cs | grep -c 'Ã'
 
 **배포물의 고지를 고쳤다.** 원본 `THIRD-PARTY-NOTICES.md`는 음성이 바이트까지 Sku의 것이라고 적는다. graft 규칙 `notices-hm-voice-korean`이 그 문단을 한국어판 사실로 바꾼다.
 
-**미확인: Yuna 합성음의 배포 조건.** Yuna는 Nuance의 음성이고, 그 합성 결과를 배포물에 실어도 되는지 확인하지 않았다. 발행 전에 확인한다.
+**음성을 한 번 바꿨다**(2026-09-30 사용자 판정). 처음 쓴 Nuance "Yuna"는 소리가 작게 들렸다. 파일 음량(LUFS)은 영어 원본과 비슷했지만 낱말이 0.03~0.14초로 영어(0.24~0.50초)보다 훨씬 짧았다. 지금 음성은 0.2~0.3초다. 이 음성은 System.Speech의 `SelectVoice`가 "설치되지 않음"으로 거부해서 SAPI COM으로 합성한다. COM은 이름이 안 맞으면 기본 음성으로 조용히 녹음하므로 생성기가 선택을 확인하고 멈춘다.
+
+**미확인: 합성음의 배포 조건.** 두 음성 다 Nuance의 것이고, 그 합성 결과를 배포물에 실어도 되는지 확인하지 않았다. 발행 전에 확인한다.
 
 **되돌리는 길**: `replace/FF14Accessibility/assets/`를 지우고 기준선의 `partymonitor` 항목 122개와 graft 규칙 하나를 빼면 원본 음성으로 돌아간다. 원본이 음성을 바꾸면 조립이 기준선 경고로 알린다.
