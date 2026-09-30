@@ -331,7 +331,7 @@
     {
       "de": ", {required} gesucht",
       "en": ", {required} wanted",
-      "ko": ", {required} 필요"
+      "ko": ", {required}마리 필요"
     },
     {
       "de": ". Enter beginnt.",
@@ -571,7 +571,7 @@
     {
       "de": "Angriff {v}",
       "en": "physical damage {v}",
-      "ko": "물리 공격력 {v}"
+      "ko": "물리 기본 성능 {v}"
     },
     {
       "de": "Annehmbare Quests",
@@ -771,12 +771,12 @@
     {
       "de": "Belegen fehlgeschlagen, die Taste hat sich nicht geändert.",
       "en": "Assignment failed, the key did not change.",
-      "ko": "배정 실패. 키가 그대로임."
+      "ko": "할당 실패. 키가 그대로임."
     },
     {
       "de": "Belegen fehlgeschlagen.",
       "en": "Assignment failed.",
-      "ko": "배정 실패."
+      "ko": "할당 실패."
     },
     {
       "de": "Belohnung: ",
@@ -861,7 +861,7 @@
     {
       "de": "Bestätigen nimmt eine Zeile auf, hoch und runter verschiebt sie, Bestätigen legt sie wieder ab.",
       "en": "Confirm picks a row up, up and down move it, confirm puts it down again.",
-      "ko": "숫자패드 0은 줄 이동 시작, 8과 2는 위아래 이동, 다시 0은 놓기."
+      "ko": "숫자패드 0은 줄 들기, 8과 2는 위아래 이동, 다시 0은 놓기."
     },
     {
       "de": "Betrag {amount}, {owner} danach {after}.",
@@ -1181,7 +1181,7 @@
     {
       "de": "Dieses Belegungsmenü ist nur für PvE. In einem PvE-Gebiet erneut versuchen.",
       "en": "This assignment menu is for PvE. Try again in a PvE area.",
-      "ko": "이 배정 메뉴는 PvE 전용. PvE 지역에서 다시 시도 필요."
+      "ko": "이 할당 메뉴는 PvE 전용. PvE 지역에서 다시 시도 필요."
     },
     {
       "de": "Dragoon",
@@ -1391,7 +1391,7 @@
     {
       "de": "Empfohlene Ausrüstung angelegt, {changed} Teile gewechselt.",
       "en": "Recommended equipment applied, {changed} pieces changed.",
-      "ko": "추천 장비 착용됨. {changed}개 변경됨."
+      "ko": "최강 장비 착용됨. 장비 {changed}개 변경됨."
     },
     {
       "de": "Ende des Verlaufs.",
@@ -1456,7 +1456,7 @@
     {
       "de": "Event-FATE dort machen, wenn es erscheint.",
       "en": "Do the event FATE there when it appears.",
-      "ko": "해당 지역에서 이벤트 돌발 임무가 나타나면 수행."
+      "ko": "해당 지역에서 이벤트 돌발 임무가 나타나면 참가."
     },
     {
       "de": "Events",
@@ -1466,12 +1466,12 @@
     {
       "de": "Events: {total} Gebiete, keines hier.",
       "en": "Events: {total} zones, none here.",
-      "ko": "이벤트: {total}개 지역, 이 지역에 없음."
+      "ko": "이벤트: 전체 {total}곳, 이 지역에는 없음."
     },
     {
       "de": "Events: {total} Gebiete, {here} hier.",
       "en": "Events: {total} zones, {here} here.",
-      "ko": "이벤트: {total}개 지역, 이 지역 {here}개."
+      "ko": "이벤트: 전체 {total}곳, 이 지역 {here}곳."
     },
     {
       "de": "FATEs",
@@ -1481,7 +1481,7 @@
     {
       "de": "FATEs dort mit der Yo-kai-Uhr machen.",
       "en": "Do FATEs there with the Yo-kai Watch on.",
-      "ko": "해당 지역에서 요괴워치를 착용하고 돌발 임무 수행."
+      "ko": "해당 지역에서 요괴워치를 장비하고 돌발 임무에 참가."
     },
     {
       "de": "FATEs: {active} aktiv, {preparing} starten gleich.",
@@ -1576,7 +1576,7 @@
     {
       "de": "Fertig mit {value}",
       "en": "Progress needed {value}",
-      "ko": "필요 작업량 {value}"
+      "ko": "작업량 {value}"
     },
     {
       "de": "Fliege zu {name}.",
@@ -2091,7 +2091,7 @@
     {
       "de": "Herstellbar {value}",
       "en": "Craftable {value}",
-      "ko": "제작 가능 {value}"
+      "ko": "제작 가능 수 {value}"
     },
     {
       "de": "Hier endet das Wegenetz, ich nehme {name}.",
@@ -2116,7 +2116,7 @@
     {
       "de": "Hier sind keine Reittiere erlaubt, also wird auch nicht geflogen.",
       "en": "Mounts are not allowed here, so there is no flying either.",
-      "ko": "여기서는 탈것을 쓸 수 없으므로 비행도 안 됨."
+      "ko": "여기서는 탈것을 사용할 수 없으므로 비행도 안 됨."
     },
     {
       "de": "Himbeerrot",
@@ -2306,7 +2306,7 @@
     {
       "de": "Job oder Anmeldung geändert. Belegungsmenü erneut öffnen.",
       "en": "Job or login changed. Reopen the assignment menu.",
-      "ko": "직업 또는 접속 변경됨. 배정 메뉴 다시 열기."
+      "ko": "직업이나 로그인 상태가 변경됨. 할당 메뉴 다시 열기."
     },
     {
       "de": "Job-Anzeige Ton Lautstärke",
@@ -2601,7 +2601,7 @@
     {
       "de": "Keine Freibriefe. Erst bei einem Freibrief-Geber annehmen.",
       "en": "No levequests. Accept one from a levemete first.",
-      "ko": "길드 의뢰 없음. 먼저 의뢰인에게서 수령 필요."
+      "ko": "길드 의뢰 없음. 먼저 의뢰인에게서 의뢰 수락 필요."
     },
     {
       "de": "Keine Gruppe",
@@ -2651,7 +2651,7 @@
     {
       "de": "Keine Quest-Ziele. Erst eine Quest annehmen.",
       "en": "No quest goals. Accept a quest first.",
-      "ko": "퀘스트 목표 없음. 먼저 퀘스트 수령 필요."
+      "ko": "퀘스트 목표 없음. 먼저 퀘스트 수락 필요."
     },
     {
       "de": "Keine Raumdaten.",
@@ -2706,7 +2706,7 @@
     {
       "de": "Keine Ziel-Taste gewählt. Erst die Ziel-Taste wählen.",
       "en": "No target slot selected. Select the target slot first.",
-      "ko": "배정할 키를 선택하지 않음. 먼저 배정할 키 선택 필요."
+      "ko": "할당할 키를 선택하지 않음. 먼저 할당할 키 선택 필요."
     },
     {
       "de": "Keine andere Liste verfügbar.",
@@ -2721,7 +2721,7 @@
     {
       "de": "Keine belegbaren Tasten gefunden.",
       "en": "No assignable keys found.",
-      "ko": "배정할 수 있는 키를 찾을 수 없음."
+      "ko": "할당할 수 있는 키를 찾을 수 없음."
     },
     {
       "de": "Keine benutzbaren Gegenstände in der Tasche.",
@@ -2761,7 +2761,7 @@
     {
       "de": "Keine zeitlichen Events.",
       "en": "No timed events.",
-      "ko": "시간제 이벤트 없음."
+      "ko": "기간 한정 이벤트 없음."
     },
     {
       "de": "Keine {label} in {range:F0} Metern.",
@@ -2916,7 +2916,7 @@
     {
       "de": "Laut Spielstand fehlen dir hier noch Ätherströme.",
       "en": "According to your progress you are still missing aether currents here.",
-      "ko": "게임 기록상 이 지역에 아직 개방하지 않은 풍맥의 샘이 있음."
+      "ko": "게임 기록상 이 지역에 아직 교감하지 않은 풍맥의 샘이 있음."
     },
     {
       "de": "Lautstärke Anstoß und Kante",
@@ -2956,7 +2956,7 @@
     {
       "de": "Lege empfohlene Ausrüstung an.",
       "en": "Applying recommended equipment.",
-      "ko": "추천 장비 착용 중."
+      "ko": "최강 장비 착용 중."
     },
     {
       "de": "Leiste auswählen. Nummernblock 8 und 2 wechseln die Leiste, 0 öffnet ihre Tasten, Komma schließt.",
@@ -3016,7 +3016,7 @@
     {
       "de": "Magieschaden {v}",
       "en": "magic damage {v}",
-      "ko": "마법 공격력 {v}"
+      "ko": "마법 기본 성능 {v}"
     },
     {
       "de": "Mana, Aufladung",
@@ -3141,7 +3141,7 @@
     {
       "de": "Nebenauftrag: ",
       "en": "Side quest: ",
-      "ko": "서브 퀘스트: "
+      "ko": "부가 퀘스트: "
     },
     {
       "de": "Nebenhand",
@@ -3181,7 +3181,7 @@
     {
       "de": "Nichts zum Belegen verfügbar.",
       "en": "Nothing available to assign.",
-      "ko": "배정할 수 있는 것 없음."
+      "ko": "할당할 수 있는 것 없음."
     },
     {
       "de": "Ninja",
@@ -3246,7 +3246,7 @@
     {
       "de": "Nummernblock 8 und 2 lesen die Tasten, 4 und 6 wechseln die Leiste, 0 wählt eine Taste zum Belegen, Komma zurück.",
       "en": "Numpad 8 and 2 read buttons, 4 and 6 change bars, 0 chooses a button to assign, decimal goes back.",
-      "ko": "숫자패드 8과 2는 키 읽기, 4와 6은 단축바 전환, 0은 배정할 키 선택, 마침표는 뒤로."
+      "ko": "숫자패드 8과 2는 키 읽기, 4와 6은 단축바 전환, 0은 할당할 키 선택, 마침표는 뒤로."
     },
     {
       "de": "Nächste Ebene",
@@ -3566,7 +3566,7 @@
     {
       "de": "Reihenfolge beim Objekte-Durchblättern",
       "en": "Order when browsing objects",
-      "ko": "사물 넘기기 순서"
+      "ko": "사물 목록 탐색 순서"
     },
     {
       "de": "Reihenfolge der Nachlese-Kategorien",
@@ -3621,7 +3621,7 @@
     {
       "de": "Rollenplatz",
       "en": "Role slot",
-      "ko": "역할 칸"
+      "ko": "모집 역할"
     },
     {
       "de": "Rosébeige",
@@ -3726,12 +3726,12 @@
     {
       "de": "Sammelpunkte: {total} verfügbar, {herePart}",
       "en": "Gathering spots: {total} available, {herePart}",
-      "ko": "채집 지점: 채집 가능 {total}개, {herePart}"
+      "ko": "채집 지점: 이용 가능 {total}개, {herePart}"
     },
     {
       "de": "Sammelpunkte: {upNow} gerade da, {total} verfügbar, {herePart}",
       "en": "Gathering spots: {upNow} up now, {total} available, {herePart}",
-      "ko": "채집 지점: 지금 {upNow}개, 채집 가능 {total}개, {herePart}"
+      "ko": "채집 지점: 지금 {upNow}개, 이용 가능 {total}개, {herePart}"
     },
     {
       "de": "Sammelstelle, Stufe {level}",
@@ -3836,7 +3836,7 @@
     {
       "de": "Skill-Zuweisung, {count} Skills. Nummernblock 8 und 2 blättern, 4 oder 6 wechselt die Liste, Nummernblock 0 wählt, Nummernblock Komma zurück.",
       "en": "Skill assignment, {count} skills. Numpad 8 and 2 to browse, 4 or 6 switches the list, Numpad 0 selects, Numpad decimal to go back.",
-      "ko": "기술 배정, 기술 {count}개. 숫자패드 8과 2는 항목 이동, 4와 6은 목록 전환, 0은 선택, 마침표는 뒤로."
+      "ko": "기술 할당, 기술 {count}개. 숫자패드 8과 2는 항목 이동, 4와 6은 목록 전환, 0은 선택, 마침표는 뒤로."
     },
     {
       "de": "Slot {slot}",
@@ -4156,7 +4156,7 @@
     {
       "de": "Tastenbelegung, {count} Tasten. Nummernblock 8 und 2 blättern, Nummernblock 0 wählt die Taste, Nummernblock Komma schließt.",
       "en": "Key assignment, {count} keys. Numpad 8 and 2 to browse, Numpad 0 picks the key, Numpad decimal closes.",
-      "ko": "키 배정, 키 {count}개. 숫자패드 8과 2는 항목 이동, 0은 키 선택, 마침표는 닫기."
+      "ko": "키 할당, 키 {count}개. 숫자패드 8과 2는 항목 이동, 0은 키 선택, 마침표는 닫기."
     },
     {
       "de": "Tausch",
@@ -4671,7 +4671,7 @@
     {
       "de": "Zuweisungs-Menü geschlossen.",
       "en": "Assignment menu closed.",
-      "ko": "배정 메뉴 닫힘."
+      "ko": "할당 메뉴 닫힘."
     },
     {
       "de": "Zweige: {branches}",
@@ -5076,7 +5076,7 @@
     {
       "de": "kein Fundort in der Welt, Belohnung aus dem Maskierten Karneval oder Startzauber.",
       "en": "no location in the world; a Masked Carnivale reward or the starting spell.",
-      "ko": "필드에 출현 지역 없음. Masked Carnivale 보상이거나 처음부터 체득하는 기술."
+      "ko": "필드에 출현 지역 없음. 가면 무투회 보상이거나 처음부터 체득하는 기술."
     },
     {
       "de": "kein Laufweg dorthin.",
@@ -5471,7 +5471,7 @@
     {
       "de": "vom Spiel geändert",
       "en": "changed by the game",
-      "ko": "게임이 바꿈"
+      "ko": "게임이 변경함"
     },
     {
       "de": "warmes Beige",
@@ -5806,12 +5806,12 @@
     {
       "de": "{label}: {here} im Gebiet, {away} in anderen Gebieten.",
       "en": "{label}: {here} in this area, {away} in other areas.",
-      "ko": "{label}: 이 지역 {here}, 다른 지역 {away}."
+      "ko": "{label}: 이 지역 {here}개, 다른 지역 {away}개."
     },
     {
       "de": "{label}: {here} im Gebiet.",
       "en": "{label}: {here} in this area.",
-      "ko": "{label}: 이 지역 {here}."
+      "ko": "{label}: 이 지역 {here}개."
     },
     {
       "de": "{lane}, {digits}, Summe {sum}, {mgp} MGP, {state}",
@@ -6086,7 +6086,7 @@
     {
       "de": "{owner}: derzeit {now}, danach {after}.",
       "en": "{owner}: currently {now}, then {after}.",
-      "ko": "{owner}: 현재 {now}, 그 뒤 {after}."
+      "ko": "{owner}: 현재 {now}, 적용 후 {after}."
     },
     {
       "de": "{points} Fertigkeitspunkte",
@@ -6136,7 +6136,7 @@
     {
       "de": "{slotLabel} gewählt, {current}. Was soll darauf?",
       "en": "{slotLabel} selected, {current}. What goes on it?",
-      "ko": "{slotLabel} 선택됨, {current}. 여기에 배정할 것은?"
+      "ko": "{slotLabel} 선택됨, {current}. 여기에 할당할 것은?"
     },
     {
       "de": "{slotLabel}, {current}, {index} von {count}",
@@ -6176,7 +6176,7 @@
     {
       "de": "{tab}, {buffers} Puffer. {first}, {count}.",
       "en": "{tab}, {buffers} buffers. {first}, {count}.",
-      "ko": "{tab}, 읽을 기록 {buffers}개. {first}, {count}."
+      "ko": "{tab}, 읽을 기록 {buffers}개. {first}, 메시지 {count}개."
     },
     {
       "de": "{target} ist nicht erreichbar - dorthin führt kein Weg.",
