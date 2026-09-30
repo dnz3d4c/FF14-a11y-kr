@@ -162,6 +162,66 @@ def test_고친_결과가_통과한다(tmp_path):
     assert ko_lexicon.scan(['      "ko": "선택한 다음 건네주기."'], "mod", "x", path) == []
 
 
+# ------------------------------------------------------------ 정규식 항목
+
+
+TELEGRAM = r"(?<![가이]) 필요\."
+
+
+def _regex_entry(bad=TELEGRAM, good="`~해야 함.`"):
+    return {**_entry(bad, good), "regex": True}
+
+
+def test_정규식_항목은_틀을_잡는다(tmp_path):
+    # 리터럴로는 `<명사> 필요.`를 못 잡는다 - 앞 명사가 문장마다 다르다.
+    entries = _empty()
+    entries["mod"] = [_regex_entry()]
+    path = _write(tmp_path, entries)
+    found = ko_lexicon.scan(['      "ko": "먼저 목적지 설정 필요."'], "mod", "x", path)
+    assert len(found) == 1
+
+
+@pytest.mark.parametrize(
+    "ko",
+    [
+        "먼저 목적지를 설정해야 함.",
+        ", 다른 클래스가 필요",
+        ", {required}마리 필요",
+        "HQ 재료가 필요함: 간이 제작.",
+    ],
+)
+def test_정규식_항목은_온전한_문장을_통과시킨다(tmp_path, ko):
+    entries = _empty()
+    entries["mod"] = [_regex_entry()]
+    path = _write(tmp_path, entries)
+    assert ko_lexicon.scan([f'      "ko": "{ko}"'], "mod", "x", path) == []
+
+
+def test_정규식이_아닌_항목은_기호를_글자로_본다(tmp_path):
+    # 표시가 없으면 지금처럼 리터럴이다. `.`이 아무 글자나 잡으면 안 된다.
+    entries = _empty()
+    entries["mod"] = [_entry("필요.")]
+    path = _write(tmp_path, entries)
+    assert ko_lexicon.scan(['      "ko": "필요함"'], "mod", "x", path) == []
+
+
+def test_깨진_정규식은_목록_위생에서_거부한다(tmp_path):
+    entries = _empty()
+    entries["mod"] = [_regex_entry(bad="(필요")]
+    problems = ko_lexicon.check_entries(_write(tmp_path, entries))
+    assert any("정규식" in p for p in problems)
+
+
+@pytest.mark.parametrize("target", ["note", "doc"])
+def test_정규식_항목은_발화에만_둔다(tmp_path, target):
+    # `note`·`doc`은 ko_style·notes_check가 따로 읽고 리터럴로 잰다. 거기 두면
+    # 틀이 글자 그대로 찾아져 아무것도 안 잡고 조용히 통과한다.
+    entries = _empty()
+    entries[target] = [_regex_entry()]
+    problems = ko_lexicon.check_entries(_write(tmp_path, entries))
+    assert any("mod에만" in p for p in problems)
+
+
 # ------------------------------------------------------------ 실물 검사
 
 

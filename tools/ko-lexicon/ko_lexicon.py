@@ -114,16 +114,26 @@ _BACKTICK = re.compile(r"`[^`]*`")
 
 
 class Entry(NamedTuple):
-    """낱말 판정 하나. `good`은 비어 있을 수 있다 - 그러면 지우라는 뜻이다."""
+    """낱말 판정 하나. `good`은 비어 있을 수 있다 - 그러면 지우라는 뜻이다.
+
+    `regex`가 참이면 `bad`는 낱말이 아니라 틀이다. `목적지 설정 필요.`처럼
+    앞 명사가 문장마다 달라 리터럴로는 못 잡는 부류가 여기 온다. 경계도 틀이
+    스스로 정한다.
+    """
 
     bad: str
     good: str
     why: str
     when: str
+    regex: bool = False
 
     def instead(self) -> str:
         """대신 쓸 것을 사람이 읽는 꼴로."""
         return f"`{self.good}`" if self.good else "지운다"
+
+    def compiled(self) -> re.Pattern[str]:
+        """이 항목을 잡는 꼴."""
+        return re.compile(self.bad) if self.regex else pattern(self.bad)
 
 
 def load(path: Path = LEXICON_PATH) -> dict:
@@ -142,6 +152,7 @@ def entries(target: str, path: Path = LEXICON_PATH) -> tuple[Entry, ...]:
             item.get("good", ""),
             item.get("why", ""),
             item.get("when", ""),
+            bool(item.get("regex", False)),
         )
         for item in found
     )
@@ -182,6 +193,14 @@ def check_entries(path: Path = LEXICON_PATH) -> list[str]:
                 problems.append(f"{where}에 why가 없다")
             if not entry.when.strip():
                 problems.append(f"{where}에 when이 없다")
+            if entry.regex and target != "mod":
+                # ko_style·notes_check는 리터럴로 읽어서 틀이 아무것도 못 잡는다.
+                problems.append(f"{where}: 정규식 항목은 mod에만 둔다")
+            elif entry.regex:
+                try:
+                    re.compile(entry.bad)
+                except re.error as err:
+                    problems.append(f"{where}가 정규식으로 안 읽힌다: {err}")
             if entry.bad in seen:
                 problems.append(f"{where}가 두 번 있다")
             seen.add(entry.bad)
@@ -205,7 +224,7 @@ def scan(lines: list[str], target: str, label: str, path: Path = LEXICON_PATH) -
     """줄 목록에서 되살아난 판정. **`mod`는 발화 값 줄만 본다.**"""
     found: list[str] = []
     for entry in entries(target, path):
-        regex = pattern(entry.bad)
+        regex = entry.compiled()
         for number, line in enumerate(lines, 1):
             text = line
             if target == "mod":
