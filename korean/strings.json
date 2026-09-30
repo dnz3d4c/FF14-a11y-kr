@@ -41,12 +41,12 @@
     {
       "de": " Das Wegenetz ist hier älter als die Häuser. Mit dem Befehl vnav rebuild neu bauen lassen.",
       "en": " The navigation mesh here is older than the houses. Rebuild it with the vnav rebuild command.",
-      "ko": "이 지역 길 정보에 하우징 건물이 빠져 있음. vnav rebuild 명령으로 다시 만들기 필요."
+      "ko": "이 지역 길 정보에 하우징 건물이 빠져 있음. vnav rebuild 명령으로 다시 만들어야 함."
     },
     {
       "de": " Das Ziel liegt nahe dem Ätheryt {aetheryteName}. Reise per Aethernet dorthin.",
       "en": " The destination is near the aetheryte {aetheryteName}. Travel there via the aethernet.",
-      "ko": " 목적지가 에테라이트 {aetheryteName} 근처. 전송망으로 이동 필요."
+      "ko": " 목적지가 에테라이트 {aetheryteName} 근처에 있음. 전송망으로 이동해야 함."
     },
     {
       "de": " Enter blättert weiter.",
@@ -381,7 +381,7 @@
     {
       "de": "Achtung, diese Spur ueberwindet {MetersRemaining(drop)} Hoehe und gilt deshalb nur in Laufrichtung. Fuer den Rueckweg zeichne bitte eine eigene Spur auf.",
       "en": "Careful: this trail covers {MetersRemaining(drop)} of height, so it only counts in the direction you walked it. Record a separate trail for the way back.",
-      "ko": "주의, 이 발자취는 높이 {MetersRemaining(drop)}를 내려가므로 걸어간 방향으로만 사용할 수 있음. 돌아오는 길은 따로 기록 필요."
+      "ko": "주의, 이 발자취는 높이 {MetersRemaining(drop)}를 내려가므로 걸어간 방향으로만 사용할 수 있음. 돌아오는 길은 따로 기록해야 함."
     },
     {
       "de": "Achtung, du stehst drin, {AoeSeconds(seconds)}.",
@@ -1056,7 +1056,7 @@
     {
       "de": "Dafür sind HQ-Materialien nötig: im Notizbuch {key} drücken oder Schnellsynthese mit HQ-Materialien.",
       "en": "These need HQ materials: press {key} in the crafting log, or use Quick Synthesis with HQ materials.",
-      "ko": "HQ 재료 필요: 제작수첩에서 {key} 누르기 또는 HQ 재료로 간이 제작."
+      "ko": "HQ 재료가 필요함: 제작수첩에서 {key} 키를 누르거나 HQ 재료로 간이 제작해야 함."
     },
     {
       "de": "Das Chatfenster ist nicht erreichbar.",
@@ -1141,12 +1141,12 @@
     {
       "de": "Die Wegsuche läuft noch. Gleich noch einmal versuchen.",
       "en": "A path search is still running. Try again in a moment.",
-      "ko": "경로 탐색이 아직 진행 중. 잠시 후 다시 시도 필요."
+      "ko": "경로 탐색이 아직 진행 중. 잠시 후 다시 시도해야 함."
     },
     {
       "de": "Diese Aktualisierung ändert Dateien, die das laufende Spiel festhält. Bitte das Spiel beenden und den Installer benutzen.",
       "en": "This update changes files the running game holds open. Please close the game and use the installer.",
-      "ko": "게임이 사용 중인 파일을 업데이트해야 함. 게임을 끄고 설치 프로그램 사용 필요."
+      "ko": "게임이 사용 중인 파일을 업데이트해야 함. 게임을 끄고 설치 프로그램을 사용해야 함."
     },
     {
       "de": "Diese Ebene",
@@ -1181,7 +1181,7 @@
     {
       "de": "Dieses Belegungsmenü ist nur für PvE. In einem PvE-Gebiet erneut versuchen.",
       "en": "This assignment menu is for PvE. Try again in a PvE area.",
-      "ko": "이 할당 메뉴는 PvE 전용. PvE 지역에서 다시 시도 필요."
+      "ko": "이 할당 메뉴는 PvE 전용임. PvE 지역에서 다시 시도해야 함."
     },
     {
       "de": "Dragoon",
@@ -1281,7 +1281,7 @@
     {
       "de": "Dungeon-Wege konnten nicht geladen werden. Sieh ins Log.",
       "en": "Dungeon routes could not be downloaded. Check the log.",
-      "ko": "던전 경로 다운로드 실패. 로그 확인 필요."
+      "ko": "던전 경로 다운로드 실패. 로그를 확인해야 함."
     },
     {
       "de": "Dungeon-Wege werden geladen.",
@@ -1326,7 +1326,7 @@
     {
       "de": "Ein passender Gegenstand: {items[0]}. Auswählen und dann Übergeben drücken.",
       "en": "One matching item: {items[0]}. Select it, then press Hand Over.",
-      "ko": "맞는 아이템 하나: {items[0]}. 선택한 다음 건네주기 누르기."
+      "ko": "맞는 아이템 하나: {items[0]}. 선택한 다음 건네주기를 눌러야 함."
     },
     {
       "de": "Eingabefeld, leer",
@@ -1456,7 +1456,7 @@
     {
       "de": "Event-FATE dort machen, wenn es erscheint.",
       "en": "Do the event FATE there when it appears.",
-      "ko": "해당 지역에서 이벤트 돌발 임무가 나타나면 참가."
+      "ko": "해당 지역에서 이벤트 돌발 임무가 나타나면 참가해야 함."
     },
     {
       "de": "Events",
@@ -1481,7 +1481,7 @@
     {
       "de": "FATEs dort mit der Yo-kai-Uhr machen.",
       "en": "Do FATEs there with the Yo-kai Watch on.",
-      "ko": "해당 지역에서 요괴워치를 장비하고 돌발 임무에 참가."
+      "ko": "해당 지역에서 요괴워치를 장비하고 돌발 임무에 참가해야 함."
     },
     {
       "de": "FATEs: {active} aktiv, {preparing} starten gleich.",
@@ -1696,17 +1696,17 @@
     {
       "de": "Freibriefe: angenommen {names}. Kein Kartenmarker — im Tagebuch unter Freibriefe „Neuer Versuch“ und dann „Beginnen“.",
       "en": "Levequests: accepted {names}. No map marker — in the journal under Levequests use Retry, then Start.",
-      "ko": "길드 의뢰: {names} 수락됨. 지도에 표시 없음. 퀘스트 창의 의뢰 탭에서 '재도전' 후 '시작' 필요."
+      "ko": "길드 의뢰: {names} 수락됨. 지도에 표시가 없음. 퀘스트 창의 의뢰 탭에서 '재도전'을 누른 뒤 '시작'을 눌러야 함."
     },
     {
       "de": "Freibriefe: läuft {name}. Noch keine Freibrief-Gegner in der Nähe — zum Aufgabengebiet.",
       "en": "Levequests: running {name}. No leve enemies nearby yet — go to the task area.",
-      "ko": "길드 의뢰: {name} 진행 중. 근처에 길드 의뢰 적 아직 없음. 의뢰 수행 지역으로 이동 필요."
+      "ko": "길드 의뢰: {name} 진행 중. 근처에 아직 길드 의뢰 적이 없음. 의뢰 수행 지역으로 이동해야 함."
     },
     {
       "de": "Freibriefe: läuft {name}. {objective}. Noch keine Freibrief-Gegner in der Nähe — zum Aufgabengebiet.",
       "en": "Levequests: running {name}. {objective}. No leve enemies nearby yet — go to the task area.",
-      "ko": "길드 의뢰: {name} 진행 중. {objective}. 근처에 길드 의뢰 적 아직 없음. 의뢰 수행 지역으로 이동 필요."
+      "ko": "길드 의뢰: {name} 진행 중. {objective}. 근처에 아직 길드 의뢰 적이 없음. 의뢰 수행 지역으로 이동해야 함."
     },
     {
       "de": "Freibriefe: {enemies} Gegner, {givers} Geber, {goals} Ziele.",
@@ -1816,7 +1816,7 @@
     {
       "de": "Gegenstand abliefern. Drücke Strg F3 für die passenden Gegenstände, dann auswählen und Übergeben.",
       "en": "Hand over item. Press Ctrl F3 for the matching items, then select and Hand Over.",
-      "ko": "아이템 건네주기. 컨트롤 F3은 맞는 아이템 찾기, 선택한 다음 건네주기 누르기."
+      "ko": "아이템 건네주기. 컨트롤 F3은 맞는 아이템 찾기, 선택한 다음 건네주기를 눌러야 함."
     },
     {
       "de": "Gegenstand {id}",
@@ -2306,7 +2306,7 @@
     {
       "de": "Job oder Anmeldung geändert. Belegungsmenü erneut öffnen.",
       "en": "Job or login changed. Reopen the assignment menu.",
-      "ko": "직업이나 로그인 상태가 변경됨. 할당 메뉴 다시 열기."
+      "ko": "직업이나 로그인 상태가 변경됨. 할당 메뉴를 다시 열어야 함."
     },
     {
       "de": "Job-Anzeige Ton Lautstärke",
@@ -2401,7 +2401,7 @@
     {
       "de": "Kein Angelplatz nah genug. Nächster: {name}, {distance:F0} Meter. Stell dich an die Angelstelle und drück erneut.",
       "en": "No fishing spot close enough. Nearest: {name}, {distance:F0} meters. Stand at the fishing spot and press again.",
-      "ko": "충분히 가까운 낚시터 없음. 가장 가까운 곳: {name}, {distance:F0}미터. 낚시터에 서서 키 다시 누르기."
+      "ko": "충분히 가까운 낚시터가 없음. 가장 가까운 곳: {name}, {distance:F0}미터. 낚시터에 서서 키 다시 누르기."
     },
     {
       "de": "Kein Ausrüstungs-Vergleich offen.",
@@ -2421,7 +2421,7 @@
     {
       "de": "Kein Emote gewählt. Erst durchblättern.",
       "en": "No emote selected. Browse first.",
-      "ko": "선택한 감정 표현 없음. 먼저 항목 이동으로 선택 필요."
+      "ko": "선택한 감정 표현이 없음. 먼저 항목 이동으로 선택해야 함."
     },
     {
       "de": "Kein Fenster fokussiert. {visibleCount} Fenster sichtbar, Liste im Log.",
@@ -2451,7 +2451,7 @@
     {
       "de": "Kein Plugin gewählt. Erst durchblättern.",
       "en": "No plugin selected. Browse first.",
-      "ko": "선택한 플러그인 없음. 먼저 항목 이동으로 선택 필요."
+      "ko": "선택한 플러그인이 없음. 먼저 항목 이동으로 선택해야 함."
     },
     {
       "de": "Kein Rezept ausgewählt.",
@@ -2461,7 +2461,7 @@
     {
       "de": "Kein Skill gewählt. Erst mit dem Skill-Browser blättern.",
       "en": "No skill selected. Browse with the skill browser first.",
-      "ko": "선택한 기술 없음. 먼저 기술 목록에서 선택 필요."
+      "ko": "선택한 기술이 없음. 먼저 기술 목록에서 선택해야 함."
     },
     {
       "de": "Kein Synthese-Fenster offen.",
@@ -2481,7 +2481,7 @@
     {
       "de": "Kein Weg aktiv. Erst ein Ziel wählen.",
       "en": "No route active. Pick a destination first.",
-      "ko": "진행 중인 경로 없음. 먼저 목적지 설정 필요."
+      "ko": "진행 중인 경로가 없음. 먼저 목적지를 설정해야 함."
     },
     {
       "de": "Kein Weg gefunden, führe in Luftlinie.{hint}",
@@ -2511,22 +2511,22 @@
     {
       "de": "Kein Ziel gesetzt. Erst mit Bild ab ein Objekt wählen.",
       "en": "No target set. Select an object with Page Down first.",
-      "ko": "대상이 정해지지 않음. 먼저 페이지 다운으로 사물 선택 필요."
+      "ko": "대상이 정해지지 않음. 먼저 페이지 다운으로 사물을 선택해야 함."
     },
     {
       "de": "Kein Ziel gewählt. Erst ein Ziel anvisieren oder im Objekt-Browser auswählen.",
       "en": "No destination selected. Target something first, or pick it in the object browser.",
-      "ko": "선택한 대상 없음. 먼저 대상 지정이나 사물 목록에서 선택 필요."
+      "ko": "선택한 대상이 없음. 먼저 대상을 지정하거나 사물 목록에서 선택해야 함."
     },
     {
       "de": "Kein Ziel zum Folgen. Erst ein Ziel anwählen.",
       "en": "No target to follow. Select a target first.",
-      "ko": "따라갈 대상 없음. 먼저 대상 지정 필요."
+      "ko": "따라갈 대상이 없음. 먼저 대상을 지정해야 함."
     },
     {
       "de": "Kein Ziel. Erst mit Bild ab ein Objekt wählen.",
       "en": "No target. Select an object with Page Down first.",
-      "ko": "대상 없음. 먼저 페이지 다운으로 사물 선택 필요."
+      "ko": "대상이 없음. 먼저 페이지 다운으로 사물을 선택해야 함."
     },
     {
       "de": "Kein aktives Addon für Dump gefunden.",
@@ -2601,7 +2601,7 @@
     {
       "de": "Keine Freibriefe. Erst bei einem Freibrief-Geber annehmen.",
       "en": "No levequests. Accept one from a levemete first.",
-      "ko": "길드 의뢰 없음. 먼저 의뢰인에게서 의뢰 수락 필요."
+      "ko": "길드 의뢰가 없음. 먼저 의뢰인에게서 의뢰를 수락해야 함."
     },
     {
       "de": "Keine Gruppe",
@@ -2626,7 +2626,7 @@
     {
       "de": "Keine Koordinaten in der Zwischenablage gefunden. Erst die Zahlen kopieren, dann die Taste drücken.",
       "en": "No coordinates found on the clipboard. Copy the numbers first, then press the key.",
-      "ko": "클립보드에 좌표 없음. 먼저 숫자를 복사한 다음 키 다시 누르기."
+      "ko": "클립보드에 좌표가 없음. 먼저 숫자를 복사한 다음 키를 다시 눌러야 함."
     },
     {
       "de": "Keine Monster in dieser Liste.",
@@ -2651,7 +2651,7 @@
     {
       "de": "Keine Quest-Ziele. Erst eine Quest annehmen.",
       "en": "No quest goals. Accept a quest first.",
-      "ko": "퀘스트 목표 없음. 먼저 퀘스트 수락 필요."
+      "ko": "퀘스트 목표가 없음. 먼저 퀘스트를 수락해야 함."
     },
     {
       "de": "Keine Raumdaten.",
@@ -2706,7 +2706,7 @@
     {
       "de": "Keine Ziel-Taste gewählt. Erst die Ziel-Taste wählen.",
       "en": "No target slot selected. Select the target slot first.",
-      "ko": "할당할 키를 선택하지 않음. 먼저 할당할 키 선택 필요."
+      "ko": "할당할 키를 선택하지 않음. 먼저 할당할 키를 선택해야 함."
     },
     {
       "de": "Keine andere Liste verfügbar.",
@@ -3171,7 +3171,7 @@
     {
       "de": "Nicht im Kampf oder während einer Laufstrecke. Bitte danach noch einmal.",
       "en": "Not during combat or while a walk is running. Please try again afterwards.",
-      "ko": "전투 중이거나 자동 이동 중에는 안 됨. 끝난 뒤 다시 시도 필요."
+      "ko": "전투 중이거나 자동 이동 중에는 안 됨. 끝난 뒤 다시 시도해야 함."
     },
     {
       "de": "Nichts bereit.",
@@ -3231,7 +3231,7 @@
     {
       "de": "Normale Kreuzleiste nicht verfügbar. Zum Auswählen /acc crossbar eingeben.",
       "en": "Normal crossbar unavailable. Use /acc crossbar to choose a set.",
-      "ko": "일반 십자 단축바 사용 불가. 선택하려면 /acc crossbar 입력."
+      "ko": "일반 십자 단축바를 사용할 수 없음. 선택하려면 /acc crossbar를 입력해야 함."
     },
     {
       "de": "Nr. {number}, {name}",
@@ -3676,7 +3676,7 @@
     {
       "de": "Ruhebereich. Erholungsbonus sammelt sich.",
       "en": "Rested area. Rested bonus is accumulating.",
-      "ko": "휴식 지역. 휴식 보너스 쌓이는 중."
+      "ko": "휴식 지역. 휴식 보너스가 쌓이는 중."
     },
     {
       "de": "Rumpf",
@@ -3926,7 +3926,7 @@
     {
       "de": "Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.",
       "en": "Choose a language with: /acc lang de, /acc lang en, /acc lang ko or /acc lang auto.",
-      "ko": "언어를 선택하려면: /acc lang ko, /acc lang en, /acc lang de, /acc lang auto 중 하나 입력."
+      "ko": "언어를 선택하려면: /acc lang ko, /acc lang en, /acc lang de, /acc lang auto 중 하나를 입력해야 함."
     },
     {
       "de": "Sprung voraus",
@@ -3951,7 +3951,7 @@
     {
       "de": "Spur wird aufgezeichnet. Lauf die Stelle jetzt ab und drueck die Taste am Ende noch einmal.",
       "en": "Recording a trail. Walk the stretch now and press the key again at the end.",
-      "ko": "발자취 기록 시작. 그 구간을 걸어간 다음 끝에서 같은 키 다시 누르기."
+      "ko": "발자취 기록 시작. 그 구간을 걸어간 다음 끝에서 같은 키를 다시 눌러야 함."
     },
     {
       "de": "Spur zu Ende, ich laufe normal weiter.",
@@ -4256,7 +4256,7 @@
     {
       "de": "Unbekannter Befehl. Tippe /acc help für Hilfe.",
       "en": "Unknown command. Type /acc help for help.",
-      "ko": "알 수 없는 명령어. 도움말은 /acc help 입력."
+      "ko": "알 수 없는 명령어. 도움말을 들으려면 /acc help를 입력해야 함."
     },
     {
       "de": "Unbekannter Gegenstand, Icon {iconId}",
@@ -4306,7 +4306,7 @@
     {
       "de": "Verlosungs-Fenster im Fokus. Mit dem Nummernblock auswählen.",
       "en": "Loot roll window focused. Use the numpad to choose.",
-      "ko": "전리품 입찰 창 활성. 숫자패드는 선택."
+      "ko": "전리품 입찰 창이 활성화됨. 숫자패드는 선택."
     },
     {
       "de": "Version {version}",
@@ -4391,12 +4391,12 @@
     {
       "de": "Wegenetz ist noch nicht bereit. Gleich nochmal versuchen.",
       "en": "Navmesh is not ready yet. Try again shortly.",
-      "ko": "길 정보가 아직 준비 안 됨. 잠시 뒤 다시 시도 필요."
+      "ko": "길 정보가 아직 준비 안 됨. 잠시 뒤 다시 시도해야 함."
     },
     {
       "de": "Wegenetz lädt noch, {percent:F0} Prozent. Gleich nochmal versuchen.",
       "en": "Navmesh still loading, {percent:F0} percent. Try again shortly.",
-      "ko": "길 정보 불러오는 중, {percent:F0}%. 잠시 뒤 다시 시도 필요."
+      "ko": "길 정보 불러오는 중, {percent:F0}%. 잠시 뒤 다시 시도해야 함."
     },
     {
       "de": "Wegenetz wird geladen.",
@@ -4416,7 +4416,7 @@
     {
       "de": "Wegfindung läuft schon. Gleich nochmal versuchen.",
       "en": "Pathfinding is already running. Try again shortly.",
-      "ko": "경로 찾기가 이미 진행 중. 잠시 뒤 다시 시도 필요."
+      "ko": "경로 찾기가 이미 진행 중. 잠시 뒤 다시 시도해야 함."
     },
     {
       "de": "Wegpunkt",
@@ -5011,12 +5011,12 @@
     {
       "de": "hier in diesem Gebiet. Das Spiel nennt keine genauere Stelle, such den Träger über die Kategorie Gegner.",
       "en": "here in this area. The game names no closer spot; find the carrier via the enemy category.",
-      "ko": "이 지역에 있음. 게임에 정확한 위치 정보가 없어 적 분류에서 이 기술을 쓰는 적 찾기 필요."
+      "ko": "이 지역에 있음. 게임에 정확한 위치 정보가 없어 적 분류에서 이 기술을 쓰는 적을 찾아야 함."
     },
     {
       "de": "hier in diesem Gebiet. Wenn kein Exemplar geladen ist, such über die Kategorie Gegner.",
       "en": "here in this area. If no specimen is loaded, look via the enemy category.",
-      "ko": "이 지역에 있음. 불러온 개체가 없으면 적 분류에서 찾기 필요."
+      "ko": "이 지역에 있음. 불러온 개체가 없으면 적 분류에서 찾아야 함."
     },
     {
       "de": "hinter links",
@@ -5681,7 +5681,7 @@
     {
       "de": "{items.Count} passende Gegenstände: {string.Join(\", \", items)}. Auswählen und dann Übergeben drücken.",
       "en": "{items.Count} matching items: {string.Join(\", \", items)}. Select one, then press Hand Over.",
-      "ko": "맞는 아이템 {items.Count}개: {string.Join(\", \", items)}. 선택한 다음 건네주기 누르기."
+      "ko": "맞는 아이템 {items.Count}개: {string.Join(\", \", items)}. 선택한 다음 건네주기를 눌러야 함."
     },
     {
       "de": "{item}, {index} von {count}",
