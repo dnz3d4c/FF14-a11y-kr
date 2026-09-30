@@ -2481,7 +2481,7 @@
     {
       "de": "Kein Weg aktiv. Erst ein Ziel wählen.",
       "en": "No route active. Pick a destination first.",
-      "ko": "진행 중인 경로가 없음. 먼저 목적지를 설정해야 함."
+      "ko": "길안내가 꺼져 있음. 먼저 목적지를 선택해야 함."
     },
     {
       "de": "Kein Weg gefunden, führe in Luftlinie.{hint}",
