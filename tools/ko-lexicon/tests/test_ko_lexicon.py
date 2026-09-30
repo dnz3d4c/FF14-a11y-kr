@@ -165,11 +165,32 @@ def test_고친_결과가_통과한다(tmp_path):
 # ------------------------------------------------------------ 정규식 항목
 
 
-TELEGRAM = r"(?<![가이]) 필요\."
+TELEGRAM = r"(?<![가이은는]) 필요\."
 
 
 def _regex_entry(bad=TELEGRAM, good="`~해야 함.`"):
     return {**_entry(bad, good), "regex": True}
+
+
+@pytest.mark.parametrize(
+    ("ko", "caught"),
+    [
+        ("먼저 목적지 설정 필요.", True),
+        ("설정이 필요.", False),
+        ("추가 설정은 필요.", False),
+        ("이 키는 필요.", False),
+        # `도`는 조사로 안 본다. `시도`처럼 명사가 `도`로 끝나는 것과 글자로
+        # 못 가르고, 교정 전 대장의 27건 중 6건이 `다시 시도 필요.`였다.
+        # `설정도 필요.`가 걸리는 오탐을 그 대가로 받는다.
+        ("잠시 뒤 다시 시도 필요.", True),
+        ("추가 설정도 필요.", True),
+    ],
+)
+def test_실물_전보문_항목의_경계(ko, caught):
+    # 교차 리뷰 지적(2026-10-01): `가`·`이`만 인정하면 `은`·`는`이 붙은
+    # 온전한 문장이 걸린다.
+    line = f'      "ko": "{ko}"'
+    assert bool(ko_lexicon.scan([line], "mod", "x")) is caught
 
 
 def test_정규식_항목은_틀을_잡는다(tmp_path):
