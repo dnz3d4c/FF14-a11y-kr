@@ -162,7 +162,7 @@ _AFTER = re.compile(r"^\s*(=>|==|!=|(?:or|and)(?![A-Za-z0-9_]))")
 _LETTER = re.compile(r"[^\W\d_]")
 
 _PICK = re.compile(r"(?<![A-Za-z0-9_])Pick\s*\(")
-_CHAIN = re.compile(r"[A-Za-z0-9_.]+$")
+_CHAIN_CHARS = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.")
 
 #: 문자열 속을 가려 둘 때 쓰는 글자. 원문에 안 나오는 것이면 아무거나 된다.
 _MASK = "\x01"
@@ -233,8 +233,18 @@ def _statement(masked: str, position: int) -> str:
 
 
 def _is_comparison(masked: str, item: Literal) -> bool:
-    """비교 키인가. `is`/`==`/`!=`/`case`와 `switch` 가지 라벨을 본다."""
-    return bool(_BEFORE.search(masked[: item.start]) or _AFTER.match(masked[item.end :]))
+    """비교 키인가. `is`/`==`/`!=`/`case`와 `switch` 가지 라벨을 본다.
+
+    앞쪽은 공백을 건너뛴 뒤 몇 글자만 본다. 파일 앞부분을 통째로 넘기면 리터럴마다
+    파일 길이만큼 읽어서, 리터럴 수만 개짜리 파일(`RussianSheetTerms.cs`, 1.1MB)에서
+    검사가 끝나지 않는다. 창은 가장 긴 낱말(`case`)과 그 앞 경계 한 글자가 들어가는
+    길이보다 길어서, `^`는 파일 맨 앞에서만 맞는다.
+    """
+    end = item.start
+    while end > 0 and masked[end - 1] in " \t\r\n":
+        end -= 1
+    before = masked[max(0, end - 6) : end]
+    return bool(_BEFORE.search(before) or _AFTER.match(masked[item.end : item.end + 64]))
 
 
 def _enclosing_call(masked: str, position: int) -> tuple[str, int] | None:
@@ -249,8 +259,12 @@ def _enclosing_call(masked: str, position: int) -> tuple[str, int] | None:
             if depth > 0:
                 depth -= 1
             elif ch == "(":
-                chain = _CHAIN.search(masked[:i])
-                return (chain.group(0) if chain else "", i)
+                # 뒤로 걸어 이름을 자른다. 앞부분 전체에 `_CHAIN`을 돌리면 호출마다
+                # 파일 길이만큼 읽어 큰 파일에서 검사가 끝나지 않는다.
+                head = i
+                while head > 0 and masked[head - 1] in _CHAIN_CHARS:
+                    head -= 1
+                return (masked[head:i], i)
             else:
                 return None  # 배열·블록 안이다. 호출 인자가 아니다
         elif ch == ";":

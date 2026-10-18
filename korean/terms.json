@@ -1582,6 +1582,347 @@
       "addon": 1144,
       "row_text": "돌발 임무 참가",
       "note": "돌발 임무를 하는 동작을 게임이 '참가'라 부른다"
+    },
+    {
+      "en": "Performance",
+      "ko": "연주",
+      "addon": 8590,
+      "row_text": "연주",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Requested (supply missions)",
+      "ko": "조달 단위",
+      "addon": 4577,
+      "row_text": "조달 단위",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Supply missions (Next Mission Allowance)",
+      "ko": "조달 임무",
+      "addon": 4598,
+      "row_text": "조달 임무 기한",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Main Scenario",
+      "ko": "주요 퀘스트",
+      "addon": 13357,
+      "row_text": "주요 퀘스트",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Companion",
+      "ko": "버디",
+      "addon": 4960,
+      "row_text": "버디",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Skills (companion)",
+      "ko": "기술",
+      "addon": 4966,
+      "row_text": "기술",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Time (companion)",
+      "ko": "시간",
+      "addon": 4962,
+      "row_text": "시간",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Category (gathering log)",
+      "ko": "분류",
+      "addon": 612,
+      "row_text": "분류",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Level (gathering log)",
+      "ko": "레벨",
+      "addon": 613,
+      "row_text": "레벨",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Player",
+      "ko": "플레이어",
+      "addon": 973,
+      "row_text": "플레이어",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "CP",
+      "ko": "CP",
+      "addon": 1004,
+      "row_text": "CP",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Step (crafting)",
+      "ko": "제작 공정",
+      "addon": 218,
+      "row_text": "제작 공정",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Compared slot",
+      "ko": "비교할 부위",
+      "addon": 2155,
+      "row_text": "비교할 부위: ",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Ground targeting mode",
+      "ko": "지면 조준 모드",
+      "addon": 3343,
+      "row_text": "지면 조준 모드",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Apply (system configuration)",
+      "ko": "적용",
+      "addon": 4004,
+      "row_text": "적용",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Log Out",
+      "ko": "접속 종료",
+      "sheet": "MainCommand",
+      "row": 23,
+      "row_text": "접속 종료",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Exit Game",
+      "ko": "게임 종료",
+      "sheet": "MainCommand",
+      "row": 24,
+      "row_text": "게임 종료",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Armoury Chest",
+      "ko": "장비함",
+      "addon": 1370,
+      "row_text": "장비함",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Attunement Complete",
+      "ko": "교감 완료",
+      "addon": 2449,
+      "row_text": "교감 완료",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Gathering Log",
+      "ko": "채집수첩",
+      "addon": 610,
+      "row_text": "채집수첩",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Current Stock (shop)",
+      "ko": "판매 목록",
+      "addon": 352,
+      "row_text": "판매 목록",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Purchase",
+      "ko": "구매",
+      "addon": 9275,
+      "row_text": "구매",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Blue Magic Spellbook",
+      "ko": "청마도서",
+      "addon": 12250,
+      "row_text": "청마도서",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Spell Details (blue magic)",
+      "ko": "청마법",
+      "addon": 12252,
+      "row_text": "청마법 정보",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Minimap",
+      "ko": "미니맵",
+      "addon": 7656,
+      "row_text": "미니맵 표시",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Aether Currents",
+      "ko": "풍맥의 샘",
+      "addon": 2445,
+      "row_text": "풍맥의 샘 교감 정보",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Aether currents",
+      "ko": "풍맥의 샘",
+      "addon": 2445,
+      "row_text": "풍맥의 샘 교감 정보",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Place in Armoury Chest",
+      "ko": "장비함에 넣기",
+      "addon": 1387,
+      "row_text": "장비함에 넣기",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Trade",
+      "ko": "거래",
+      "addon": 201,
+      "row_text": "거래",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Trade request",
+      "ko": "거래 신청",
+      "addon": 53,
+      "row_text": "거래 신청",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Weather",
+      "ko": "날씨",
+      "addon": 8555,
+      "row_text": "날씨",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Main Scenario Guide",
+      "ko": "주요 퀘스트 가이드",
+      "addon": 10277,
+      "row_text": "주요 퀘스트 가이드 표시",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Duty list (To-do list)",
+      "ko": "할 일 목록",
+      "addon": 7655,
+      "row_text": "할 일 목록/임무 정보 표시",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Zoom in",
+      "ko": "확대",
+      "addon": 10303,
+      "row_text": "카메라 확대",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Zoom out",
+      "ko": "축소",
+      "addon": 10304,
+      "row_text": "카메라 축소",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Miner",
+      "ko": "광부",
+      "sheet": "ClassJob",
+      "row": 16,
+      "row_text": "광부",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Botanist",
+      "ko": "원예가",
+      "sheet": "ClassJob",
+      "row": 17,
+      "row_text": "원예가",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Fisher",
+      "ko": "어부",
+      "sheet": "ClassJob",
+      "row": 18,
+      "row_text": "어부",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Effects",
+      "ko": "효과",
+      "addon": 991,
+      "row_text": "효과",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Default (system configuration reset)",
+      "ko": "초기화",
+      "addon": 4003,
+      "row_text": "초기화",
+      "note": "v6.08.129 번역에서 확인 (2026-10-18)"
+    },
+    {
+      "en": "Blunderville",
+      "ko": "블런더빌",
+      "sheet": "PlaceName",
+      "row": 4469,
+      "row_text": "블런더빌",
+      "note": "블런더빌 코스 이름. 원본 주석이 PlaceName 4470-4475를 지목하고, 4469가 지역 이름이다. 영어 이름과의 짝은 행 차례로 맞췄다 - 피버·퍼레이드·마운틴·로비 넷이 소리로 일치한다 (2026-10-18)"
+    },
+    {
+      "en": "Gentlebean's Fever",
+      "ko": "맨더빌 피버",
+      "sheet": "PlaceName",
+      "row": 4470,
+      "row_text": "맨더빌 피버",
+      "note": "블런더빌 코스 이름. 원본 주석이 PlaceName 4470-4475를 지목하고, 4469가 지역 이름이다. 영어 이름과의 짝은 행 차례로 맞췄다 - 피버·퍼레이드·마운틴·로비 넷이 소리로 일치한다 (2026-10-18)"
+    },
+    {
+      "en": "Manderville-can Parade",
+      "ko": "맨더빌 퍼레이드",
+      "sheet": "PlaceName",
+      "row": 4471,
+      "row_text": "맨더빌 퍼레이드",
+      "note": "블런더빌 코스 이름. 원본 주석이 PlaceName 4470-4475를 지목하고, 4469가 지역 이름이다. 영어 이름과의 짝은 행 차례로 맞췄다 - 피버·퍼레이드·마운틴·로비 넷이 소리로 일치한다 (2026-10-18)"
+    },
+    {
+      "en": "The Gold Swiveller",
+      "ko": "맨더빌 링",
+      "sheet": "PlaceName",
+      "row": 4472,
+      "row_text": "맨더빌 링",
+      "note": "블런더빌 코스 이름. 원본 주석이 PlaceName 4470-4475를 지목하고, 4469가 지역 이름이다. 영어 이름과의 짝은 행 차례로 맞췄다 - 피버·퍼레이드·마운틴·로비 넷이 소리로 일치한다 (2026-10-18)"
+    },
+    {
+      "en": "Saucery Siege",
+      "ko": "맨더빌 캐슬",
+      "sheet": "PlaceName",
+      "row": 4473,
+      "row_text": "맨더빌 캐슬",
+      "note": "블런더빌 코스 이름. 원본 주석이 PlaceName 4470-4475를 지목하고, 4469가 지역 이름이다. 영어 이름과의 짝은 행 차례로 맞췄다 - 피버·퍼레이드·마운틴·로비 넷이 소리로 일치한다 (2026-10-18)"
+    },
+    {
+      "en": "Manderville Mountain",
+      "ko": "맨더빌 마운틴",
+      "sheet": "PlaceName",
+      "row": 4474,
+      "row_text": "맨더빌 마운틴",
+      "note": "블런더빌 코스 이름. 원본 주석이 PlaceName 4470-4475를 지목하고, 4469가 지역 이름이다. 영어 이름과의 짝은 행 차례로 맞췄다 - 피버·퍼레이드·마운틴·로비 넷이 소리로 일치한다 (2026-10-18)"
+    },
+    {
+      "en": "Lobbyville",
+      "ko": "맨더빌 로비",
+      "sheet": "PlaceName",
+      "row": 4475,
+      "row_text": "맨더빌 로비",
+      "note": "블런더빌 코스 이름. 원본 주석이 PlaceName 4470-4475를 지목하고, 4469가 지역 이름이다. 영어 이름과의 짝은 행 차례로 맞췄다 - 피버·퍼레이드·마운틴·로비 넷이 소리로 일치한다 (2026-10-18)"
     }
   ]
 }

@@ -320,12 +320,16 @@ def test_L_선언과_넘겨주기는_자리도_못_읽음도_아니다() -> None
 
 
 def test_리터럴이_아닌_L은_못_읽음으로_낸다() -> None:
-    """영어로 나가면서 미적용에도 안 잡히는 자리다. 미적용과 같은 무게로 센다."""
+    """영어로 나가면서 미적용에도 안 잡히는 자리다. 미적용과 같은 무게로 센다.
+
+    인자 안의 삼항은 `unnest`가 펴기 전의 모양이다. 앞의 두 조각이 둘 다 식인
+    이어붙이기는 숫자끼리 먼저 더해질 수 있어서 보간으로 읽지 않는다.
+    """
     text = (
         "    public static string A(bool on) =>\n"
         '        L(on ? "an" : "aus", on ? "on" : "off", on ? "вкл" : "выкл");\n'
-        "    public static string B(string n) =>\n"
-        '        L(n + ", fertig", n + ", done");\n'
+        "    public static string B(int a, int b) =>\n"
+        '        L(a + b + " fertig", a + b + " done");\n'
     )
     sites, blind = scanner.scan(text)
 
@@ -333,6 +337,97 @@ def test_리터럴이_아닌_L은_못_읽음으로_낸다() -> None:
     assert [(spot.line, spot.name, spot.shape) for spot in blind] == [
         (2, "A", "리터럴이 아님"),
         (4, "B", "이어붙이기"),
+    ]
+
+
+def test_리터럴끼리_이어붙인_L은_합쳐_읽고_소스는_그대로_둔다() -> None:
+    text = 'var a = L("Diese Installation " +\n          "kann nicht.", "This " + "cannot.");\n'
+    site = scanner.find_sites(text)[0]
+    result = scanner.rewrite(text, {("Diese Installation kann nicht.", "This cannot."): "안 된다."})
+
+    assert (site.de, site.en) == ("Diese Installation kann nicht.", "This cannot.")
+    assert result.text == text.replace('"cannot.")', '"cannot.", ko: "안 된다.")')
+
+
+def test_보간과_맨_리터럴을_이어붙이면_보간으로_읽고_중괄호를_겹친다() -> None:
+    text = 'var a = L($"{n} Ziele" + " {x}", $"{n} targets" + ".");\n'
+    site = scanner.find_sites(text)[0]
+
+    assert (site.de, site.en) == ("{n} Ziele {{x}}", "{n} targets.")
+
+
+def test_변수를_이어붙인_L은_보간으로_읽고_한국어를_보간으로_끼운다() -> None:
+    text = 'var a = L(name + ", angefordert " + requested, name + ", requested " + requested);\n'
+    site = scanner.find_sites(text)[0]
+    key = ("{name}, angefordert {requested}", "{name}, requested {requested}")
+    result = scanner.rewrite(text, {key: "{name}, 요청 {requested}"})
+
+    assert (site.de, site.en) == key
+    assert result.text.endswith('", requested " + requested, ko: $"{name}, 요청 {requested}");\n')
+
+
+def test_이어붙인_식이_연산자를_품으면_안_읽는다() -> None:
+    """`"x" + a ?? b`는 `("x" + a) ?? b`라 조각을 보간으로 옮기면 뜻이 달라진다."""
+    text = 'var a = L("Rang " + a ?? b, "Rank " + a ?? b);\n'
+    sites, blind = scanner.scan(text)
+
+    assert sites == []
+    assert len(blind) == 1
+
+
+def test_같은_조건의_삼항을_인자마다_가진_L을_둘로_편다() -> None:
+    text = 'var a = L(on ? "an" : "aus", on ? "on" : "off", on ? "вкл" : "выкл");\n'
+
+    assert scanner.unnest(text) == (
+        'var a = (on ? L("an", "on", "вкл") : L("aus", "off", "выкл"));\n'
+    )
+
+
+def test_편_L에_한국어가_들어간다() -> None:
+    text = 'var a = L(on ? "an" : "aus", on ? "on" : "off");\n'
+    result = scanner.rewrite(text, {("an", "on"): "켬", ("aus", "off"): "끔"})
+
+    assert result.text == 'var a = (on ? L("an", "on", ko: "켬") : L("aus", "off", ko: "끔"));\n'
+    assert result.unreadable == []
+
+
+def test_한정한_L을_펴도_한정을_양쪽에_되쓴다() -> None:
+    text = 'var a = AccessibilityStrings.L(on ? "an" : "aus", on ? "on" : "off");\n'
+
+    assert scanner.unnest(text) == (
+        'var a = (on ? AccessibilityStrings.L("an", "on")'
+        ' : AccessibilityStrings.L("aus", "off"));\n'
+    )
+
+
+def test_인자마다_조건이_다르면_L을_안_편다() -> None:
+    text = 'var a = L(on ? "an" : "aus", off ? "on" : "off");\n'
+
+    assert scanner.unnest(text) == text
+
+
+def test_여러_줄_L을_펴면_원래_들여쓰기에_맞춰_나눈다() -> None:
+    text = (
+        "    public static string F(bool enabled) =>\n"
+        "        L(enabled\n"
+        '              ? "Fliegen beim Auto-Lauf ein. Ruf dein Reittier."\n'
+        '              : "Fliegen beim Auto-Lauf aus.",\n'
+        "          enabled\n"
+        '              ? "Flying during auto-walk on. Summon a mount."\n'
+        '              : "Flying during auto-walk off.");\n'
+    )
+    opened = scanner.unnest(text)
+
+    assert opened == (
+        "    public static string F(bool enabled) =>\n"
+        "        (enabled\n"
+        '            ? L("Fliegen beim Auto-Lauf ein. Ruf dein Reittier.",'
+        ' "Flying during auto-walk on. Summon a mount.")\n'
+        '            : L("Fliegen beim Auto-Lauf aus.", "Flying during auto-walk off."));\n'
+    )
+    assert [site.en for site in scanner.find_sites(opened)] == [
+        "Flying during auto-walk on. Summon a mount.",
+        "Flying during auto-walk off.",
     ]
 
 

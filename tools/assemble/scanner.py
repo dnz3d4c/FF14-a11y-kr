@@ -68,6 +68,8 @@ MEMBER = re.compile(
 )
 
 _IDENT = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
+#: 한정한 이름(`AccessibilityStrings.L`)을 이루는 글자.
+_QUALIFIED = _IDENT | {"."}
 _NEWLINE = chr(10)
 
 
@@ -536,7 +538,90 @@ def unnest(text: str) -> str:
 
     for begin, stop, replacement in reversed(edits):
         text = text[:begin] + replacement + text[stop:]
+    return _unnest_family(text)
+
+
+def _unnest_family(text: str) -> str:
+    """인자마다 같은 조건의 삼항을 가진 `L` 계열 호출을 호출 둘로 편다.
+
+        L(c ? a_de : b_de, c ? a_en : b_en, c ? a_ru : b_ru)
+        -> (c ? L(a_de, a_en, a_ru) : L(b_de, b_en, b_ru))
+
+    `unnest`가 옛 원본의 `IsGerman ? (c ? ..) : (c ? ..)`를 펴던 것과 같은 일이다.
+    원본이 v6.08.128에서 그 모양을 `L(...)` 안으로 옮겼다. 안전장치도 같다 - 조건이
+    인자마다 글자까지 같고, 부작용이 없고, 안쪽이 또 삼항이 아니고, 식 안에 주석이
+    없고, 조각이 줄을 걸치지 않아야 한다. 하나라도 어긋나면 그대로 둔다.
+
+    괄호로 감싸는 까닭은 호출 하나가 삼항이 되면 우선순위가 바뀌어서다. `"x" + L(..)`
+    자리에 맨 삼항을 놓으면 `("x" + c) ? ..`로 읽힌다.
+    """
+    stripped = strip_comments(text)
+    edits: list[tuple[int, int, str]] = []
+    for name in FAMILY:
+        start = 0
+        while True:
+            found = stripped.find(name, start)
+            if found < 0:
+                break
+            start = found + len(name)
+            if found > 0 and stripped[found - 1] in _IDENT:
+                continue
+            if DECLARED.search(stripped, max(0, found - 40), found):
+                continue
+            close = _branch(stripped, start, len(stripped), "")
+            if close < 0 or stripped[close] != ")":
+                continue
+            edit = _open_call(stripped, text, found, name, close)
+            if edit is not None and all(edit[1] <= b or edit[0] >= e for b, e, _ in edits):
+                edits.append(edit)
+
+    for begin, stop, replacement in sorted(edits, reverse=True):
+        text = text[:begin] + replacement + text[stop:]
     return text
+
+
+def _open_call(
+    stripped: str, text: str, found: int, name: str, close: int
+) -> tuple[int, int, str] | None:
+    """`_unnest_family`의 한 자리. (시작, 끝, 놓을 글). 못 펴면 None."""
+    begin = found
+    while begin > 0 and stripped[begin - 1] in _QUALIFIED:
+        begin -= 1
+    if text[begin : close + 1] != stripped[begin : close + 1]:
+        return None  # 식 안에 주석이 있다
+    head = text[begin:found] + name
+
+    args = _arguments(stripped, found + len(name), close)
+    if not 2 <= len(args) <= 3:
+        return None
+    if any(NAMED.match(stripped, _trimmed(stripped, span)[0]) for span in args):
+        return None
+    splits = [_split(stripped, *span) for span in args]
+    if any(split is None for split in splits):
+        return None
+    parts = [split for split in splits if split is not None]
+    if any(_split(stripped, *piece) is not None for part in parts for piece in part[1:]):
+        return None  # 안쪽이 또 삼항이다
+
+    condition = _piece(text, parts[0][0])
+    if any(_piece(text, part[0]) != condition for part in parts):
+        return None
+    if SIDE_EFFECT.search(condition):
+        return None
+    yes = [_piece(text, part[1]) for part in parts]
+    no = [_piece(text, part[2]) for part in parts]
+    if any(not piece or _NEWLINE in piece for piece in [condition, *yes, *no]):
+        return None
+
+    first = f"{head}{', '.join(yes)})"
+    second = f"{head}{', '.join(no)})"
+    line_start = text.rfind(_NEWLINE, 0, begin) + 1
+    single = f"({condition} ? {first} : {second})"
+    if begin - line_start + len(single) <= WIDTH:
+        return begin, close + 1, single
+    indent = text[line_start:begin]
+    pad = " " * (len(indent) - len(indent.lstrip()) + 4)
+    return begin, close + 1, f"({condition}{_NEWLINE}{pad}? {first}{_NEWLINE}{pad}: {second})"
 
 
 def _flatten(
@@ -771,6 +856,88 @@ def _literal_arg(stripped: str, span: Span) -> tuple[str, int, int] | None:
     return value, raw_start, raw_end
 
 
+def _plain_operand(piece: str) -> bool:
+    """이어붙이기의 식 조각이 보간 자리로 옮겨도 뜻이 같은 모양인가.
+
+    이름·멤버 접근·호출·색인과 괄호로 감싼 식만 받는다. 최상위에 다른 연산자가 있으면
+    `+`로 자른 조각이 실제 피연산자가 아니다 - `"x" + a ?? b`는 `("x" + a) ?? b`다.
+    """
+    if not piece or piece[0] not in _IDENT | {"("}:
+        return False
+    depth = 0
+    i = 0
+    while i < len(piece):
+        after = _skip_literal(piece, i)
+        if after >= 0:
+            if depth == 0:
+                return False
+            i = after
+            continue
+        ch = piece[i]
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth -= 1
+        elif depth == 0 and ch not in _QUALIFIED:
+            return False
+        i += 1
+    return depth == 0
+
+
+def _text_arg(stripped: str, span: Span) -> tuple[str, int, int] | None:
+    """`L`의 독일어·영어 인자를 읽는다. (내용, 시작, 끝). 못 읽으면 None.
+
+    리터럴 하나이거나, 리터럴과 식을 `+`로 이어붙인 것을 받는다. 이어붙인 것은 소스를
+    안 바꾸고 **읽을 때만** 합친다 - 한국어는 끝에 `ko:`로 들어가므로 원문 모양이 남는다.
+    식 조각은 `{식}`으로 읽고, 그러면 한국어는 같은 보간 자리를 가진 보간 리터럴이 된다.
+    C#의 문자열 `+`와 보간은 둘 다 현재 문화권의 `ToString`을 써서 값이 같다.
+
+    앞의 두 조각이 둘 다 식이면 안 읽는다. `a + b + " x"`는 왼쪽부터 묶여서 둘이
+    숫자이면 먼저 더해진다.
+    """
+    single = _literal_arg(stripped, span)
+    if single is not None:
+        return single
+
+    start, end = _trimmed(stripped, span)
+    pieces: list[Span] = []
+    at = start
+    while at < end:
+        stop = _branch(stripped, at, end, "+")
+        if stop < 0:
+            stop = end
+        pieces.append(_trimmed(stripped, (at, stop)))
+        at = stop + 1
+    if len(pieces) < 2:
+        return None
+
+    parts: list[tuple[str, str | None]] = []  # (원문, 리터럴이면 내용)
+    for piece in pieces:
+        literal = _literal_arg(stripped, piece)
+        raw = stripped[piece[0] : piece[1]]
+        if literal is not None:
+            parts.append((raw, literal[0]))
+        elif _plain_operand(raw) and _NEWLINE not in raw:
+            parts.append((raw, None))
+        else:
+            return None
+    if parts[0][1] is None and parts[1][1] is None:
+        return None
+    if all(value is None for _, value in parts):
+        return None
+
+    interpolated = any(value is None or raw.startswith("$") for raw, value in parts)
+    out: list[str] = []
+    for raw, value in parts:
+        if value is None:
+            out.append("{" + raw + "}")
+        elif interpolated and not raw.startswith("$"):
+            out.append(value.replace("{", "{{").replace("}", "}}"))
+        else:
+            out.append(value)
+    return "".join(out), start, end
+
+
 def _family_sites(stripped: str, text: str, unreadable: list[Blind]) -> list[Site]:
     """원본의 `L(de, en[, ru])`과 그 축약 `W`·`Job`.
 
@@ -811,8 +978,8 @@ def _family_sites(stripped: str, text: str, unreadable: list[Blind]) -> list[Sit
                 continue  # 넘겨주기다
 
             line = stripped.count(_NEWLINE, 0, found) + 1
-            de = _literal_arg(stripped, de_span)
-            en = _literal_arg(stripped, en_span)
+            de = _text_arg(stripped, de_span)
+            en = _text_arg(stripped, en_span)
             ko_span = named.get("ko")
             ko = None if ko_span is None else _literal_arg(stripped, ko_span)
             if de is None or en is None or (ko_span is not None and ko is None):

@@ -68,15 +68,18 @@
     {
       "name": "plugin-language-name-switch",
       "file": "FF14Accessibility/Plugin.cs",
-      "why": "삼항은 언어가 둘일 때만 맞다. 셋이 되면 \"독일어가 아니면 전부 영어\"가 되어 한국어를 고른 사람에게 영어 이름을 말한다.",
+      "why": "원본의 갈림은 러시아어·독일어가 아니면 전부 영어다. 한국어를 고른 사람에게 영어 이름을 말하므로 언어마다 갈래를 둔다.",
       "find": [
-        "        var languageName = Loc.IsGerman ? AccessibilityStrings.LanguageGerman : AccessibilityStrings.LanguageEnglish;"
+        "        var languageName = Loc.IsRussian ? AccessibilityStrings.LanguageRussian",
+        "                         : Loc.IsGerman ? AccessibilityStrings.LanguageGerman",
+        "                         : AccessibilityStrings.LanguageEnglish;"
       ],
       "replace": [
         "        var languageName = Loc.Current switch",
         "        {",
         "            LanguageMode.German => AccessibilityStrings.LanguageGerman,",
         "            LanguageMode.Korean => AccessibilityStrings.LanguageKorean,",
+        "            LanguageMode.Russian => AccessibilityStrings.LanguageRussian,",
         "            _ => AccessibilityStrings.LanguageEnglish,",
         "        };"
       ]
@@ -97,16 +100,6 @@
         "        // belongs to Dalamud's load context and would outlive this assembly.",
         "        CompatReport.Uninstall();"
       ]
-    },
-    {
-      "name": "plugin-drop-dead-chatplayer-field",
-      "file": "FF14Accessibility/Plugin.cs",
-      "why": "원본 전체에서 ChatPlayerService가 나오는 곳은 셋뿐이다 - 이 필드 선언, 클래스 선언, 생성자 선언. new ChatPlayerService(...)가 어디에도 없다. Plugin은 sealed이고 partial이 아닌 단일 파일이며 필드가 private이라 컴파일러의 CS0169가 곧 전수 증거다. 항상 null이고 아무도 읽지 않으므로 지워도 동작이 안 바뀐다. 우리는 -warnaserror로 빌드하므로 놔두면 CS0169와 CS8618이 빌드를 세운다. 원본이 나중에 이 필드를 실제로 배선하면 앵커가 안 맞아 조립이 규칙 이름을 대고 멈춘다 - 무른 채로 잊히지 않는다. 결함 자체는 upstream-reports/chat-sender-menu-never-wired.md로 원본에 보낸다. 첫 줄의 KontextmenÃ¼는 오타가 아니다 - v6.08.35에서 원본 Plugin.cs 전체가 UTF-8을 한 번 더 인코딩한 바이트로 올라왔고 앵커는 그 바이트를 그대로 잡는다(upstream-reports/plugin-cs-double-encoded.md). 원본이 인코딩을 고치면 앵커가 다시 안 맞아 조립이 멈추고, 그때 Kontextmenü로 되돌린다.",
-      "find": [
-        "    // [Chat-Absender] KontextmenÃ¼ / Anvisieren aus der Nachlese-Zeile.",
-        "    private readonly ChatPlayerService _chatPlayer;"
-      ],
-      "replace": []
     },
     {
       "name": "configuration-default-korean",
@@ -131,12 +124,12 @@
       "why": "옛 삼항은 한국어에 영어 음성을 골라 준다. 한국어 경고문을 영어 음성이 읽으면 소리는 나는데 알아들을 수가 없다. 주입 앞에 도는 까닭은 앵커가 삼항이라 주입이 먼저 지나가면 Pick으로 바뀌어 앵커가 안 맞기 때문이다.",
       "phase": "before",
       "find": [
-        "        var want = Loc.IsGerman ? \"de\" : \"en\";"
+        "        var want = Loc.IsRussian ? \"ru\" : Loc.IsGerman ? \"de\" : \"en\";"
       ],
       "replace": [
-        "        // Loc.CultureCode, not \"IsGerman ? de : en\": with a third language the old",
-        "        // form picked an ENGLISH voice for Korean, which then reads the Korean",
-        "        // warning aloud unintelligibly. Exactly the case the comment above rules out.",
+        "        // Loc.CultureCode, not \"IsRussian ? ru : IsGerman ? de : en\": with Korean as",
+        "        // a further language the old form picked an ENGLISH voice for Korean, which",
+        "        // then reads the Korean warning aloud unintelligibly. CultureCode knows ru too.",
         "        var want = Loc.CultureCode;"
       ]
     },
@@ -156,7 +149,7 @@
       "file": "FF14Accessibility/Services/UIReaderService.cs",
       "why": "이것이 없으면 캐릭터 생성의 매 단계에서 확인 버튼을 못 찾고, 외모 단계는 아예 빠져나갈 수가 없다.",
       "find": [
-        "    private static readonly string[] ConfirmButtonLabels = [\"Ok\", \"Bestätigen\"];"
+        "    private static readonly string[] ConfirmButtonLabels = [\"Ok\", \"ОК\", \"Bestätigen\", \"Confirm\", \"Подтвердить\", \"Confirmer\", \"確認\"];"
       ],
       "replace": [
         "    // \"확인\" is the Korean client's label, read out of a live node dump of",
@@ -164,7 +157,7 @@
         "    // confirm buttons are Comp(1001) with the text child \"확인\". Without it",
         "    // PressFocusedOk logs \"kein Ok-Button\" on every step of character creation and",
         "    // the appearance step cannot be left at all.",
-        "    private static readonly string[] ConfirmButtonLabels = [\"Ok\", \"Bestätigen\", \"확인\"];"
+        "    private static readonly string[] ConfirmButtonLabels = [\"Ok\", \"ОК\", \"Bestätigen\", \"Confirm\", \"Подтвердить\", \"Confirmer\", \"確認\", \"확인\"];"
       ]
     },
     {
@@ -180,24 +173,19 @@
       ]
     },
     {
-      "name": "colornamer-pick-shorthand",
+      "name": "colornamer-w-korean",
       "file": "FF14Accessibility/Services/ColorNamer.cs",
-      "why": "이 파일의 104곳이 별칭 De로 갈리고 조립이 그 자리를 세 인자짜리 Pick으로 바꾼다. 축약이 없으면 그 104곳이 전부 CS0103으로 빌드를 세운다. AccessibilityStrings의 것과 따로 두는 까닭은 축약이 클래스마다 하나씩이기 때문이다.",
+      "phase": "before",
+      "why": "색상 낱말 104곳이 이 축약으로 갈린다. AccessibilityStrings.L과 같은 수법이다 - 선언을 Loc.Pick으로 돌리면 호출부는 그대로 두고 조립 도구가 ko를 이름 붙인 인자로 끼운다. 원본에 De ? 삼항이 하나도 안 남아 옛 Pick 축약은 지웠다.",
       "find": [
-        "    private static bool De => Loc.IsGerman;"
+        "    private static string W(string de, string en, string ru) =>",
+        "        Loc.IsRussian ? ru : Loc.IsGerman ? de : en;"
       ],
       "replace": [
-        "    private static bool De => Loc.IsGerman;",
-        "",
-        "    // Three-language form. The Korean comes from korean/strings.json and is written",
-        "    // in by tools/assemble - do not hand-edit it here, the catalogue is the original.",
-        "    //",
-        "    // caller is filled in by the compiler and names the method the swatch word came",
-        "    // from, which is what the missing-Korean log prints. Fourth parameter, so the",
-        "    // three-argument calls the assembler writes cannot land on it.",
-        "    private static string Pick(string de, string en, string? ko = null,",
-        "                               [CallerMemberName] string caller = \"\") =>",
-        "        Loc.Pick(de, en, ko, caller);"
+        "    // Korean through Loc.Pick, see AccessibilityStrings.L.",
+        "    private static string W(string de, string en, string ru, string? ko = null,",
+        "                            [CallerMemberName] string caller = \"\") =>",
+        "        Loc.IsRussian ? ru : Loc.Pick(de, en, ko, caller);"
       ]
     },
     {
@@ -238,30 +226,46 @@
       ]
     },
     {
-      "name": "strings-language-korean",
+      "name": "strings-l-korean",
       "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
-      "why": "언어 이름을 말하는 자리에 한국어 갈래가 필요하다. 삼항 모양으로 넣고 주입 앞에 도는 까닭은 한국어를 대장에서 받기 위해서다 - 여기에 한국어를 박으면 같은 문장이 두 곳에 살고 둘이 갈라져도 아무도 모른다.",
       "phase": "before",
+      "why": "원본이 v6.08.128부터 문장을 L(de, en, ru)로 고른다. 선언을 Loc.Pick으로 돌리면 원본 호출 1,500여 곳을 그대로 두고도 한국어 모드가 대장의 한국어를 받고, 대장에 없는 자리는 로그에 남는다. ko와 caller를 뒤에 붙이는 까닭은 원본 호출이 인자 셋 이하라 위치 인자가 둘에 닿지 않아서다. 조립 도구는 ko를 이름 붙인 인자로만 넣는다. 주입 앞에 도는 까닭은 원본 선언의 IsGerman ? de : en이 못 읽음으로 세어지기 때문이다.",
       "find": [
-        "    public static string LanguageEnglish => IsGerman ? \"Englisch\" : \"English\";"
+        "    internal static string L(string de, string en, string? ru = null)",
+        "        => Loc.IsRussian ? ru ?? en : IsGerman ? de : en;"
       ],
       "replace": [
-        "    public static string LanguageEnglish => IsGerman ? \"Englisch\" : \"English\";",
-        "    public static string LanguageKorean  => IsGerman ? \"Koreanisch\" : \"Korean\";"
+        "    // Korean goes through Loc.Pick: ko is written in by tools/assemble as a named",
+        "    // argument from korean/strings.json, and a line without it is logged as",
+        "    // missing. caller is filled in by the compiler and is what that log prints.",
+        "    internal static string L(string de, string en, string? ru = null, string? ko = null,",
+        "                             [CallerMemberName] string caller = \"\")",
+        "        => Loc.IsRussian ? ru ?? en : Loc.Pick(de, en, ko, caller);"
+      ]
+    },
+    {
+      "name": "strings-language-korean",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
+      "why": "언어 이름을 말하는 자리에 한국어 갈래가 필요하다. 한국어는 대장에서 받는다 - 여기에 박으면 같은 문장이 두 곳에 산다. 러시아어 인자를 안 주는 까닭은 지어내지 않기 위해서다. 이 이름은 한국어로 바꾼 직후에만 말해지므로 러시아어 사용자는 들을 일이 없고, 들어도 영어로 나간다.",
+      "phase": "before",
+      "find": [
+        "    public static string LanguageEnglish => L(\"Englisch\", \"English\", \"английский\");"
+      ],
+      "replace": [
+        "    public static string LanguageEnglish => L(\"Englisch\", \"English\", \"английский\");",
+        "    public static string LanguageKorean  => L(\"Koreanisch\", \"Korean\");"
       ]
     },
     {
       "name": "strings-language-usage-three",
       "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
-      "why": "이 판은 /acc lang ko를 받으면서 사용법은 de와 en과 auto만 말하고 있었다. 원본이 2언어 문구라 3언어 문구를 담은 대장 행과 키가 안 맞아 서로 못 만났다. 독일어와 영어를 3언어 문구로 바꾸면 키가 맞고, 한국어는 대장에서 들어온다. 주입 앞에 도는 까닭이 그것이다.",
+      "why": "이 버전은 /acc lang ko를 받는데 원본 사용법은 ko를 말하지 않는다. 독일어와 영어를 ko까지 말하는 문구로 바꾸면 대장 행과 키가 맞고 한국어는 대장에서 들어온다. 러시아어 문구는 손대지 않는다 - 원본 사용자가 듣는 말이다. 주입 앞에 도는 까닭이 키 맞춤이다.",
       "phase": "before",
       "find": [
-        "            ? \"Sprache wählen mit: /acc lang de, /acc lang en oder /acc lang auto.\"",
-        "            : \"Choose a language with: /acc lang de, /acc lang en or /acc lang auto.\";"
+        "        L(\"Sprache wählen mit: /acc lang de, /acc lang en oder /acc lang auto.\", \"Choose a language with: /acc lang de, /acc lang en or /acc lang auto.\", \"Выбрать язык: /acc lang ru, /acc lang en или /acc lang auto.\");"
       ],
       "replace": [
-        "            ? \"Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.\"",
-        "            : \"Choose a language with: /acc lang de, /acc lang en, /acc lang ko or /acc lang auto.\";"
+        "        L(\"Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.\", \"Choose a language with: /acc lang de, /acc lang en, /acc lang ko or /acc lang auto.\", \"Выбрать язык: /acc lang ru, /acc lang en или /acc lang auto.\");"
       ]
     },
     {
@@ -275,21 +279,24 @@
         "    private static readonly string[] CompassEn =",
         "        { \"North\", \"Northeast\", \"East\", \"Southeast\", \"South\", \"Southwest\", \"West\", \"Northwest\" };",
         "",
-        "    public static string[] CompassWords => IsGerman ? CompassDe : CompassEn;"
+        "    private static readonly string[] CompassRu =",
+        "        { \"Север\", \"Северо-восток\", \"Восток\", \"Юго-восток\", \"Юг\", \"Юго-запад\", \"Запад\", \"Северо-запад\" };",
+        "",
+        "    public static string[] CompassWords => Loc.IsRussian ? CompassRu : IsGerman ? CompassDe : CompassEn;"
       ],
       "replace": [
         "    // ORDER IS MEANING: index 0 = North .. 7 = Northwest, read by",
         "    // RouteService.SectorOf. Reordering compiles and then speaks the wrong way.",
         "    public static string[] CompassWords => new[]",
         "    {",
-        "        IsGerman ? \"Norden\" : \"North\",",
-        "        IsGerman ? \"Nordosten\" : \"Northeast\",",
-        "        IsGerman ? \"Osten\" : \"East\",",
-        "        IsGerman ? \"Südosten\" : \"Southeast\",",
-        "        IsGerman ? \"Süden\" : \"South\",",
-        "        IsGerman ? \"Südwesten\" : \"Southwest\",",
-        "        IsGerman ? \"Westen\" : \"West\",",
-        "        IsGerman ? \"Nordwesten\" : \"Northwest\",",
+        "        L(\"Norden\", \"North\", \"Север\"),",
+        "        L(\"Nordosten\", \"Northeast\", \"Северо-восток\"),",
+        "        L(\"Osten\", \"East\", \"Восток\"),",
+        "        L(\"Südosten\", \"Southeast\", \"Юго-восток\"),",
+        "        L(\"Süden\", \"South\", \"Юг\"),",
+        "        L(\"Südwesten\", \"Southwest\", \"Юго-запад\"),",
+        "        L(\"Westen\", \"West\", \"Запад\"),",
+        "        L(\"Nordwesten\", \"Northwest\", \"Северо-запад\"),",
         "    };"
       ]
     },
@@ -303,20 +310,23 @@
         "        { \"nördlich\", \"nordöstlich\", \"östlich\", \"südöstlich\", \"südlich\", \"südwestlich\", \"westlich\", \"nordwestlich\" };",
         "    private static readonly string[] CompassAdjEn =",
         "        { \"north\", \"northeast\", \"east\", \"southeast\", \"south\", \"southwest\", \"west\", \"northwest\" };",
-        "    public static string[] CompassAdjectives => IsGerman ? CompassAdjDe : CompassAdjEn;"
+        "    private static readonly string[] CompassAdjRu =",
+        "        { \"севернее\", \"северо-восточнее\", \"восточнее\", \"юго-восточнее\", \"южнее\", \"юго-западнее\", \"западнее\", \"северо-западнее\" };",
+        "",
+        "    public static string[] CompassAdjectives => Loc.IsRussian ? CompassAdjRu : IsGerman ? CompassAdjDe : CompassAdjEn;"
       ],
       "replace": [
         "    // ORDER IS MEANING, same index as CompassWords.",
         "    public static string[] CompassAdjectives => new[]",
         "    {",
-        "        IsGerman ? \"nördlich\" : \"north\",",
-        "        IsGerman ? \"nordöstlich\" : \"northeast\",",
-        "        IsGerman ? \"östlich\" : \"east\",",
-        "        IsGerman ? \"südöstlich\" : \"southeast\",",
-        "        IsGerman ? \"südlich\" : \"south\",",
-        "        IsGerman ? \"südwestlich\" : \"southwest\",",
-        "        IsGerman ? \"westlich\" : \"west\",",
-        "        IsGerman ? \"nordwestlich\" : \"northwest\",",
+        "        L(\"nördlich\", \"north\", \"севернее\"),",
+        "        L(\"nordöstlich\", \"northeast\", \"северо-восточнее\"),",
+        "        L(\"östlich\", \"east\", \"восточнее\"),",
+        "        L(\"südöstlich\", \"southeast\", \"юго-восточнее\"),",
+        "        L(\"südlich\", \"south\", \"южнее\"),",
+        "        L(\"südwestlich\", \"southwest\", \"юго-западнее\"),",
+        "        L(\"westlich\", \"west\", \"западнее\"),",
+        "        L(\"nordwestlich\", \"northwest\", \"северо-западнее\"),",
         "    };"
       ]
     },
@@ -327,14 +337,14 @@
       "phase": "before",
       "find": [
         "    public static string[] RewardCurrencyLabels =>",
-        "        IsGerman ? new[] { \"Erfahrung\", \"Gil\" } : new[] { \"EXP\", \"Gil\" };"
+        "        Loc.IsRussian ? new[] { \"Опыт\", \"Гил\" } : IsGerman ? new[] { \"Erfahrung\", \"Gil\" } : new[] { \"EXP\", \"Gil\" };"
       ],
       "replace": [
         "    // ORDER IS MEANING: the currency type is only a UI image, so position decides.",
         "    public static string[] RewardCurrencyLabels => new[]",
         "    {",
-        "        IsGerman ? \"Erfahrung\" : \"EXP\",",
-        "        IsGerman ? \"Gil\" : \"Gil\",",
+        "        L(\"Erfahrung\", \"EXP\", \"Опыт\"),",
+        "        L(\"Gil\", \"Gil\", \"Гил\"),",
         "    };"
       ]
     },
@@ -345,21 +355,22 @@
       "phase": "before",
       "find": [
         "        MathF.Abs(rise) >= 5f",
-        "            ? (IsGerman",
-        "                ? $\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, \" +",
-        "                  $\"{(rise > 0 ? \"das Ziel liegt höher\" : \"das Ziel liegt tiefer\")}.\"",
-        "                : $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, \" +",
-        "                  $\"{(rise > 0 ? \"the target is higher up\" : \"the target is further down\")}.\")"
+        "            ? L($\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, \" +",
+        "                $\"{(rise > 0 ? \"das Ziel liegt höher\" : \"das Ziel liegt tiefer\")}.\",",
+        "                $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, \" +",
+        "                $\"{(rise > 0 ? \"the target is higher up\" : \"the target is further down\")}.\",",
+        "                $\"Полёт окончен, приземлился. Осталось {MetersRemaining(distance)} на {direction}, \" +",
+        "                $\"{(rise > 0 ? \"цель выше\" : \"цель ниже\")}.\")"
       ],
       "replace": [
         "        MathF.Abs(rise) >= 5f",
         "            ? (rise > 0",
-        "                ? (IsGerman",
-        "                    ? $\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt höher.\"",
-        "                    : $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is higher up.\")",
-        "                : (IsGerman",
-        "                    ? $\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt tiefer.\"",
-        "                    : $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is further down.\"))"
+        "                ? L($\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt höher.\",",
+        "                    $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is higher up.\",",
+        "                    $\"Полёт окончен, приземлился. Осталось {MetersRemaining(distance)} на {direction}, цель выше.\")",
+        "                : L($\"Flug beendet und gelandet. Noch {MetersRemaining(distance)} nach {direction}, das Ziel liegt tiefer.\",",
+        "                    $\"Flight ended and landed. {MetersRemaining(distance)} to the {direction}, the target is further down.\",",
+        "                    $\"Полёт окончен, приземлился. Осталось {MetersRemaining(distance)} на {direction}, цель ниже.\"))"
       ]
     },
     {
@@ -368,67 +379,23 @@
       "why": "영어가 단복수를 문장 안에서 삼항으로 고른다. 한국어에는 그 구분이 없어서 그 자리를 그대로 두면 한국어 문장에서 transition이 발화된다. 단복수를 갈래 밖으로 빼면 영어 문장 둘이 각각 맨 리터럴이 되고, 독일어는 원래 한 꼴이라 양쪽에 같은 것을 쓴다 - 대장의 열쇠가 (독일어, 영어) 쌍이라 부딪히지 않는다.",
       "phase": "before",
       "find": [
-        "            : (IsGerman",
+        "            : L(",
         "                // \"Gebietswechsel\" ist im Deutschen in Ein- und Mehrzahl gleich.",
-        "                ? $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\"",
-        "                : $\"in the area {zone}, {hops} {(hops == 1 ? \"transition\" : \"transitions\")} away.\");"
+        "                $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\",",
+        "                $\"in the area {zone}, {hops} {(hops == 1 ? \"transition\" : \"transitions\")} away.\",",
+        "                $\"в местности {zone}, переходов: {hops}.\");"
       ],
       "replace": [
-        "            : (hops == 1",
-        "                // \"Gebietswechsel\" ist im Deutschen in Ein- und Mehrzahl gleich.",
-        "                ? (IsGerman",
-        "                    ? $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\"",
-        "                    : $\"in the area {zone}, {hops} transition away.\")",
-        "                : (IsGerman",
-        "                    ? $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\"",
-        "                    : $\"in the area {zone}, {hops} transitions away.\"));"
-      ]
-    },
-    {
-      "name": "strings-update-needs-installer-flatten",
-      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
-      "why": "이어붙인 리터럴이라 파서가 갈림길로 못 읽고, 그러면 대장과 만나지 못해 영어로 나가면서 미적용에도 안 잡힌다. 한 줄로 펴면 Pick이 되어 대장이 읽는다. 우리 사용자가 실제로 듣는 문장이다 - 정식 자리에 깐 설치는 스스로 못 갈아 끼우므로 이 안내로 떨어진다.",
-      "phase": "before",
-      "find": [
-        "        IsGerman ? \"Diese Aktualisierung ändert Dateien, die das laufende Spiel \" +",
-        "                   \"festhält. Bitte das Spiel beenden und den Installer benutzen.\"",
-        "                 : \"This update changes files the running game holds open. \" +",
-        "                   \"Please close the game and use the installer.\";"
-      ],
-      "replace": [
-        "        IsGerman ? \"Diese Aktualisierung ändert Dateien, die das laufende Spiel festhält. Bitte das Spiel beenden und den Installer benutzen.\"",
-        "                 : \"This update changes files the running game holds open. Please close the game and use the installer.\";"
-      ]
-    },
-    {
-      "name": "strings-update-not-self-managed-flatten",
-      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
-      "why": "같은 모양이고 같은 이유다. 이 문장은 특히 중요하다 - 우리 배포물은 Dalamud 커스텀 저장소와 설치 프로그램으로 정식 자리에 깔리므로, 갱신을 눌렀을 때 우리 사용자가 가장 자주 듣게 되는 안내가 이것이다.",
-      "phase": "before",
-      "find": [
-        "        IsGerman ? \"Diese Installation wird von Dalamud verwaltet und kann sich \" +",
-        "                   \"nicht selbst aktualisieren.\"",
-        "                 : \"This installation is managed by Dalamud and cannot update itself.\";"
-      ],
-      "replace": [
-        "        IsGerman ? \"Diese Installation wird von Dalamud verwaltet und kann sich nicht selbst aktualisieren.\"",
-        "                 : \"This installation is managed by Dalamud and cannot update itself.\";"
-      ]
-    },
-    {
-      "name": "strings-update-busy-now-flatten",
-      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
-      "why": "같은 모양이고 같은 이유다.",
-      "phase": "before",
-      "find": [
-        "        IsGerman ? \"Nicht im Kampf oder während einer Laufstrecke. \" +",
-        "                   \"Bitte danach noch einmal.\"",
-        "                 : \"Not during combat or while a walk is running. \" +",
-        "                   \"Please try again afterwards.\";"
-      ],
-      "replace": [
-        "        IsGerman ? \"Nicht im Kampf oder während einer Laufstrecke. Bitte danach noch einmal.\"",
-        "                 : \"Not during combat or while a walk is running. Please try again afterwards.\";"
+        "            : hops == 1",
+        "                ? L(",
+        "                    // \"Gebietswechsel\" ist im Deutschen in Ein- und Mehrzahl gleich.",
+        "                    $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\",",
+        "                    $\"in the area {zone}, {hops} transition away.\",",
+        "                    $\"в местности {zone}, переходов: {hops}.\")",
+        "                : L(",
+        "                    $\"im Gebiet {zone}, {hops} Gebietswechsel entfernt.\",",
+        "                    $\"in the area {zone}, {hops} transitions away.\",",
+        "                    $\"в местности {zone}, переходов: {hops}.\");"
       ]
     },
     {
@@ -439,22 +406,25 @@
       "find": [
         "        var german = new[] { \"Weiß\", \"Rot\", \"Blau\", \"Grün\", \"Lila\", \"Gelb\", \"Orange\", \"Grau\" };",
         "        var english = new[] { \"White\", \"Red\", \"Blue\", \"Green\", \"Purple\", \"Yellow\", \"Orange\", \"Grey\" };",
-        "        var table = IsGerman ? german : english;"
+        "        // Russisch in derselben Reihenfolge: der Spieler hoert die acht Woerter",
+        "        // seit Jahren so. Uebersetzt, nicht neu erfunden.",
+        "        var russian = new[] { \"Белый\", \"Красный\", \"Синий\", \"Зелёный\", \"Фиолетовый\", \"Жёлтый\", \"Оранжевый\", \"Серый\" };",
+        "        var table = Loc.IsRussian ? russian : IsGerman ? german : english;"
       ],
       "replace": [
         "        // ORDER IS MEANING: Sku's own assignment order, see the summary above.",
         "        // Reordering compiles and then gives every enemy a callname the player",
-        "        // has not learned.",
+        "        // has not learned. The Russian order is upstream's, kept as it was.",
         "        var table = new[]",
         "        {",
-        "            IsGerman ? \"Weiß\" : \"White\",",
-        "            IsGerman ? \"Rot\" : \"Red\",",
-        "            IsGerman ? \"Blau\" : \"Blue\",",
-        "            IsGerman ? \"Grün\" : \"Green\",",
-        "            IsGerman ? \"Lila\" : \"Purple\",",
-        "            IsGerman ? \"Gelb\" : \"Yellow\",",
-        "            IsGerman ? \"Orange\" : \"Orange\",",
-        "            IsGerman ? \"Grau\" : \"Grey\",",
+        "            L(\"Weiß\", \"White\", \"Белый\"),",
+        "            L(\"Rot\", \"Red\", \"Красный\"),",
+        "            L(\"Blau\", \"Blue\", \"Синий\"),",
+        "            L(\"Grün\", \"Green\", \"Зелёный\"),",
+        "            L(\"Lila\", \"Purple\", \"Фиолетовый\"),",
+        "            L(\"Gelb\", \"Yellow\", \"Жёлтый\"),",
+        "            L(\"Orange\", \"Orange\", \"Оранжевый\"),",
+        "            L(\"Grau\", \"Grey\", \"Серый\"),",
         "        };"
       ]
     },
@@ -468,76 +438,6 @@
       ],
       "replace": [
         "        NavCategory.Fates            => IsGerman ? \"FATEs\" : \"FATEs\","
-      ]
-    },
-    {
-      "name": "strings-quest-object-count-flatten",
-      "why": "삼항이 세 겹이라 scanner의 unnest가 안 편다 - 안쪽 갈래가 또 삼항이면 갈래가 넷이 되어 짝이 안 맞으므로 그대로 둔다. 그래서 세 갈래가 통째로 영어로 나가는데 미적용에도 안 잡힌다. 개수 조건을 언어 갈림길 밖으로 빼면 갈래 셋이 전부 리터럴 쌍이 되어 대장이 읽는다. 뜻은 그대로다 - 같은 조건이 같은 순서로 갈린다.",
-      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
-      "phase": "before",
-      "find": [
-        "        IsGerman",
-        "            ? objects > 0 && triggers > 0",
-        "                ? $\"Quest-Objekte: {objects} Objekte, {triggers} Auslöser in der Nähe.\"",
-        "                : triggers > 0",
-        "                    ? $\"Quest-Objekte: {triggers} Auslöser in der Nähe.\"",
-        "                    : $\"Quest-Objekte: {objects} in der Nähe.\"",
-        "            : objects > 0 && triggers > 0",
-        "                ? $\"Quest objects: {objects} objects, {triggers} triggers nearby.\"",
-        "                : triggers > 0",
-        "                    ? $\"Quest objects: {triggers} triggers nearby.\"",
-        "                    : $\"Quest objects: {objects} nearby.\";"
-      ],
-      "replace": [
-        "        objects > 0 && triggers > 0",
-        "            ? (IsGerman",
-        "                ? $\"Quest-Objekte: {objects} Objekte, {triggers} Auslöser in der Nähe.\"",
-        "                : $\"Quest objects: {objects} objects, {triggers} triggers nearby.\")",
-        "            : triggers > 0",
-        "                ? (IsGerman",
-        "                    ? $\"Quest-Objekte: {triggers} Auslöser in der Nähe.\"",
-        "                    : $\"Quest objects: {triggers} triggers nearby.\")",
-        "                : (IsGerman",
-        "                    ? $\"Quest-Objekte: {objects} in der Nähe.\"",
-        "                    : $\"Quest objects: {objects} nearby.\");"
-      ]
-    },
-    {
-      "name": "strings-synthesis-opened-flatten",
-      "why": "이어붙이기라 파서 손 밖이고, 제작 창을 여는 첫 문장이 통째로 영어로 나가면서 미적용에도 안 잡힌다. 조각을 갈래별로 한 줄에 합치면 맨 리터럴이 되어 대장이 읽는다. 이어 붙인 결과의 글자는 한 자도 안 달라진다.",
-      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
-      "phase": "before",
-      "find": [
-        "             + (IsGerman",
-        "                ? $\"Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, \"",
-        "                  + $\"Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von \"",
-        "                  + $\"{maxDurability}, Schritt {step}.\"",
-        "                : $\"Quality {quality} of {maxQuality}, HQ chance {hqPercent} percent, \"",
-        "                  + $\"progress {progress} of {maxProgress}, durability {durability} of \"",
-        "                  + $\"{maxDurability}, step {step}.\")"
-      ],
-      "replace": [
-        "             + (IsGerman",
-        "                ? $\"Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von {maxDurability}, Schritt {step}.\"",
-        "                : $\"Quality {quality} of {maxQuality}, HQ chance {hqPercent} percent, progress {progress} of {maxProgress}, durability {durability} of {maxDurability}, step {step}.\")"
-      ]
-    },
-    {
-      "name": "strings-synthesis-progress-flatten",
-      "why": "SynthesisOpened와 같은 모양이고 같은 까닭이다. 제작 중 동작마다 말하는 짧은 줄이라 실제로 가장 자주 들리는 자리다.",
-      "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
-      "phase": "before",
-      "find": [
-        "        => IsGerman",
-        "            ? $\"Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, \"",
-        "              + $\"Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von {maxDurability}.\"",
-        "            : $\"Quality {quality} of {maxQuality}, HQ chance {hqPercent} percent, \"",
-        "              + $\"progress {progress} of {maxProgress}, durability {durability} of {maxDurability}.\";"
-      ],
-      "replace": [
-        "        => IsGerman",
-        "            ? $\"Qualität {quality} von {maxQuality}, HQ-Chance {hqPercent} Prozent, Fortschritt {progress} von {maxProgress}, Haltbarkeit {durability} von {maxDurability}.\"",
-        "            : $\"Quality {quality} of {maxQuality}, HQ chance {hqPercent} percent, progress {progress} of {maxProgress}, durability {durability} of {maxDurability}.\";"
       ]
     },
     {
@@ -555,24 +455,19 @@
     {
       "name": "gaugecues-job-shorthand",
       "file": "FF14Accessibility/Services/GaugeReadyCues.cs",
-      "why": "직업 이름 스물셋이 이 축약으로 갈리는데, 선언이 Loc.IsGerman ? de : en이라 표식은 잡히지만 피연산자가 리터럴이 아니라 못 읽음으로 나갔다. 정작 리터럴은 호출부에 있다. 축약을 Loc.Pick으로 돌리면 스캐너가 호출부를 자리로 읽고 대장의 한국어를 세 번째 인자로 넣는다. 이름을 Pick으로 안 바꾸는 까닭은 호출부 스물셋이 Job을 쓰고 있어서다 - 스캐너도 그 자리가 쓰던 이름을 되쓴다(scanner.PICKS). phase가 before인 까닭은 이 선언 자체가 못 읽음으로 세어지기 때문이다. 주입 앞에 고쳐야 그 한 건이 보고에서 빠진다.",
+      "why": "직업 이름 스물둘이 이 축약으로 갈린다. 원본이 AccessibilityStrings.L로 넘기므로 ko와 caller를 같이 넘긴다. 셋째 인자는 러시아어라 조립 도구가 한국어를 이름 붙인 인자로만 끼운다.",
       "phase": "before",
       "find": [
-        "    private static string Job(string de, string en) => Loc.IsGerman ? de : en;"
+        "    private static string Job(string de, string en, string ru) =>",
+        "        AccessibilityStrings.L(de, en, ru);"
       ],
       "replace": [
-        "    // Three-language form. The Korean comes from korean/strings.json and is written",
-        "    // in by tools/assemble - do not hand-edit it here, the catalogue is the original.",
-        "    //",
-        "    // The name stays Job, not Pick: the twenty-three call sites below spell it that",
-        "    // way and the assembler writes back the name the site used.",
-        "    //",
-        "    // caller is filled in by the compiler and names the method, which is what the",
-        "    // missing-Korean log prints. Fourth parameter, so the three-argument calls the",
-        "    // assembler writes cannot land on it.",
-        "    private static string Job(string de, string en, string? ko = null,",
+        "    // Korean through AccessibilityStrings.L. ko is written in by tools/assemble as",
+        "    // a named argument; caller is passed on so the missing-Korean log names the",
+        "    // method here, not this wrapper.",
+        "    private static string Job(string de, string en, string ru, string? ko = null,",
         "                              [CallerMemberName] string caller = \"\") =>",
-        "        Loc.Pick(de, en, ko, caller);"
+        "        AccessibilityStrings.L(de, en, ru, ko, caller);"
       ]
     },
     {
@@ -581,13 +476,28 @@
       "why": "중첩 삼항이라 scanner의 unnest가 알아서 펴는데, 편 결과의 뒤쪽 갈래가 IsGerman ? melded : melded가 되어 못 읽음으로 남는다. 양쪽이 글자까지 같아 번역할 것이 없는 자리인데도 신호가 울리고, 그 신호가 쌓이면 진짜 못 읽음과 섞여 아무도 안 보게 된다. 안쪽 조건을 손으로 밖에 빼면 갈림길이 하나만 남고 그 하나는 리터럴 쌍이라 대장이 읽는다. 뜻은 그대로다 - 자리가 없으면 마테리아 이름만 말하는 것이 원본의 동작이고 그 이름은 게임 창에서 글자 그대로 온다.",
       "phase": "before",
       "find": [
-        "        IsGerman ? (sockets > 0 ? $\"{melded}, {sockets} Plätze\" : melded)",
-        "                 : (sockets > 0 ? $\"{melded}, {sockets} sockets\" : melded);"
+        "        L(sockets > 0 ? $\"{melded}, {sockets} Plaetze\" : melded,",
+        "          sockets > 0 ? $\"{melded}, {sockets} sockets\" : melded,",
+        "          sockets > 0 ? $\"{melded}, слотов: {sockets}\" : melded);"
       ],
       "replace": [
         "        sockets > 0",
-        "            ? (IsGerman ? $\"{melded}, {sockets} Plätze\" : $\"{melded}, {sockets} sockets\")",
+        "            ? L($\"{melded}, {sockets} Plaetze\", $\"{melded}, {sockets} sockets\", $\"{melded}, слотов: {sockets}\")",
         "            : melded;"
+      ]
+    },
+    {
+      "name": "strings-more-enemies-pick",
+      "file": "FF14Accessibility/Services/AccessibilityStrings.V19.cs",
+      "phase": "before",
+      "why": "공격받음 안내의 끝(\"그리고 다른 적 N명\")을 고르는 함수가 러시아어와 독일어만 따로 두고 나머지는 전부 영어를 돌려준다. 갈림이 if (Loc.IsGerman) return ...; 꼴이라 스캐너가 갈림길로 보지 않아 못 읽음에도 안 잡힌다. 영어 줄을 L로 바꾸면 대장이 읽는다. 독일어 줄은 그대로 두고 L에 같은 독일어를 넣는다 - 대장의 키가 (독일어, 영어) 쌍이고, 독일어는 앞 줄에서 이미 돌아가므로 들리는 것은 그대로다.",
+      "find": [
+        "\t\treturn (count == 1) ? \"one more\" : $\"{count} more\";"
+      ],
+      "replace": [
+        "\t\treturn count == 1",
+        "\t\t\t? L(\"einem weiteren Gegner\", \"one more\")",
+        "\t\t\t: L($\"{count} weiteren Gegnern\", $\"{count} more\");"
       ]
     },
     {

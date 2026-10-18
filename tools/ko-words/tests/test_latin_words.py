@@ -106,8 +106,12 @@ def test_새_영어가_말없이_들어오지_않는다():
 def test_허용목록은_사람이_훑을_수_있는_크기다():
     # 스물몇 개는 한 번에 읽힌다. 이 숫자가 크게 불면 허용목록이라는 방식 자체를
     # 다시 봐야 한다는 신호다 - 조용히 늘리라는 뜻이 아니다.
+    #
+    # 2026-10-18에 60에서 80으로 올렸다(사용자 결정). v6.08.129가 /acc help 전문에
+    # 명령어 이름 스무 개 남짓을 더했고, 같은 날 키 이름 일곱을 영어로 두기로 정해
+    # 62개가 됐다. 하나씩 훑었고 전부 영어로 있어야 맞는 낱말이었다.
     words = json.loads(GOLDEN.read_text(encoding="utf-8"))["words"]
-    assert len(words) < 60, f"허용목록이 {len(words)}개다 - 사람이 못 훑는다"
+    assert len(words) < 80, f"허용목록이 {len(words)}개다 - 사람이 못 훑는다"
 
 
 @pytest.mark.skipif(not CATALOG.is_file(), reason="대장이 없다")

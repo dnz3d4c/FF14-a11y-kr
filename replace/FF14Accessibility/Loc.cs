@@ -12,7 +12,16 @@ public enum LanguageMode
     Auto = 0,
     German = 1,
     English = 2,
+
+    /// <summary>
+    /// Korean keeps the 3 it had before upstream added Russian. The choice is saved
+    /// in the plugin config as this number, so taking 3 away would turn every saved
+    /// Korean setting into Russian on the first start of the new version.
+    /// </summary>
     Korean = 3,
+
+    /// <summary>Russian (upstream uses 3 for it). Strings without a Russian text stay English.</summary>
+    Russian = 4,
 }
 
 /// <summary>
@@ -34,6 +43,12 @@ public static class Loc
     /// <summary>What the user picked. May be <see cref="LanguageMode.Auto"/>.</summary>
     public static LanguageMode Mode { get; set; } = LanguageMode.Auto;
 
+    /// <summary>Saved separately from the language of plugin announcements.</summary>
+    public static bool TranslateItemsAndActions { get; set; } = true;
+
+    /// <summary>Current translation state for item/ability speech and its caches.</summary>
+    public static bool IsRussianItemActionText => IsRussian && TranslateItemsAndActions;
+
     /// <summary>Language used when the OS culture matches no known one.</summary>
     public const LanguageMode Fallback = LanguageMode.English;
 
@@ -44,6 +59,7 @@ public static class Loc
             ["de"] = LanguageMode.German,
             ["en"] = LanguageMode.English,
             ["ko"] = LanguageMode.Korean,
+            ["ru"] = LanguageMode.Russian,
         };
 
     /// <summary>What "/acc lang" accepts. Several spellings may map to one language.</summary>
@@ -60,6 +76,11 @@ public static class Loc
             ["korean"] = LanguageMode.Korean,
             ["koreanisch"] = LanguageMode.Korean,
             ["한국어"] = LanguageMode.Korean,
+            ["ru"] = LanguageMode.Russian,
+            ["russian"] = LanguageMode.Russian,
+            ["russisch"] = LanguageMode.Russian,
+            ["рус"] = LanguageMode.Russian,
+            ["русский"] = LanguageMode.Russian,
             ["auto"] = LanguageMode.Auto,
         };
 
@@ -83,6 +104,10 @@ public static class Loc
     /// <summary>True when announcements should be Korean.</summary>
     public static bool IsKorean => Current == LanguageMode.Korean;
 
+    /// <summary>True when announcements should be Russian. Auto picks Russian on a
+    /// Russian Windows, exactly as it picks German on a German one.</summary>
+    public static bool IsRussian => Current == LanguageMode.Russian;
+
     /// <summary>
     /// Zweibuchstabiger Sprachcode der laufenden Sprache, fuer fremde APIs, die
     /// nach Kultur auswaehlen statt nach unserem Enum - SAPI zum Beispiel.
@@ -98,6 +123,7 @@ public static class Loc
     {
         LanguageMode.Korean => "ko",
         LanguageMode.German => "de",
+        LanguageMode.Russian => "ru",
         _ => "en",
     };
 

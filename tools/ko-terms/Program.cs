@@ -26,7 +26,7 @@
 //     row <번호>           행 번호로 바로 본다
 //     dump <디렉토리>      전 행을 TSV로
 //
-//     --sheet <이름>       Addon(기본) | Action | Pet | Status | ClassJob | MainCommand | all
+//     --sheet <이름>       Addon(기본) | Action | Pet | Status | ClassJob | MainCommand | PlaceName | all
 
 using System.Text;
 using Lumina;
@@ -75,6 +75,9 @@ var known = new List<Sheet>
     // 메인 메뉴 명령 이름. 창 제목은 Addon 행만으로 탭과 못 가르는데, 그 창을
     // 여는 메뉴 항목의 이름은 여기 있다.
     Make<MainCommand>("MainCommand", r => r.Name.ExtractText()),
+    // 지명. 원본이 장소 이름을 문장에 박아 둔 자리(블런더빌 코스 이름, PlaceName
+    // 4470-4475)가 있어서, 그 한국어판 이름을 행 번호로 확인할 때 쓴다.
+    Make<PlaceName>("PlaceName", r => r.Name.ExtractText()),
 };
 
 // `--sheet`는 모드 앞뒤 어디에 와도 된다. 떼어 내고 나머지를 예전처럼 읽는다.

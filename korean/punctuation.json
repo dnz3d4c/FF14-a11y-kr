@@ -448,6 +448,213 @@
       ],
       "why": "결정 3·4의 숫자 형식이 원문 von을 쉼표로 옮긴다(2026-09-29 사용자 결정)",
       "when": "2026-09-29"
+    },
+    {
+      "de": "Auf der Karte {mapX:0.0} und {mapY:0.0}",
+      "kind": "나열",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "und가 나열 마지막 항목을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Blaumagie-Sonde. Reiter {tab} von {tabs}. {actions} von 16 Kacheln mit Aktions-Id, {filled} von 24 Plätzen belegt. {verdict} Rest im Log.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Feld {index} von {total}. {(context.Length > 0 ? context + \": \" : \"\")}{text}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "HP {current} von {maximum}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Kompanon-Sonde auf dem Desktop: Fensterbefund, Nummerblock 0 und der letzte Spielchat.",
+      "kind": "나열",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "und가 나열 마지막 항목을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Liste {index} von {total}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Manderville-Parcours. Der Ton zeigt den nächsten Abschnitt nach Norden. Unterwegs Windstöße, Schwünge und bewegliche Brücken.",
+      "kind": "나열",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "und가 나열 마지막 항목을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Manderville-Rennen. Der Ton zeigt den nächsten Abschnitt nach Norden. Unterwegs rollende Stangen und Pendel.",
+      "kind": "나열",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "und가 나열 마지막 항목을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Manderville-Spitze. Der Ton zeigt bergauf zur Krone. Unterwegs Wippen und rollende Kugeln.",
+      "kind": "나열",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "und가 나열 마지막 항목을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Num8/2 und Num4/6 wechseln den Fokus; Num0 oder Enter betätigt die Schaltfläche. Escape geht zurück.",
+      "kind": "나열",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "und가 나열 마지막 항목을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Reiter {name}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Rezeptansicht: {view}, Umschalter, {index} von {total}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Seite {page} von {pages}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Seite {page} von {pages}. Eintrag {entry} von {entries}. {status}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Seite {page} von {pages}. {zone}, Eintrag {entry} von {entries}. {AetherProgressUnread}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Seite {page} von {pages}. {zone}, Eintrag {entry} von {entries}. {found} von {total}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "Standort {index} von {count}, {distance}, {direction}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "{(section.Length > 0 ? section + \". \" : \"\")}{text}. Zeile {index} von {total}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "{body}, {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "{current} von {maximum}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "{label}, Registerkarte {index} von {count}",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "{name}, Reiter {index} von {count}.",
+      "kind": "형식",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "원문 von을 숫자 형식(탭 2, 전체 4 / HP 45000, 최대 91051)대로 쉼표로 옮겼다",
+      "when": "2026-10-18"
+    },
+    {
+      "de": "{name}, {required} benötigt, vorhanden {total}, davon {CraftingCount(nq)} NQ und {CraftingCount(hq)} HQ",
+      "kind": "나열",
+      "faults": [
+        "쉼표"
+      ],
+      "why": "und가 나열 마지막 항목을 잇는다. 한국어는 쉼표로 잇는다",
+      "when": "2026-10-18"
     }
   ]
 }

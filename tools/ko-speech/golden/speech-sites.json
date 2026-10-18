@@ -16,170 +16,134 @@
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "AusrÃ¼stung",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Alle Ausrüstungsteile in Arsenaltruhe legen",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. 원본 v6.08.128이 무기고에 넣기를 들여오면서 형제들과 같은 배열에 한 줄로 더했다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "AusrÃ¼stung vergleichen",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. 원본 v6.08.5가 장비 비교를 들여오면서 형제들과 같은 배열에 한 줄로 더했다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Ausrüstung",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Beste AusrÃ¼stung",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Ausrüstung vergleichen",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. 원본 v6.08.5가 장비 비교를 들여오면서 형제들과 같은 배열에 한 줄로 더했다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Chat-Absender MenÃ¼",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Beste Ausrüstung",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Chat-Registerkarte zurÃ¼ck",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Chat-Absender Menü",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Emote ausfÃ¼hren",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Chat-Registerkarte zurück",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Emote zurÃ¼ck",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Emote ausführen",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "FlÃ¤chenwarnung an/aus",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Emote zurück",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "HQ-Materialien im Rezeptbuch Ã¼bernehmen",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Flächenwarnung an/aus",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "HimmelssÃ¤ule",
-      "why": "`#if DEBUG` 안의 딥 던전 조사 명령이 쓰는 콘텐츠 이름표다(`Plugin.cs:795-840`). 배포 빌드에는 안 들어간다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "HQ-Materialien im Rezeptbuch übernehmen",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Kategorie zurÃ¼ck",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Himmelssäule",
+      "why": "`#if DEBUG` 안의 딥 던전 조사 명령이 쓰는 콘텐츠 이름표다(`Plugin.cs:795-840`). 배포 빌드에는 안 들어간다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Kein Tiefes GewÃ¶lbe freigeschaltet.",
-      "why": "`#if DEBUG` 안의 딥 던전 조사 명령이 말하는 문장이다. 개발 빌드에서만 들린다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Kategorie zurück",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "MenÃ¼ vorlesen",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Kein Tiefes Gewölbe freigeschaltet.",
+      "why": "`#if DEBUG` 안의 딥 던전 조사 명령이 말하는 문장이다. 개발 빌드에서만 들린다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Nachlese Kategorie zurÃ¼ck",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Menü vorlesen",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Nachlese Ã¤lter",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Nachlese Kategorie zurück",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "NÃ¤chstes Objekt",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Nachlese älter",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Plugin-Liste zurÃ¼ck",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Nächstes Objekt",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "Skill-MenÃ¼",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Plugin-Liste zurück",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "ZufÃ¤lliges Aussehen",
-      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Skill-Menü",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
       "file": "Plugin.cs",
       "rule": "umlaut",
-      "text": "lÃ¶schen",
-      "why": "채팅 명령어 낱말을 `.Equals`로 대조하는 자리다. `del`·`loesch`와 나란한 형제라 발화가 아니라 입력이다. 원본 v6.08.35부터 이 줄이 이중 인코딩돼 깨진 글자로 온다(docs/decisions.md D-18)."
+      "text": "Zufälliges Aussehen",
+      "why": "`/acc keys` 충돌 보고서가 쓰는 기능 이름이다. `KeybindService.DumpKeybinds`가 문자열 빌더와 로그에만 넣고 사람에게는 개수만 말한다."
     },
     {
-      "file": "Services/AccessibilityStrings.cs",
-      "rule": "sibling",
-      "text": "PvP",
-      "why": "게임 한국어판이 그대로 `PvP`라고 쓴다(KR Addon 834행). 세 언어가 같은 낱말이라 `Pick`으로 감싸도 값이 셋 다 같다. **형제 대조가 잡은 것은 맞고 판정만 통과다** - 형제와 모양을 맞출지는 손볼 때 같이 정한다."
+      "file": "Plugin.cs",
+      "rule": "umlaut",
+      "text": "löschen",
+      "why": "채팅 명령어 낱말을 `.Equals`로 대조하는 자리다. `del`·`loesch`와 나란한 형제라 발화가 아니라 입력이다."
     },
     {
       "file": "Services/AccessibilityStrings.cs",
       "rule": "umlaut",
       "text": "Rücktaste",
       "why": "`SpokenKeyLabel`이 독일어 키 이름을 영어로 바꿀 때 쓰는 표의 **찾기 키**다. 발화되는 것은 표의 값(`Backspace`)이고 이 낱말 자체는 설정 파일에 저장된 철자를 맞대는 데만 쓴다. 같은 낱말이 `KeyNames.cs`에도 같은 까닭으로 이미 올라 있다."
-    },
-    {
-      "file": "Services/ActionSignalProbe.cs",
-      "rule": "speech",
-      "text": "Sonde nicht moeglich.",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/ActionSignalProbe.cs",
-      "rule": "speech",
-      "text": "Sonde: {lines.Count} Aktionen ins Log geschrieben.",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/AozNotebookProbe.cs",
-      "rule": "speech",
-      "text": "Blaumagie-Sonde. Reiter {addon->TabIndex + 1} von {addon->TabCount}. ",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/AozNotebookProbe.cs",
-      "rule": "speech",
-      "text": "Das Zauberbuch der Blaumagie ist nicht offen.",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/AozNotebookProbe.cs",
-      "rule": "speech",
-      "text": "{unlockVerdict} Rest im Log.",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/AozNotebookProbe.cs",
-      "rule": "speech",
-      "text": "{withId} von 16 Kacheln mit Aktions-Id, {filled} von 24 Plaetzen belegt. ",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
     },
     {
       "file": "Services/AutoWalkService.cs",
@@ -206,142 +170,22 @@
       "why": "발화가 아니라 사유 인자다. `Finish(string? spoken, string reason)`과 `EndFlightShort(Vector3, float, string reason)`의 `reason` 자리이고 로그로만 간다 - 실제로 말하는 것은 `AccessibilityStrings.FlightEndedRemaining`이 만든다."
     },
     {
-      "file": "Services/BeastmasterGaugeProbe.cs",
-      "rule": "speech",
-      "text": "Bestienbaendiger-Sonde. Job {job}, Stufe {level}. ",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v6.08.33이 들여온 마수조련사 게이지 탐침이고, `ActionSignalProbe.cs`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/BeastmasterGaugeProbe.cs",
-      "rule": "speech",
-      "text": "Sonde nicht moeglich.",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v6.08.33이 들여온 마수조련사 게이지 탐침이고, `ActionSignalProbe.cs`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/BeastmasterGaugeProbe.cs",
-      "rule": "speech",
-      "text": "{addonHits} Addon-Treffer, {statusHits} Statuszeilen. Rest im Log.",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v6.08.33이 들여온 마수조련사 게이지 탐침이고, `ActionSignalProbe.cs`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/CollisionProbe.cs",
+      "file": "Services/HotbarService.cs",
       "rule": "umlaut",
-      "text": "Kollisionssonde: {found} Einträge im Log.",
-      "why": "파일 전체가 #if DEBUG 안이라 배포되는 Release 빌드에는 컴파일되지 않는다. 업스트림이 v5.90에서 넣은 개발자용 충돌 탐침이고, 사용자가 이 문장을 들을 경로가 없다. 카탈로그에 넣으면 사용자가 못 듣는 문장이 쌓이므로 여기서 판단을 적고 넘긴다. #if DEBUG 밖으로 나오면 그때 옮긴다."
+      "text": "Einträge {_craftSkills.Count}, Probe {DateTime.Now:yyyy-MM-dd HH:mm:ss}",
+      "why": "`PluginFileLog.Write`의 인자다. 로그 판정이 `log`라는 이름 조각만 보므로 `PluginFileLog`를 못 알아본다. 발화되지 않는다."
     },
     {
-      "file": "Services/FishingService.cs",
-      "rule": "speech",
-      "text": "{hits.Count} Objekte in 50 Metern im Log.",
-      "why": "탐침 발화이고 **`#if DEBUG` 밖이라 배포판에 들어간다.** `ProbeNearbyObjects`(:315)도 호출부인 `Plugin.cs:734`의 `case \"fishobj\":`도 조건 밖이다. 옛 저장소가 적어 둔 명령어 이름 `/acc fish`는 틀렸다 - 그 이름은 `Plugin.cs:731`이 부르는 `AnnounceSpotsInCurrentZone`의 것이라 다른 기능이다. **같은 파일의 `NavigationService` 셋과 심각도가 다르다**: 이쪽은 기본 키에 안 물려 있어서 사용자가 `/acc fishobj`를 일부러 쳐야만 나오고, 문서에 없는 진단 명령이라 그럴 일이 사실상 없다. 키 한 번으로 닿는 자리가 아니라 통과시키되, `#if DEBUG` 안으로 들어가거나 키에 물리면 그때 다시 본다."
-    },
-    {
-      "file": "Services/FlightProbe.cs",
-      "rule": "speech",
-      "text": "Flugsonde: Gebiet unbekannt.",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/FlightProbe.cs",
-      "rule": "speech",
-      "text": "Urteil {_flight.Blocked()}.",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/FlightProbe.cs",
+      "file": "Services/HotbarService.cs",
       "rule": "umlaut",
-      "text": "Flugsonde. Gebiet {place}. Nutzung {use}, Ätherstrom-Satz {set}, komplett {(complete ? \"ja\" : \"nein\")}. ",
-      "why": "파일 전체가 `#if DEBUG`라 배포 빌드에 안 들어간다 (v5.96이 들여온 탐침이고, `lift-probe-speaks-german.md`와 같은 판정이다). 사용자가 듣는 자리가 아니다."
-    },
-    {
-      "file": "Services/GaugeReadyCues.cs",
-      "rule": "sibling",
-      "text": "Getsu",
-      "why": "**통과시키는 것이 아니라 한국어를 못 찾아 원어로 두기로 한 자리다.** 사무라이 게이지의 자원 이름이고, 영어 쪽은 모드가 지은 말이 아니라 게임 자신의 낱말이다 - 모드가 `Dalamud.Game.ClientState.JobGauge`의 `SAMGauge` 필드를 그대로 읽어 쓴다. KR 클라이언트의 시트 다섯에 이 자원 이름이 UI 문자열로 없다. 근거와 무엇을 뒤졌는지는 `korean/terms.json`의 `not_found`가 갖는다 (2026-09-20 사용자 결정)."
-    },
-    {
-      "file": "Services/GaugeReadyCues.cs",
-      "rule": "sibling",
-      "text": "Ka",
-      "why": "**통과시키는 것이 아니라 한국어를 못 찾아 원어로 두기로 한 자리다.** 사무라이 게이지의 자원 이름이고, 영어 쪽은 모드가 지은 말이 아니라 게임 자신의 낱말이다 - 모드가 `Dalamud.Game.ClientState.JobGauge`의 `SAMGauge` 필드를 그대로 읽어 쓴다. KR 클라이언트의 시트 다섯에 이 자원 이름이 UI 문자열로 없다. 근거와 무엇을 뒤졌는지는 `korean/terms.json`의 `not_found`가 갖는다 (2026-09-20 사용자 결정)."
-    },
-    {
-      "file": "Services/GaugeReadyCues.cs",
-      "rule": "sibling",
-      "text": "Kenki",
-      "why": "**통과시키는 것이 아니라 한국어를 못 찾아 원어로 두기로 한 자리다.** 사무라이 게이지의 자원 이름이고, 영어 쪽은 모드가 지은 말이 아니라 게임 자신의 낱말이다 - 모드가 `Dalamud.Game.ClientState.JobGauge`의 `SAMGauge` 필드를 그대로 읽어 쓴다. KR 클라이언트의 시트 다섯에 이 자원 이름이 UI 문자열로 없다. 근거와 무엇을 뒤졌는지는 `korean/terms.json`의 `not_found`가 갖는다 (2026-09-20 사용자 결정)."
-    },
-    {
-      "file": "Services/GaugeReadyCues.cs",
-      "rule": "sibling",
-      "text": "Setsu",
-      "why": "**통과시키는 것이 아니라 한국어를 못 찾아 원어로 두기로 한 자리다.** 사무라이 게이지의 자원 이름이고, 영어 쪽은 모드가 지은 말이 아니라 게임 자신의 낱말이다 - 모드가 `Dalamud.Game.ClientState.JobGauge`의 `SAMGauge` 필드를 그대로 읽어 쓴다. KR 클라이언트의 시트 다섯에 이 자원 이름이 UI 문자열로 없다. 근거와 무엇을 뒤졌는지는 `korean/terms.json`의 `not_found`가 갖는다 (2026-09-20 사용자 결정)."
-    },
-    {
-      "file": "Services/GaugeReadyCues.cs",
-      "rule": "sibling",
-      "text": "Tsubame",
-      "why": "**통과시키는 것이 아니라 한국어를 못 찾아 원어로 두기로 한 자리다.** 사무라이 게이지의 자원 이름이고, 영어 쪽은 모드가 지은 말이 아니라 게임 자신의 낱말이다 - 모드가 `Dalamud.Game.ClientState.JobGauge`의 `SAMGauge` 필드를 그대로 읽어 쓴다. KR 클라이언트의 시트 다섯에 이 자원 이름이 UI 문자열로 없다. 근거와 무엇을 뒤졌는지는 `korean/terms.json`의 `not_found`가 갖는다 (2026-09-20 사용자 결정)."
+      "text": "Keine Handwerksaktionen für den aktuellen Beruf.",
+      "why": "`ProbeCraftDescriptions`의 반환값이다. 유일한 호출부 `WriteSkillDiagnostics`가 반환값을 버린다(v6.08.129). 발화되지 않는다. 호출부가 이 값을 말하기 시작하면 결함이다."
     },
     {
       "file": "Services/KeybindService.cs",
       "rule": "umlaut",
       "text": "Einträge: {numKeybinds}",
       "why": "`/acc keys`가 파일로 남기는 진단 보고서의 머리글이다. 사람에게는 개수만 말한다."
-    },
-    {
-      "file": "Services/LiftProbe.cs",
-      "rule": "speech",
-      "text": "Aufzug-Sonde abgebrochen.",
-      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `LiftProbe.Start`를 `Plugin.cs:771`의 명령어 갈래가 부른다."
-    },
-    {
-      "file": "Services/LiftProbe.cs",
-      "rule": "speech",
-      "text": "Aufzug-Sonde fertig.",
-      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. `LiftProbe`가 승강기에 올라탄 것을 재고 끝을 알린다."
-    },
-    {
-      "file": "Services/LiftProbe.cs",
-      "rule": "speech",
-      "text": "Aufzug-Sonde laeuft, {TrackDuration.TotalSeconds:F0} Sekunden. ",
-      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. 측정이 도는 동안의 안내다."
-    },
-    {
-      "file": "Services/LiftProbe.cs",
-      "rule": "speech",
-      "text": "Aufzug-Sonde: kein Spieler.",
-      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. 잴 대상이 없을 때의 거절이다."
-    },
-    {
-      "file": "Services/LiftProbe.cs",
-      "rule": "speech",
-      "text": "Du faehrst. Hoehe {(moved.Y > 0 ? \"steigt\" : \"faellt\")}.",
-      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이고**(`LiftProbe.cs`의 1행과 197행), 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이다(`:752-781`). 배포물은 `dotnet build -c Release`로 빌드하므로(`tools/pack/pack.py:204`) 이 클래스가 아예 컴파일되지 않는다 - 사용자가 들을 경로가 없다. 다만 형제 넷과 달리 이 자리는 `Start`가 아니라 `Update`에 있어서, 측정이 도는 동안 사람이 아무것도 안 쳐도 스스로 말한다. 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`."
-    },
-    {
-      "file": "Services/LiftProbe.cs",
-      "rule": "speech",
-      "text": "Jetzt auf den Aufzug stellen und ihn ausloesen.",
-      "why": "탐침 발화다. **파일 전체가 `#if DEBUG` 안이라**(`LiftProbe.cs`의 1행과 197행) 배포되는 Release 빌드에는 컴파일되지 않는다 - 유일한 호출부인 `Plugin.cs`의 `case \"lift\"`도 같은 조건 안이고(`:752-781`), 배포물은 `dotnet build -c Release`로 만든다(`tools/pack/pack.py:204`). 관찰의 기록은 `upstream-reports/lift-probe-speaks-german.md`. 키에 안 물려 있고 채팅 명령어(`/acc lift`)로만 불린다 - 사용자가 일부러 쳐야 들리는 개발자 진단 자리다. 측정을 시작하며 무엇을 하라고 이르는 자리다."
-    },
-    {
-      "file": "Services/NavigationService.cs",
-      "rule": "speech",
-      "text": "Marker-Sonde: {eventCount} Event, {miniCount} Minimap, {places.Count} Orte im Log.",
-      "why": "**통과시키는 것이 아니라 아직 못 고친 결함이다. 옛 저장소에서 옮겨 온 `키에 안 물려 있고 채팅 명령어로만 불린다`는 근거는 이 저장소에서 사실이 아니다.** 기본 키에 물려 있다 - `Configuration.cs:57`이 `KeyDumpUI = \"Strg+F5\"`를 기본값으로 주고, 그 키를 읽는 `Plugin.cs:1880-1888`은 `#if DEBUG` 밖이다. 띄운 창이 있으면 `DumpFocusedAddon`이 먹지만 **야외처럼 창이 없으면 거짓을 돌려주고** 그때 `DumpNearbyObjects`로 떨어진다(`Plugin.cs:1886-1887`). 그 함수(`:2398`)도 `#if DEBUG` 밖이라 배포판에 그대로 들어간다. 사안 파일: `upstream-reports/object-probe-speaks-german.md`. `DumpNearbyObjects`가 `:2433`에서 `DumpMapMarkers`를 조건 없이 부르므로, 야외에서 Strg+F5 한 번에 이 문장이 `Objekt-Sonde` 다음으로 이어 나온다. 옛 근거가 적은 `/acc marker` 명령은 이 저장소에 없다."
-    },
-    {
-      "file": "Services/NavigationService.cs",
-      "rule": "speech",
-      "text": "Objekt-Sonde: kein Spieler.",
-      "why": "**통과시키는 것이 아니라 아직 못 고친 결함이다. 옛 저장소에서 옮겨 온 `키에 안 물려 있고 채팅 명령어로만 불린다`는 근거는 이 저장소에서 사실이 아니다.** 기본 키에 물려 있다 - `Configuration.cs:57`이 `KeyDumpUI = \"Strg+F5\"`를 기본값으로 주고, 그 키를 읽는 `Plugin.cs:1880-1888`은 `#if DEBUG` 밖이다. 띄운 창이 있으면 `DumpFocusedAddon`이 먹지만 **야외처럼 창이 없으면 거짓을 돌려주고** 그때 `DumpNearbyObjects`로 떨어진다(`Plugin.cs:1886-1887`). 그 함수(`:2398`)도 `#if DEBUG` 밖이라 배포판에 그대로 들어간다. 사안 파일: `upstream-reports/object-probe-speaks-german.md`. 이 자리는 그 갈래에서 플레이어를 못 읽었을 때의 거절이다."
-    },
-    {
-      "file": "Services/NavigationService.cs",
-      "rule": "speech",
-      "text": "Objekt-Sonde: {near.Count} Objekte im Log.",
-      "why": "**통과시키는 것이 아니라 아직 못 고친 결함이다. 옛 저장소에서 옮겨 온 `키에 안 물려 있고 채팅 명령어로만 불린다`는 근거는 이 저장소에서 사실이 아니다.** 기본 키에 물려 있다 - `Configuration.cs:57`이 `KeyDumpUI = \"Strg+F5\"`를 기본값으로 주고, 그 키를 읽는 `Plugin.cs:1880-1888`은 `#if DEBUG` 밖이다. 띄운 창이 있으면 `DumpFocusedAddon`이 먹지만 **야외처럼 창이 없으면 거짓을 돌려주고** 그때 `DumpNearbyObjects`로 떨어진다(`Plugin.cs:1886-1887`). 그 함수(`:2398`)도 `#if DEBUG` 밖이라 배포판에 그대로 들어간다. 사안 파일: `upstream-reports/object-probe-speaks-german.md`. 이 자리가 그 갈래의 주 안내다 - 원본 주석이 `Announces the count so the blind user knows the dump ran`라고 적어, 로그가 아니라 **사용자에게 하는 말**임을 스스로 밝힌다."
     },
     {
       "file": "Services/PlacesService.cs",
@@ -356,10 +200,16 @@
       "why": "**통과시키는 것이 아니라 아직 못 고친 결함이다.** `PlaceDestination.TypeLabel`을 판정용으로 독일어로 두는 것은 원본의 의도인데(`NavigationService.cs:2101`·`3031`과 `PlacesService.cs:461`이 그 값을 글자로 비교한다), 그 값이 `NavigationService.cs:1754`의 발화 문장에 그대로 들어간다. 이 낱말을 이름까지 지목해 다루는 사안 파일이 열려 있다 - `upstream-reports/place-type-label-spoken-in-german.md`(상태: 초안). 리터럴만 바꾸면 에테라이트 분류가 예외도 로그도 없이 죽으므로 여기서 손대지 않는다."
     },
     {
+      "file": "Services/RussianLotteryText.cs",
+      "rule": "umlaut",
+      "text": "fünf",
+      "why": "러시아어 복권 안내를 위해 숫자 낱말을 수로 읽는 사전의 키다. 게임이 준 글을 파싱할 때 쓰고 말하지 않는다."
+    },
+    {
       "file": "Services/UIReaderService.cs",
       "rule": "speech",
-      "text": "ConfigSystem Dump. {addon->UldManager.NodeListCount} Nodes.",
-      "why": "덤프 발화인데 **지금은 도달할 수 없다.** 이 문장을 내는 `DumpConfigSystemNodes`(:5936)는 `AnnounceConfigSystemFocusIfChanged`가 `_dumpOnNextConfigSystemUpdate`를 참으로 볼 때만 불리는데(`:5151-5154`), 그 필드는 선언(`:102`)·읽기(`:5151`)·되돌리기(`:5153`)만 있고 **참으로 놓는 자리가 저장소 어디에도 없다.** 원본이 방아쇠를 뺐다고 `:5021` 주석이 적는다 - `CS-DIAG-Dump bei InputReceived (case 12) ENTFERNT`. 옛 저장소가 적어 둔 `F5로 화면 구조를 쏟는 자리`는 이 저장소에서 사실이 아니다 - Strg+F5는 `DumpFocusedAddon`(:10822)으로 가고 이 함수로는 안 온다. 부르는 자리가 생기면 그때 다시 본다."
+      "text": "ActionMenu",
+      "why": "`IsAddonVisible(\"ActionMenu\")`의 창 이름이다. 발화 인자 식 안에 있어서 발화 판정에 걸렸지만 말해지는 글이 아니다."
     },
     {
       "file": "Services/UIReaderService.cs",

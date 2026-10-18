@@ -7,7 +7,7 @@
 | 파일 | 출처 | 라이선스 |
 |------|------|----------|
 | `Dalamud.dll` | 한국 클라이언트 빌드. [MiqoKR/kr-dalamud-updater](https://github.com/MiqoKR/kr-dalamud-updater)가 만든다 | AGPL-3.0 |
-| `FFXIVClientStructs.dll` | 공식과 **같은 7.56.2.9089**인데 한국 클라이언트 오프셋과 시그니처가 덧씌워져 바이트가 다르다 | MIT |
+| `FFXIVClientStructs.dll` | 공식과 **같은 7.57.0.9378**인데 한국 클라이언트 오프셋과 시그니처가 덧씌워져 바이트가 다르다 | MIT |
 | `Lumina.dll` | 공식 배포본과 **바이트가 같다** | |
 | `Lumina.Excel.dll` | 공식 배포본과 바이트가 같다 | |
 | `InteropGenerator.Runtime.dll` | 공식 배포본과 바이트가 같다 | |
@@ -59,7 +59,7 @@
 
 러너에는 한국 클라이언트가 없고 공식에는 버전을 고정한 주소가 없으므로, **여섯을 다 어딘가에서 받아야 한다.** 이 저장소의 별도 릴리스에 올려 두었고 워크플로가 거기서 받는다.
 
-<https://github.com/dnz3d4c/FF14-a11y-kr/releases/tag/dalamud-kr-15.0.3.5>
+<https://github.com/dnz3d4c/FF14-a11y-kr/releases/tag/dalamud-kr-15.0.3.7>
 
 - 태그는 어셈블리 버전을 그대로 쓴다.
 - 자산은 `.dll` **여섯**과 `SHA256SUMS.txt`, 그리고 출처와 라이선스를 적은 `README.txt`다.
