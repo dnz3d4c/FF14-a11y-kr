@@ -23,6 +23,14 @@
 
 **2026-09-20에 15.0.3.5로 다시 쟀고 넷이 또 일치했다.** 그날 공식 `latest.zip`도 15.0.3.5라 같은 어셈블리 버전끼리 잰 것이다. 한국 전용 둘은 예상대로 갈렸고, 그 두 해시가 설치본의 `Dalamud.KR.Compatibility.Patch.json`이 적은 `OfficialClientStructsSha256`·`CompatibleClientStructsSha256`과 각각 맞아떨어진다 — 대조가 우리 계산만으로 닫히지 않는다.
 
+**2026-10-18에 15.0.3.7로 다시 쟀고 넷이 또 일치했다.** 이번에는 공식 `latest.zip`이 이미 15.0.3.8로 앞서 있어서, 공식 15.0.3.7 zip을 **내용 해시로 받았다.** 한국판 업데이터 0.5.5의 검증 기록(`docs/DALAMUD_UPDATER_0.5.5_KR.md`)이 적은 Hook ZIP SHA-256을 kamori에 넣으면 된다. 받은 파일의 해시가 그 값과 같았다.
+
+    https://kamori.goats.dev/File/Get/82d3efad4615d4b40fdabd458132473d6b69e341cd700293a6bb3ff2b5b77547
+
+**해시는 소문자로 넣는다.** 문서에 적힌 대문자 그대로 넣으면 404다. 한국 전용 둘은 이번에도 설치본 호환 패치 파일(패치 버전 9)의 `OfficialClientStructsSha256`(`A47750CE…`)·`CompatibleClientStructsSha256`(`717FEEEE…`)과 각각 맞는다.
+
+**이 설치본은 업데이터의 [업데이트 확인]으로 깐 것이 아니다.** 업데이터는 kamori의 최신 하나만 받는데 그것이 15.0.3.8이었고, 15.0.3.8의 `FFXIVClientStructs.dll`(`98795452…`)은 업데이터가 아는 공식 해시가 아니라서 패치 단계에서 "검증되지 않은 FFXIVClientStructs 버전"으로 거부된다. 그래서 위 zip을 `Hooks\15.0.3.7`에 풀고 `version.json`을 적은 뒤 업데이터 자신의 `Dalamud.Updater.Gui.exe --patch-hook <폴더>`로 씌웠다. 업데이터가 설치 때 하는 일 가운데 이 경로가 빠뜨리는 것은 서명 캐시 이전 하나다(`Program.cs`의 `InstallHookAsync`). 달라무드가 다시 만든다.
+
 **같은 버전끼리일 때만 성립한다.** 2026-09-09에 공식 `latest.zip`이 15.0.3.3으로 오른 뒤 설치본(아직 15.0.3.2)과 재니 **넷이 다 달라졌다.** 그런데 설치본을 15.0.3.3으로 올린 뒤 다시 재니 **넷이 다시 다 같았다.** 버전 차이였을 뿐 한국 패치와는 무관하다. 대조는 반드시 **같은 어셈블리 버전끼리** 해야 하고, 어긋난 채로 재면 "달라졌으니 표를 고쳐야 한다"는 잘못된 결론에 이른다.
 
 **7.51 다운그레이드는 끝났다.** 한국판 업데이터 0.5.1부터 `FFXIVClientStructs`를 옛 버전으로 갈아 끼우지 않고 공식이 싣는 버전을 그 자리에서 패치한다. 그래서 이 저장소의 `graft` 덧대기 넷이 필요 없어졌다(`decisions.md`의 D-12 해제). 판정 근거는 설치본의 `Dalamud.KR.Compatibility.Patch.json`이고, 거기서 `OfficialClientStructsFileVersion`과 `CompatibleClientStructsFileVersion`이 같은 값이면 다운그레이드가 없다는 뜻이다.
