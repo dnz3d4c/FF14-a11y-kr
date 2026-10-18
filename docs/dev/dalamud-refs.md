@@ -85,3 +85,16 @@
 우리 버전을 고르는 쪽은 이미 면역이다. `release_manifest.latest_release_tag`가 `v` 네 마디 태그만 이전 버전으로 본다. 하지만 **깃허브의 `latest`는 우리가 정하는 값이 아니라서 그 검사로는 못 막는다.**
 
 **버전 상수를 한 곳에만 둔다.** 기존 저장소는 워크플로 둘에 같은 값을 두 벌로 갖고 있었고, 갈리는 것을 막는 장치가 "테스트가 YAML을 grep한다"뿐이었다.
+
+## 사용자에게 주는 한 벌은 따로다
+
+참조 릴리스는 빌드용 어셈블리 여섯뿐이다. 설치 프로그램이 사용자 프로필에 넣는 것은 `dalamud-kr-full-<버전>` 한 벌이고, 업데이터가 공식 최신을 못 다루는 동안만 쓴다(`decisions.md`의 D-21).
+
+배치는 업데이터가 프로필에 남기는 것과 같다.
+
+- `addon/Hooks/<버전>/` — 위 절차로 패치한 후크. **`.pdb`와 `cachedSigs`는 뺀다.** `hashes.json`에 pdb 항목이 없고, 시그니처 캐시는 게임이 다시 만든다.
+- `dalamudAssets/<자산 번호>/` — 공식 자산 꾸러미. 주소는 `https://kamori.goats.dev/Dalamud/Asset/Meta`의 `packageUrl`이다. 업데이터도 이것을 받아 같은 자리에 푼다.
+- `dalamudAssets/asset.ver` — 자산 번호만, 줄바꿈 없이.
+- `dalamudAssets/local/` — 빈 폴더.
+
+**올리기 전에 버리는 폴더에 풀어 `--patch-hook`을 한 번 더 돌린다.** pdb를 뺀 상태로도 참조가 다 풀리는지가 거기서 갈린다. 올린 뒤에는 되받아 `SHA256SUMS.txt`로 재고, 압축의 해시를 `kr/Installer/KrDalamudBundle.cs`의 상수에 옮긴다. 참조 릴리스와 같이 `--prerelease`다.
