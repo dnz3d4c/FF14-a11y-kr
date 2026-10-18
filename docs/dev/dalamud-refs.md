@@ -23,7 +23,7 @@
 
 **2026-09-20에 15.0.3.5로 다시 쟀고 넷이 또 일치했다.** 그날 공식 `latest.zip`도 15.0.3.5라 같은 어셈블리 버전끼리 잰 것이다. 한국 전용 둘은 예상대로 갈렸고, 그 두 해시가 설치본의 `Dalamud.KR.Compatibility.Patch.json`이 적은 `OfficialClientStructsSha256`·`CompatibleClientStructsSha256`과 각각 맞아떨어진다 — 대조가 우리 계산만으로 닫히지 않는다.
 
-**2026-10-18에 15.0.3.7로 다시 쟀고 넷이 또 일치했다.** 이번에는 공식 `latest.zip`이 이미 15.0.3.8로 앞서 있어서, 공식 15.0.3.7 zip을 **내용 해시로 받았다.** 한국판 업데이터 0.5.5의 검증 기록(`docs/DALAMUD_UPDATER_0.5.5_KR.md`)이 적은 Hook ZIP SHA-256을 kamori에 넣으면 된다. 받은 파일의 해시가 그 값과 같았다.
+**2026-10-18에 15.0.3.7로 다시 쟀고 넷이 또 일치했다.** 이번에는 공식 `latest.zip`이 이미 15.0.3.8로 앞서 있어서, 공식 15.0.3.7 zip을 **내용 해시로 받았다.** 한국판 업데이터 0.5.5의 검증 기록([`MiqoKR/kr-dalamud-updater`의 `docs/DALAMUD_UPDATER_0.5.5_KR.md`](https://github.com/MiqoKR/kr-dalamud-updater/blob/updater-v0.5.5/docs/DALAMUD_UPDATER_0.5.5_KR.md))이 적은 Hook ZIP SHA-256을 kamori에 넣으면 된다. 받은 파일의 해시가 그 값과 같았다.
 
     https://kamori.goats.dev/File/Get/82d3efad4615d4b40fdabd458132473d6b69e341cd700293a6bb3ff2b5b77547
 
