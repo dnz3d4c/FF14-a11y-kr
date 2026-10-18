@@ -185,6 +185,14 @@ jobs:
         with:
           submodules: true
 
+      # **원본 태그를 받는다.** 서브모듈을 얕게 받으면 태그가 안 보여서
+      # `release.py`가 핀의 태그 이름을 못 읽고, 원본 노트를 못 받아 노트
+      # 게이트에서 선다(2026-10-18, v6.8.129.0 첫 실행). `sync.yml`이 같은
+      # 까닭으로 이미 이렇게 한다.
+      - name: 원본 태그 받기
+        shell: bash
+        run: git -C upstream fetch --tags --force origin
+
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
