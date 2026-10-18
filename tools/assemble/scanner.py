@@ -14,7 +14,7 @@
 
 ## 표식으로 못 보는 것
 
-갈림길을 알아보는 표식은 `MARKERS`와 `PICKS`에 적어 둔 이름뿐이다. 여기 없는 별칭을
+갈림길을 알아보는 표식은 `MARKERS`와 `PICKS`와 `FAMILY`에 적어 둔 이름뿐이다. 여기 없는 별칭을
 새로 정의하고 그 별칭으로 갈라지는 자리는 한 건도 안 잡힌다. 안 잡히면 미적용에도
 못 읽음에도 안 나타나므로, 미적용 0건은 그 자체로 "다 옮겼다"가 아니다.
 """
@@ -30,12 +30,21 @@ from dataclasses import dataclass, field
 MARKERS = ("IsGerman", "De")
 PICK = "Pick("
 
-#: `Pick` 말고 같은 모양으로 갈리는 호출 축약. `Job`은 `GaugeReadyCues.cs`가 직업
-#: 이름 스물셋에 쓰는 것인데, 선언이 `Loc.IsGerman ? de : en`이라 표식은 잡히지만
-#: 피연산자가 리터럴이 아니라 못 읽음으로 나갔다. 정작 리터럴은 호출부에 있다.
-#: 표식과 마찬가지로 되쓸 때 **그 자리가 쓰던 이름**을 되쓴다 - `Job`으로 갈리던
-#: 자리에 `Pick`을 넣으면 그 클래스에 없는 이름이 된다.
-PICKS = (PICK, "Job(")
+#: 이미 옮긴 자리의 호출. 셋째 인자가 한국어다.
+PICKS = (PICK,)
+
+#: 원본이 v6.08.128부터 문장을 고르는 호출. `L(de, en, ru)`이고 **셋째 인자가
+#: 러시아어다.** `W`(`ColorNamer.cs`)와 `Job`(`GaugeReadyCues.cs`)은 같은 모양의
+#: 축약이다. 한국어는 이름 붙인 인자 `ko:`로 끼운다 - 러시아어가 없는 `L(de, en)`에
+#: 위치 인자로 넣으면 그 값이 `ru`에 들어간다. `Job`은 v6.08.35까지 `Pick`과 같은
+#: 모양이라 `PICKS`에 있었는데, 거기 두면 러시아어를 한국어로 읽는다.
+FAMILY = ("L(", "W(", "Job(")
+
+#: 호출이 아니라 선언이다. 이름 바로 앞에 돌려주는 형식이 있다.
+DECLARED = re.compile(r"\bstring\??[ \t]*$")
+
+#: 이름 붙인 인자의 머리. `::`는 이름 공간 별칭이라 거른다.
+NAMED = re.compile(r"(\w+)[ \t\r\n]*:(?!:)")
 
 #: 표식 앞에 붙을 수 있는 한정자. 파일마다 관례가 달라 통일하지 않는다.
 QUALIFIER = "Loc."
@@ -79,8 +88,16 @@ class Site:
     qualifier: str = ""
     #: 아직 안 옮긴 `IsGerman ? de : en`인가. 이미 `Pick(...)`인 자리와 가른다.
     ternary: bool = False
-    #: 그 자리가 쓰던 호출 이름. `PICKS`의 하나이고 되쓸 때 그대로 되쓴다.
+    #: 그 자리가 쓰던 호출 이름. `PICKS`나 `FAMILY`의 하나이고 되쓸 때 그대로 되쓴다.
     call: str = PICK
+    #: `L` 계열 자리의 러시아어 인자를 원문 그대로. 없으면 None.
+    ru_raw: str | None = None
+    #: `L` 계열 자리인가. 다시 그리지 않고 `ko:` 인자만 끼우거나 갈아 끼운다.
+    family: bool = False
+    #: `ko:` 인자를 끼울 자리. 마지막 인자가 끝나는 곳이라 닫는 괄호 앞의 줄바꿈이 남는다.
+    tail: int = -1
+    #: 이미 박힌 `ko:` 리터럴의 (시작, 끝). 대장이 바뀌면 여기만 갈아 끼운다.
+    ko_span: tuple[int, int] | None = None
 
 
 @dataclass(frozen=True)
@@ -585,7 +602,11 @@ def scan(text: str) -> tuple[list[Site], list[Blind]]:
     """
     stripped = strip_comments(text)
     unreadable: list[Blind] = []
-    sites = [*_ternary_sites(stripped, text, unreadable), *_pick_sites(stripped, text)]
+    sites = [
+        *_ternary_sites(stripped, text, unreadable),
+        *_pick_sites(stripped, text),
+        *_family_sites(stripped, text, unreadable),
+    ]
     return sorted(sites, key=lambda site: site.start), sorted(
         unreadable, key=lambda blind: blind.line
     )
@@ -717,6 +738,115 @@ def _named_pick_sites(stripped: str, text: str, name: str) -> list[Site]:
                 call=name,
             )
         )
+
+
+def _arguments(stripped: str, start: int, close: int) -> list[Span]:
+    """호출 괄호 안을 최상위 쉼표로 가른 인자들의 자리."""
+    spans: list[Span] = []
+    at = start
+    while at < close:
+        stop = _branch(stripped, at, close, ",")
+        if stop < 0:
+            stop = close
+        spans.append((at, stop))
+        at = stop + 1
+    return spans
+
+
+def _trimmed(text: str, span: Span) -> Span:
+    start, end = span
+    while start < end and text[start] in " \t\r\n":
+        start += 1
+    while end > start and text[end - 1] in " \t\r\n":
+        end -= 1
+    return start, end
+
+
+def _literal_arg(stripped: str, span: Span) -> tuple[str, int, int] | None:
+    """인자 하나가 통째로 리터럴 하나이면 (내용, 시작, 끝). 아니면 None."""
+    start, end = _trimmed(stripped, span)
+    value, raw_start, raw_end = read_literal(stripped, start)
+    if value is None or raw_end != end:
+        return None
+    return value, raw_start, raw_end
+
+
+def _family_sites(stripped: str, text: str, unreadable: list[Blind]) -> list[Site]:
+    """원본의 `L(de, en[, ru])`과 그 축약 `W`·`Job`.
+
+    받은 `de`·`en`을 그대로 넘기는 감싸개(`Job`이 `AccessibilityStrings.L(de, en, ru)`를
+    부르는 것)는 자리가 아니다. 문장은 감싸개의 호출부에 있고 거기서 읽힌다. 그 밖에
+    독일어나 영어가 리터럴 하나가 아닌 자리는 **영어로 나가면서 미적용에도 안 잡히는
+    자리**라 `unreadable`에 남긴다.
+    """
+    sites: list[Site] = []
+    for name in FAMILY:
+        start = 0
+        while True:
+            found = stripped.find(name, start)
+            if found < 0:
+                break
+            start = found + len(name)
+            if found > 0 and stripped[found - 1] in _IDENT:
+                continue  # `HTML(`이나 `ByJob(` 같은 다른 이름이다
+            if DECLARED.search(stripped, max(0, found - 40), found):
+                continue
+            close = _branch(stripped, start, len(stripped), "")
+            if close < 0 or stripped[close] != ")":
+                continue
+
+            args = _arguments(stripped, start, close)
+            named: dict[str, Span] = {}
+            positional: list[Span] = []
+            for span in args:
+                head = NAMED.match(stripped, _trimmed(stripped, span)[0])
+                if head is None:
+                    positional.append(span)
+                else:
+                    named[head.group(1)] = (head.end(), span[1])
+            if len(positional) < 2:
+                continue
+            de_span, en_span = positional[0], positional[1]
+            if (_piece(stripped, de_span), _piece(stripped, en_span)) == ("de", "en"):
+                continue  # 넘겨주기다
+
+            line = stripped.count(_NEWLINE, 0, found) + 1
+            de = _literal_arg(stripped, de_span)
+            en = _literal_arg(stripped, en_span)
+            ko_span = named.get("ko")
+            ko = None if ko_span is None else _literal_arg(stripped, ko_span)
+            if de is None or en is None or (ko_span is not None and ko is None):
+                concat = _concatenated(stripped, *de_span) or _concatenated(stripped, *en_span)
+                unreadable.append(
+                    Blind(
+                        line=line,
+                        end_line=stripped.count(_NEWLINE, 0, close) + 1,
+                        name=member_name(text, found),
+                        shape=CONCAT if concat else NOT_LITERAL if ko_span is None else OTHER,
+                        excerpt=_excerpt(text, found, close + 1),
+                    )
+                )
+                continue
+
+            ru_span = positional[2] if len(positional) > 2 else named.get("ru")
+            sites.append(
+                Site(
+                    start=found,
+                    end=close + 1,
+                    de=de[0],
+                    en=en[0],
+                    de_raw=text[de[1] : de[2]],
+                    en_raw=text[en[1] : en[2]],
+                    ko=None if ko is None else ko[0],
+                    line=line,
+                    call=name,
+                    ru_raw=None if ru_span is None else _piece(text, ru_span),
+                    family=True,
+                    tail=_trimmed(stripped, args[-1])[1],
+                    ko_span=None if ko is None else (ko[1], ko[2]),
+                )
+            )
+    return sites
 
 
 def member_name(text: str, offset: int) -> str:
@@ -911,11 +1041,17 @@ def rewrite(text: str, catalog: dict[tuple[str, str], str]) -> Result:
         if site.ko == wanted:
             continue
 
-        edits.append((site.start, site.end, _render(site, wanted, text)))
+        if not site.family:
+            edits.append((site.start, site.end, _render(site, wanted, text)))
+        elif site.ko_span is None:
+            edits.append((site.tail, site.tail, f", ko: {_literal(wanted)}"))
+        else:
+            edits.append((*site.ko_span, _literal(wanted)))
         result.applied.append(key)
 
-    # 뒤에서부터 갈아 끼운다. 앞을 먼저 고치면 뒤쪽 위치가 밀린다.
-    for start, end, replacement in reversed(edits):
+    # 뒤에서부터 갈아 끼운다. 앞을 먼저 고치면 뒤쪽 위치가 밀린다. 위치로 정렬하는 까닭은
+    # `L` 자리의 끼울 곳이 자리 끝이라, 그 안에 든 다른 자리보다 뒤이기 때문이다.
+    for start, end, replacement in sorted(edits, reverse=True):
         text = text[:start] + replacement + text[end:]
 
     result.text = text

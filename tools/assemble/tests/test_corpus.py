@@ -71,6 +71,18 @@ def test_독일어와_영어는_조립_전후로_한_자도_안_바뀐다() -> N
         ], path.name
 
 
+def test_러시아어는_조립_전후로_한_자도_안_바뀐다() -> None:
+    """`L`의 셋째 인자는 러시아어다. 한국어를 끼우다 그 자리를 건드리면 러시아어 사용자가 듣는다."""
+    catalog = _catalog()
+    for path in _sources():
+        source = files.read(path)
+        after = scanner.rewrite(source, catalog).text
+
+        assert [site.ru_raw for site in scanner.find_sites(after) if site.ru_raw] == [
+            site.ru_raw for site in scanner.find_sites(scanner.unnest(source)) if site.ru_raw
+        ], path.name
+
+
 def test_갈래를_펴도_문장은_원문에서_잘라_온_그대로다() -> None:
     """편 자리의 독일어와 영어는 원문에 그 글자 그대로 있어야 한다.
 

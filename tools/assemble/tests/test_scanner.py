@@ -238,31 +238,177 @@ def test_다른_이름의_Pick은_거른다() -> None:
     assert scanner.find_sites(text) == []
 
 
-def test_별칭_호출도_자리로_잡힌다() -> None:
-    """`GaugeReadyCues.cs`의 `Job(de, en)`이 그런 자리다.
-
-    선언이 `Loc.IsGerman ? de : en`이라 표식은 잡히는데 피연산자가 리터럴이 아니라
-    못 읽음으로 나간다. 정작 리터럴은 호출부에 있다.
-    """
-    text = 'var x = Job("Paladin", "Paladin");\n'
+def test_L_호출을_자리로_읽는다() -> None:
+    """v6.08.128부터 원본이 삼항 대신 `L(de, en, ru)`로 문장을 고른다."""
+    text = 'public static string A => L("Hallo", "Hello", "Привет");\n'
     sites = scanner.find_sites(text)
 
-    assert len(sites) == 1
-    assert (sites[0].de, sites[0].en) == ("Paladin", "Paladin")
+    assert [(site.de, site.en, site.ko, site.call) for site in sites] == [
+        ("Hallo", "Hello", None, "L(")
+    ]
 
 
-def test_별칭_호출은_그_자리가_쓰던_이름으로_되쓴다() -> None:
-    """`Pick`으로 되쓰면 그 클래스에 없는 이름이 되어 빌드가 선다."""
-    text = 'var x = Job("Ninja", "Ninja");\n'
-    result = scanner.rewrite(text, {("Ninja", "Ninja"): "닌자"})
+def test_L의_셋째_인자는_러시아어라_한국어로_안_읽는다() -> None:
+    """`Pick`의 셋째는 한국어지만 `L`의 셋째는 러시아어다. 섞으면 러시아어가 한국어로 나간다."""
+    text = 'var x = Job("Ninja", "Ninja", "Ниндзя");\n'
+    site = scanner.find_sites(text)[0]
 
-    assert result.text == 'var x = Job("Ninja", "Ninja", "닌자");\n'
+    assert site.ko is None
+    assert site.ru_raw == '"Ниндзя"'
 
 
-def test_별칭_앞에_다른_이름이_붙으면_거른다() -> None:
-    text = 'var x = ByJob("Hallo", "Hello");\n'
+def test_러시아어가_없는_L도_읽는다() -> None:
+    text = 'public static string A => L("Hallo", "Hello");\n'
+    site = scanner.find_sites(text)[0]
+
+    assert (site.de, site.en, site.ko, site.ru_raw) == ("Hallo", "Hello", None, None)
+
+
+def test_여러_줄에_걸친_L을_읽는다() -> None:
+    text = (
+        "    public static string A =>\n"
+        "        L(\n"
+        '            "Hallo",\n'
+        '            "Hello",\n'
+        '            "Привет");\n'
+    )
+    sites = scanner.find_sites(text)
+
+    assert [(site.de, site.en, site.line) for site in sites] == [("Hallo", "Hello", 2)]
+
+
+def test_보간_L을_읽는다() -> None:
+    text = 'public static string A(int n) => L($"{n} Ziele", $"{n} targets", $"{n} целей");\n'
+    site = scanner.find_sites(text)[0]
+
+    assert (site.de, site.en) == ("{n} Ziele", "{n} targets")
+    assert site.de_raw == '$"{n} Ziele"'
+
+
+def test_한정한_L과_W도_읽는다() -> None:
+    """`GaugeReadyCues.cs`는 `AccessibilityStrings.L`을, `ColorNamer.cs`는 `W`를 쓴다."""
+    text = (
+        'var a = AccessibilityStrings.L("Hallo", "Hello");\nvar b = W("rot", "red", "красный");\n'
+    )
+    sites = scanner.find_sites(text)
+
+    assert [(site.de, site.call) for site in sites] == [("Hallo", "L("), ("rot", "W(")]
+
+
+def test_다른_이름의_꼬리인_L은_안_읽는다() -> None:
+    text = 'var x = HTML("Hallo", "Hello");\nvar y = ByJob("Hallo", "Hello", "x");\n'
 
     assert scanner.find_sites(text) == []
+
+
+def test_L_선언과_넘겨주기는_자리도_못_읽음도_아니다() -> None:
+    """선언과, 받은 `de`·`en`을 그대로 넘기는 감싸개는 문장이 앉은 자리가 아니다.
+
+    문장은 그 감싸개의 호출부에 있고 거기서 읽힌다. 여기를 못 읽음으로 세면 고칠 것이
+    없는 줄이 보고를 채워 진짜 신호를 가린다.
+    """
+    text = (
+        "    internal static string L(string de, string en, string? ru = null)\n"
+        "        => Loc.IsRussian ? ru ?? en : Loc.Pick(de, en);\n"
+        "    private static string Job(string de, string en, string ru) =>\n"
+        "        AccessibilityStrings.L(de, en, ru);\n"
+    )
+    sites, blind = scanner.scan(text)
+
+    assert sites == []
+    assert blind == []
+
+
+def test_리터럴이_아닌_L은_못_읽음으로_낸다() -> None:
+    """영어로 나가면서 미적용에도 안 잡히는 자리다. 미적용과 같은 무게로 센다."""
+    text = (
+        "    public static string A(bool on) =>\n"
+        '        L(on ? "an" : "aus", on ? "on" : "off", on ? "вкл" : "выкл");\n'
+        "    public static string B(string n) =>\n"
+        '        L(n + ", fertig", n + ", done");\n'
+    )
+    sites, blind = scanner.scan(text)
+
+    assert sites == []
+    assert [(spot.line, spot.name, spot.shape) for spot in blind] == [
+        (2, "A", "리터럴이 아님"),
+        (4, "B", "이어붙이기"),
+    ]
+
+
+def test_대장에_있는_L에는_한국어를_이름_붙인_인자로_끼운다() -> None:
+    """러시아어가 없는 `L(de, en)`에 위치 인자로 넣으면 그 값이 `ru`에 들어간다."""
+    text = 'var a = L("Hallo", "Hello");\nvar b = L("Tschuess", "Bye", "Пока");\n'
+    result = scanner.rewrite(text, {("Hallo", "Hello"): "안녕", ("Tschuess", "Bye"): "잘 가"})
+
+    assert result.text == (
+        'var a = L("Hallo", "Hello", ko: "안녕");\n'
+        'var b = L("Tschuess", "Bye", "Пока", ko: "잘 가");\n'
+    )
+    assert result.applied == [("Hallo", "Hello"), ("Tschuess", "Bye")]
+
+
+def test_여러_줄_L은_모양을_그대로_두고_끝에만_끼운다() -> None:
+    text = (
+        '        L(\n            "Hallo",\n            "Hello",\n            "Привет"\n        );\n'
+    )
+    result = scanner.rewrite(text, {("Hallo", "Hello"): "안녕"})
+
+    assert result.text == (
+        "        L(\n"
+        '            "Hallo",\n'
+        '            "Hello",\n'
+        '            "Привет", ko: "안녕"\n'
+        "        );\n"
+    )
+
+
+def test_대장에_없는_L은_손대지_않는다() -> None:
+    """선언이 `Loc.Pick`을 타므로 그대로 두어도 한국어 모드에서 로그에 남는다."""
+    text = 'var a = L("Hallo", "Hello", "Привет");\n'
+    result = scanner.rewrite(text, {})
+
+    assert result.text == text
+    assert result.seen == [("Hallo", "Hello")]
+
+
+def test_보간_L에는_달러를_붙인_한국어를_끼운다() -> None:
+    text = 'var a = L($"{n} Ziele", $"{n} targets");\n'
+    result = scanner.rewrite(text, {("{n} Ziele", "{n} targets"): "대상 {n}개"})
+
+    assert result.text == 'var a = L($"{n} Ziele", $"{n} targets", ko: $"대상 {n}개");\n'
+
+
+def test_L의_보간_자리가_안_맞으면_안_끼우고_보고한다() -> None:
+    text = 'var a = L($"{n} Ziele", $"{n} targets");\n'
+    result = scanner.rewrite(text, {("{n} Ziele", "{n} targets"): "대상 {m}개"})
+
+    assert result.text == text
+    assert len(result.bad_slots) == 1
+
+
+def test_한국어가_박힌_L을_읽고_다시_조립해도_안_바뀐다() -> None:
+    text = 'var a = L("Hallo", "Hello", "Привет", ko: "안녕");\n'
+    site = scanner.find_sites(text)[0]
+    result = scanner.rewrite(text, {("Hallo", "Hello"): "안녕"})
+
+    assert site.ko == "안녕"
+    assert result.text == text
+    assert result.applied == []
+
+
+def test_대장이_바뀌면_박힌_한국어만_갈아_끼운다() -> None:
+    text = 'var a = L("Hallo", "Hello", ko: "안녕");\n'
+    result = scanner.rewrite(text, {("Hallo", "Hello"): "안녕하세요"})
+
+    assert result.text == 'var a = L("Hallo", "Hello", ko: "안녕하세요");\n'
+
+
+def test_러시아어가_식인_L도_끝에_끼운다() -> None:
+    text = 'var a = L("Hallo", "Hello", Russian("x", (1, 2)));\n'
+    result = scanner.rewrite(text, {("Hallo", "Hello"): "안녕"})
+
+    assert result.text == 'var a = L("Hallo", "Hello", Russian("x", (1, 2)), ko: "안녕");\n'
 
 
 def test_대장에_있는_쌍에만_한국어가_들어간다() -> None:
