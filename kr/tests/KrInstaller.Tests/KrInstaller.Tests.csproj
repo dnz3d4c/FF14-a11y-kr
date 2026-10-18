@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The Korean installer's own decisions, tested without the installer.
+
+    Only KrHookSelection.cs is compiled in: it is the part that decides whether
+    the bundled Dalamud is needed and which version the updater should use, and it
+    has no tie to WinForms, Loc or the network. The rest of the installer is
+    exercised end to end by tools/pack (pack_check -e2e).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2"><PrivateAssets>all</PrivateAssets></PackageReference>
+    <Using Include="Xunit" />
+    <Compile Include="../../Installer/KrHookSelection.cs" Link="Installer/KrHookSelection.cs" />
+  </ItemGroup>
+</Project>

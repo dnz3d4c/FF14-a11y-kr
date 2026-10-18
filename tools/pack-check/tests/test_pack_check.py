@@ -819,3 +819,45 @@ def test_PATH의_dotnet이_런타임뿐이면_안_쓴다(tmp_path, monkeypatch):
     )
 
     assert pack_check.dotnet_path() == scoop / "apps" / "dotnet-sdk" / "current" / "dotnet.exe"
+
+
+def test_요구하는_달라무드_버전은_설치_프로그램_상수에서_읽는다():
+    # 검사가 따로 숫자를 들고 있으면 설치 프로그램과 갈라져도 아무도 모른다.
+    assert pack_check.required_hook_version(REPO) == "15.0.3.7"
+
+
+def _bundled(root, *, hook=True, now="15.0.3.7", backup="15.0.3.5"):
+    if hook:
+        folder = root / "addon" / "Hooks" / "15.0.3.7"
+        folder.mkdir(parents=True)
+        (folder / "Dalamud.KR.Compatibility.Patch.json").write_text("{}", encoding="utf-8")
+    settings = root / "settings.json"
+    settings.write_text(json.dumps({"HookVersion": now, "AutoStart": True}), encoding="utf-8")
+    if backup is not None:
+        (root / "settings.json.bak-installer").write_text(
+            json.dumps({"HookVersion": backup, "AutoStart": True}), encoding="utf-8"
+        )
+    return settings
+
+
+def test_한_벌이_놓이고_업데이터가_그_버전을_가리키면_지난다(tmp_path):
+    settings = _bundled(tmp_path)
+    assert pack_check.bundle_problems(tmp_path, settings, "15.0.3.7") == []
+
+
+def test_요구_버전_후크가_없으면_잡는다(tmp_path):
+    settings = _bundled(tmp_path, hook=False)
+    assert any("15.0.3.7" in p for p in pack_check.bundle_problems(tmp_path, settings, "15.0.3.7"))
+
+
+def test_업데이터가_옛_버전을_가리키면_잡는다(tmp_path):
+    # 폴더만 놓이고 설정이 그대로면 게임에는 옛 달라무드가 붙는다(2026-10-18 실측).
+    settings = _bundled(tmp_path, now="15.0.3.5")
+    found = pack_check.bundle_problems(tmp_path, settings, "15.0.3.7")
+    assert any("HookVersion" in p for p in found)
+
+
+def test_백업이_없으면_잡는다(tmp_path):
+    # 남의 설정에 쓰는 유일한 자리라 되돌릴 길이 남아야 한다.
+    settings = _bundled(tmp_path, backup=None)
+    assert any("백업" in p for p in pack_check.bundle_problems(tmp_path, settings, "15.0.3.7"))

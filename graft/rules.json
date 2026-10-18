@@ -720,6 +720,26 @@
       ]
     },
     {
+      "name": "installer-kr-bundle-offer",
+      "file": "Installer/InstallerService.cs",
+      "why": "이 모드가 요구하는 한국판 달라무드(15.0.3.7)가 없으면 우리가 올린 한 벌을 받아 넣고, 업데이터 설정이 그 버전을 가리키게 한다. 업데이터가 공식 최신(15.0.3.8)을 패치하지 못해 [업데이트 확인]이 실패하는 동안, 새 사용자는 실패가 확정된 15분 대기로 가고 15.0.3.5에 있던 사용자는 옛 달라무드로 게임을 실행한다. 2026-09의 같은 규칙은 달라무드가 아예 없을 때만 돌아 기존 사용자를 못 구했다 - 그래서 판정을 요구 버전으로 바꾸고 설정까지 맞춘다. 묻지 않는다. 받기가 실패하면 그대로 원래 경로로 흘러가므로 한 벌 릴리스를 내리는 것만으로 새 버전 없이 꺼진다. 로직은 kr/Installer/KrDalamudBundle.cs와 KrHookSelection.cs가 들고 있다. installer-kr-updater-first가 만든 줄을 앵커로 잡으므로 그 규칙 뒤에 둔다. 해제 조건은 docs/decisions.md D-21에 있다.",
+      "find": [
+        "        if (KrProfile.DalamudInstalled)",
+        "            return true;"
+      ],
+      "replace": [
+        "        // Before the Dalamud check, because that check is satisfied by any KR",
+        "        // Dalamud - including the 15.0.3.5 a profile may still carry - while",
+        "        // the plugin needs the version KrDalamudBundle names. It also points the",
+        "        // updater at that version; a folder on disk is not what gets injected.",
+        "        // Every failure here falls through to the updater path below unchanged.",
+        "        await KrDalamudBundle.EnsureAsync(DownloadFileAsync, Info, Warn);",
+        "",
+        "        if (KrProfile.DalamudInstalled)",
+        "            return true;"
+      ]
+    },
+    {
       "name": "notices-hm-voice-korean",
       "file": "THIRD-PARTY-NOTICES.md",
       "why": "한국어판은 힐 모니터 음성 122개를 Vocalizer Expressive Yuna 합성으로 갈아 끼운다(replace/). 원본 고지는 음성이 바이트까지 Sku의 것이라고 적는데, 그대로 두면 배포물의 고지가 사실과 다르다. 음높이 사다리와 파일 이름은 Sku의 것 그대로라 그 절의 나머지는 둔다.",

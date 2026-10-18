@@ -111,6 +111,14 @@ jobs:
           dotnet build -c Release -warnaserror \
             build/FF14Accessibility/FF14Accessibility.csproj
 
+      # 한국어판 설치 프로그램의 판정 - 요구하는 달라무드가 놓였나, 업데이터가 그
+      # 버전을 가리키나. 설치 실증(pack_check --e2e)은 러너에서 못 돌아서, 러너가
+      # 잴 수 있는 것은 이 단위 검사뿐이다. 조립 뒤에 도는 까닭은 kr/가 build/로
+      # 들어가야 테스트가 가리키는 소스 경로가 맞기 때문이다.
+      - name: 설치 프로그램 판정 검사
+        shell: bash
+        run: dotnet test -c Release build/tests/KrInstaller.Tests/KrInstaller.Tests.csproj
+
       # 설치 프로그램의 한국어. 대장의 그물 밖이라 이 검사가 없으면 그 문장들은
       # 고아 검출도 미번역 로그도 못 받고, 키가 빠지면 조용히 영어로 떨어진다.
       # 조립 뒤에 도는 까닭은 소스 아홉 파일이 네 군데로 흩어져 있어서다 -

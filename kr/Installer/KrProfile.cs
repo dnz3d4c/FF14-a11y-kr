@@ -76,6 +76,13 @@ internal static class KrProfile
     /// the vnavmesh rule forbids; reading a documented user setting is not, and
     /// hardcoding is in fact the more coupled of the two - it bets both that
     /// their default never moves and that the user never edits it.
+    ///
+    /// **One exception, and only one** (2026-10-18, user decision):
+    /// KrDalamudBundle moves the updater's HookVersion forward to the Dalamud this
+    /// plugin needs, after leaving settings.json.bak-installer next to it. Without
+    /// that a profile still on an older hook keeps injecting it even with the
+    /// right folder on disk. Nothing else in that file is touched, and a newer
+    /// choice is never moved back. See docs/decisions.md D-21.
     /// </summary>
     private static string ResolveRoot()
     {
@@ -93,9 +100,19 @@ internal static class KrProfile
 
     private static string DefaultRoot => Path.Combine(AppData, DefaultFolder);
 
+    /// <summary>
+    /// Points the updater's settings file somewhere else. Exists for the install
+    /// test (tools/pack-check): it runs the installer against a throwaway profile,
+    /// and without this the one write we make to the updater's settings would land
+    /// in the real user's file.
+    /// </summary>
+    public const string UpdaterSettingsOverrideVariable = "FF14ACC_KR_UPDATER_SETTINGS";
+
     /// <summary>Path to the updater's settings file. It may not exist.</summary>
     public static string UpdaterSettingsPath =>
-        Path.Combine(AppData, UpdaterSettingsDir, UpdaterSettingsName);
+        Environment.GetEnvironmentVariable(UpdaterSettingsOverrideVariable) is { Length: > 0 } overridden
+            ? overridden
+            : Path.Combine(AppData, UpdaterSettingsDir, UpdaterSettingsName);
 
     /// <summary>
     /// ProfileRoot out of the updater's settings, or null when it is absent,

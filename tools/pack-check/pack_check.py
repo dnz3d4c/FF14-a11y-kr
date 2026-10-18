@@ -646,6 +646,42 @@ def installer_seed_containers(repo: Path) -> set[str]:
     return {key for key, value in seed.items() if isinstance(value, dict)}
 
 
+#: 설치 프로그램이 요구하는 달라무드 버전을 적어 둔 C# 상수.
+_REQUIRED_HOOK = re.compile(r'RequiredVersion\s*=\s*"([0-9.]+)"')
+
+
+def required_hook_version(repo: Path) -> str:
+    """설치 프로그램이 한 벌로 맞추는 달라무드 버전. `KrDalamudBundle.cs`가 단일 원천이다."""
+    text = (repo / "kr" / "Installer" / "KrDalamudBundle.cs").read_text(encoding="utf-8")
+    match = _REQUIRED_HOOK.search(text)
+    if match is None:
+        raise ValueError("KrDalamudBundle.cs에서 RequiredVersion을 못 읽었다")
+    return match.group(1)
+
+
+def bundle_problems(root: Path, settings: Path, version: str) -> list[str]:
+    """한 벌 조달이 끝난 프로필이 갖춰야 할 셋.
+
+    폴더만으로는 모자란다. 업데이터는 설정이 가리키는 후크를 게임에 붙이므로,
+    설정이 옛 버전에 머물면 폴더가 있어도 옛 달라무드로 게임이 뜬다(2026-10-18
+    개발 머신 실측). 남의 설정에 쓰는 유일한 자리라 백업도 남아야 한다.
+    """
+    problems = []
+    hook = root / "addon" / "Hooks" / version
+    if not any(hook.glob("Dalamud.KR.*.Patch.json")):
+        problems.append(f"요구하는 달라무드 {version}의 한국 패치 후크가 없다: {hook}")
+    try:
+        chosen = json.loads(settings.read_text(encoding="utf-8")).get("HookVersion", "")
+    except (OSError, ValueError) as error:
+        problems.append(f"업데이터 설정을 못 읽었다: {settings} ({error})")
+        chosen = None
+    if chosen is not None and chosen != version:
+        problems.append(f"업데이터 설정의 HookVersion이 {chosen!r}다. {version}이어야 한다")
+    if not settings.with_name(settings.name + ".bak-installer").is_file():
+        problems.append(f"업데이터 설정을 고치면서 백업을 안 남겼다: {settings}.bak-installer")
+    return problems
+
+
 def _seed_dalamud(root: Path, *, marker: bool = True, assets: bool = True) -> None:
     """업데이터가 일을 마쳤을 때 남는 자취.
 
@@ -691,10 +727,14 @@ def _seed_profile(root: Path) -> None:
 
 
 def run_installer(
-    exe: Path, root: Path, shortcut_dir: Path | None = None
+    exe: Path, root: Path, shortcut_dir: Path | None = None, updater_settings: Path | None = None
 ) -> subprocess.CompletedProcess[str]:
     env = dict(os.environ)
     env["FF14ACC_KR_PROFILE"] = str(root)
+    # 설치 프로그램이 업데이터 설정의 HookVersion을 고치는 자리가 있다. 버리는
+    # 파일로 돌리지 않으면 검사가 실제 사용자 설정에 쓴다.
+    if updater_settings is not None:
+        env["FF14ACC_KR_UPDATER_SETTINGS"] = str(updater_settings)
     # 바로가기를 버리는 폴더로 돌린다. 안 그러면 검사를 돌릴 때마다 실제
     # 바탕화면에 바로가기가 하나씩 놓이고, 그러면 이 단계를 건너뛸 수밖에
     # 없어진다 - 아무 검사도 안 지나는 단계가 되는 것이 제일 나쁘다.
@@ -979,7 +1019,16 @@ def check_install_e2e(dist: Path) -> list[str]:
         shortcut_dir = workdir / "shortcuts"
         shortcut_dir.mkdir()
 
-        first = run_installer(exe, root, shortcut_dir)
+        # 15.0.3.5에 머문 사용자를 흉내 낸다. 씨앗 후크는 요구 버전이 아니라서
+        # 설치 프로그램이 한 벌을 실제로 받아 풀고 이 설정을 옮겨야 한다 - 세션
+        # 중에 저절로는 안 생기는 갈래라 여기서 인위로 태운다.
+        settings = workdir / "updater-settings.json"
+        settings.write_text(
+            json.dumps({"ProfileRoot": str(root), "HookVersion": "15.0.3.5", "AutoStart": True}),
+            encoding="utf-8",
+        )
+
+        first = run_installer(exe, root, shortcut_dir, settings)
         if first.returncode != 0:
             problems.append(
                 f"설치 프로그램이 실패했다(코드 {first.returncode}):\n{first.stdout}{first.stderr}"
@@ -987,6 +1036,7 @@ def check_install_e2e(dist: Path) -> list[str]:
             return problems
 
         problems += shortcut_problems(shortcut_dir)
+        problems += bundle_problems(root, settings, required_hook_version(REPO))
 
         if not dotnet_branch_ran(first.stdout):
             problems.append(
@@ -1005,7 +1055,7 @@ def check_install_e2e(dist: Path) -> list[str]:
         problems += config_problems(config, first_id, str(dev_dir / f"{INTERNAL_NAME}.dll"))
 
         # 두 번째 실행: 갱신 경로다. 신원이 바뀌면 프로필에 죽은 항목이 쌓인다.
-        second = run_installer(exe, root, shortcut_dir)
+        second = run_installer(exe, root, shortcut_dir, settings)
         if second.returncode != 0:
             problems.append(f"두 번째 설치가 실패했다(코드 {second.returncode})")
         elif working_plugin_id(plugin_root) != first_id:
