@@ -1,7 +1,7 @@
 # 이동 대상 갈래를 옮길 때 몇 번째인지 말하지 않는다
 
 **상태**: 초안. 기능 추가라 기각될 수 있다
-**대상**: `FF14Accessibility/Services/NavigationService.cs`, 갈래 전환 안내
+**대상**: `FF14Accessibility/Services/NavigationService.cs`의 `CycleCategory`(v6.08.129 `:1342`), 갈래 전환 안내. v6.08.129까지 그대로다
 **심각도**: 낮음
 
 ## 증상

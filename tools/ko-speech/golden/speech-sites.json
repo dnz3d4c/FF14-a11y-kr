@@ -191,13 +191,13 @@
       "file": "Services/PlacesService.cs",
       "rule": "umlaut",
       "text": "Ätheryt",
-      "why": "**통과시키는 것이 아니라 아직 못 고친 결함이다.** `PlaceDestination.TypeLabel`을 판정용으로 독일어로 두는 것은 원본의 의도인데(`NavigationService.cs:2101`·`3031`과 `PlacesService.cs:461`이 그 값을 글자로 비교한다), 그 값이 `NavigationService.cs:1754`의 발화 문장에 그대로 들어간다. 이 낱말을 이름까지 지목해 다루는 사안 파일이 열려 있다 - `upstream-reports/place-type-label-spoken-in-german.md`(상태: 초안). 리터럴만 바꾸면 에테라이트 분류가 예외도 로그도 없이 죽으므로 여기서 손대지 않는다."
+      "why": "판정용 식별자다. `PlaceDestination.TypeLabel`을 독일어로 두고 `NavigationService`·`PlacesService`가 글자로 비교한다. v6.08.129부터 발화할 때는 `AccessibilityStrings.PlaceKindLabel`(V19.cs:293)이 이 값을 언어별 낱말로 바꾼다(NavigationService.cs:2533). 그래서 발화되지 않는다. 그 사상을 거치지 않고 이 값을 말하는 자리가 생기면 결함이다."
     },
     {
       "file": "Services/PlacesService.cs",
       "rule": "umlaut",
       "text": "Übergang",
-      "why": "**통과시키는 것이 아니라 아직 못 고친 결함이다.** `PlaceDestination.TypeLabel`을 판정용으로 독일어로 두는 것은 원본의 의도인데(`NavigationService.cs:2101`·`3031`과 `PlacesService.cs:461`이 그 값을 글자로 비교한다), 그 값이 `NavigationService.cs:1754`의 발화 문장에 그대로 들어간다. 이 낱말을 이름까지 지목해 다루는 사안 파일이 열려 있다 - `upstream-reports/place-type-label-spoken-in-german.md`(상태: 초안). 리터럴만 바꾸면 에테라이트 분류가 예외도 로그도 없이 죽으므로 여기서 손대지 않는다."
+      "why": "판정용 식별자다. `PlaceDestination.TypeLabel`을 독일어로 두고 `NavigationService`·`PlacesService`가 글자로 비교한다. v6.08.129부터 발화할 때는 `AccessibilityStrings.PlaceKindLabel`(V19.cs:293)이 이 값을 언어별 낱말로 바꾼다(NavigationService.cs:2533). 그래서 발화되지 않는다. 그 사상을 거치지 않고 이 값을 말하는 자리가 생기면 결함이다."
     },
     {
       "file": "Services/RussianLotteryText.cs",

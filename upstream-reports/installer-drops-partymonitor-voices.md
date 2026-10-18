@@ -1,7 +1,7 @@
 # 설치 프로그램이 힐 모니터 음성 파일을 안 깐다
 
 **상태**: 초안
-**대상**: v6.08.35의 `Installer/InstallerService.cs` `DeployPluginFiles`(951행), `FF14Accessibility/Services/UpdateService.cs` `ExtractFiles`(342행)
+**대상**: `Installer/InstallerService.cs` `DeployPluginFiles`(951행), `FF14Accessibility/Services/UpdateService.cs` `ExtractFiles`(342행). v6.08.35에서 찾았고 v6.08.129에서도 같은 줄이다
 **심각도**: 높음. 설치 프로그램으로 깐 사용자 전원에게 힐 모니터가 소리를 안 낸다
 
 ## 증상
@@ -26,11 +26,15 @@
 
 ## 왜 원본 쪽에서 안 보였나
 
+러시아어 설치 프로그램은 이 문제를 피한다(아래 「고칠 방향」). 그쪽 사용자에게는 발현되지 않을 수 있다(미확인).
+
 미확인 추정이다. 원본 csproj의 Debug 빌드가 음성 파일을 개발용 폴더로 따로 복사한다(`FF14Accessibility.csproj:145`). 개발 환경에서는 설치 프로그램을 거치지 않고도 음성이 있어서 결함이 가려졌을 수 있다.
 
 ## 고칠 방향
 
 설치 프로그램과 자기 갱신이 루트 파일에 더해 `assets/` 트리를 상대 경로 그대로 받는다. `runtimes/`는 지금처럼 버린다. 대상 경로가 플러그인 폴더 밖으로 나가면 거부한다.
+
+**원본 저장소 안에 이미 그렇게 하는 코드가 있다.** v6.08.118 병합(`55b17bc`)이 들여온 러시아어 설치 프로그램 `Installer/Russian/`이 압축을 트리째 풀고(`PackageFiles.cs`의 `Extract`), `ValidatePlugin`(`:97-99`)이 `assets/partymonitor`에 mp3가 122개인지 검사한다. 같은 방식을 기본 설치 프로그램과 `UpdateService.ExtractFiles`에 적용하면 된다.
 
 ## 보내는 기준
 
