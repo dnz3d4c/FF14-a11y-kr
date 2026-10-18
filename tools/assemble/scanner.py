@@ -606,7 +606,9 @@ def _open_call(
     condition = _piece(text, parts[0][0])
     if any(_piece(text, part[0]) != condition for part in parts):
         return None
-    if SIDE_EFFECT.search(condition):
+    if SIDE_EFFECT.search(condition) or "(" in condition:
+        # 호출은 부작용이 없는지 증명할 수 없다. 인자마다 한 번씩 불리던 것이 펴면
+        # 한 번이 된다. 원본의 조건은 이름과 비교뿐이라 막아도 잃는 자리가 없다.
         return None
     yes = [_piece(text, part[1]) for part in parts]
     no = [_piece(text, part[2]) for part in parts]

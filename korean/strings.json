@@ -406,7 +406,7 @@
     {
       "de": "0 öffnet die Kategorie. Dort öffnet 0 das Spielmenü des Gegenstands. 4 zurück. Entf schließt.",
       "en": "0 opens the category. There, 0 opens the item's game menu. 4 goes back. Delete closes.",
-      "ko": "0은 분류 열기. 거기서 0은 아이템 게임 메뉴 열기. 4는 뒤로. Delete는 닫기."
+      "ko": "0은 분류 열기. 분류 안에서 0은 아이템 게임 메뉴 열기. 4는 뒤로. Delete는 닫기."
     },
     {
       "de": "0 öffnet die Klasse. Plus zurück zu den Klassen. Entf schließt.",
@@ -1531,7 +1531,7 @@
     {
       "de": "Die Gegenseite bietet jetzt {offer}.",
       "en": "The other side now offers {offer}.",
-      "ko": "이제 상대는 {offer} 제시함."
+      "ko": "상대가 이제 제시한 것은 {offer}."
     },
     {
       "de": "Die Handelsanfrage läuft noch.",
@@ -1571,7 +1571,7 @@
     {
       "de": "Die ausgewählte Klasse ist noch nicht verfügbar.",
       "en": "The selected class is not available yet.",
-      "ko": "선택한 클래스를 아직 알 수 없음."
+      "ko": "선택한 클래스를 아직 사용할 수 없음."
     },
     {
       "de": "Diese Aktualisierung ändert Dateien, die das laufende Spiel festhält. Bitte das Spiel beenden und den Installer benutzen.",
@@ -5179,9 +5179,9 @@
       "ko": "언어가 윈도 설정을 따르도록 변경됨: 현재 {language}."
     },
     {
-      "de": "Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.",
-      "en": "Choose a language with: /acc lang de, /acc lang en, /acc lang ko or /acc lang auto.",
-      "ko": "언어를 선택하려면: /acc lang ko, /acc lang en, /acc lang de, /acc lang auto 중 하나를 입력해야 함."
+      "de": "Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko, /acc lang ru oder /acc lang auto.",
+      "en": "Choose a language with: /acc lang de, /acc lang en, /acc lang ko, /acc lang ru or /acc lang auto.",
+      "ko": "언어를 선택하려면: /acc lang ko, /acc lang en, /acc lang de, /acc lang ru, /acc lang auto 중 하나를 입력해야 함."
     },
     {
       "de": "Sprung voraus",
@@ -7826,7 +7826,7 @@
     {
       "de": "{partner} bietet jetzt {offer}.",
       "en": "{partner} now offers {offer}.",
-      "ko": "이제 {partner} 쪽은 {offer} 제시함."
+      "ko": "{partner} 쪽이 이제 제시한 것은 {offer}."
     },
     {
       "de": "{points} Fertigkeitspunkte",

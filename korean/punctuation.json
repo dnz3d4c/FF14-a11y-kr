@@ -45,7 +45,7 @@
       "when": "2026-09-13"
     },
     {
-      "de": "Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.",
+      "de": "Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko, /acc lang ru oder /acc lang auto.",
       "kind": "나열",
       "faults": [
         "쉼표"

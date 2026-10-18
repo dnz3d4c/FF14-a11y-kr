@@ -400,6 +400,13 @@ def test_한정한_L을_펴도_한정을_양쪽에_되쓴다() -> None:
     )
 
 
+def test_조건에_호출이_있으면_L을_안_편다() -> None:
+    """인자 둘에 적힌 `Next()`는 두 번 불린다. 펴면 한 번이 되어 동작이 바뀐다."""
+    text = 'var a = L(Next() ? "an" : "aus", Next() ? "on" : "off");\n'
+
+    assert scanner.unnest(text) == text
+
+
 def test_인자마다_조건이_다르면_L을_안_편다() -> None:
     text = 'var a = L(on ? "an" : "aus", off ? "on" : "off");\n'
 

@@ -259,13 +259,13 @@
     {
       "name": "strings-language-usage-three",
       "file": "FF14Accessibility/Services/AccessibilityStrings.cs",
-      "why": "이 버전은 /acc lang ko를 받는데 원본 사용법은 ko를 말하지 않는다. 독일어와 영어를 ko까지 말하는 문구로 바꾸면 대장 행과 키가 맞고 한국어는 대장에서 들어온다. 러시아어 문구는 손대지 않는다 - 원본 사용자가 듣는 말이다. 주입 앞에 도는 까닭이 키 맞춤이다.",
+      "why": "이 버전은 /acc lang ko를 받는데 원본 사용법은 ko를 말하지 않는다. 독일어와 영어를 ko와 ru까지 말하는 문구로 바꾸면(원본 사용법은 ru도 빠뜨린다 - Loc.cs가 받는데 말하지 않는다) 대장 행과 키가 맞고 한국어는 대장에서 들어온다. 러시아어 문구는 손대지 않는다 - 원본 사용자가 듣는 말이다. 주입 앞에 도는 까닭이 키 맞춤이다.",
       "phase": "before",
       "find": [
         "        L(\"Sprache wählen mit: /acc lang de, /acc lang en oder /acc lang auto.\", \"Choose a language with: /acc lang de, /acc lang en or /acc lang auto.\", \"Выбрать язык: /acc lang ru, /acc lang en или /acc lang auto.\");"
       ],
       "replace": [
-        "        L(\"Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko oder /acc lang auto.\", \"Choose a language with: /acc lang de, /acc lang en, /acc lang ko or /acc lang auto.\", \"Выбрать язык: /acc lang ru, /acc lang en или /acc lang auto.\");"
+        "        L(\"Sprache wählen mit: /acc lang de, /acc lang en, /acc lang ko, /acc lang ru oder /acc lang auto.\", \"Choose a language with: /acc lang de, /acc lang en, /acc lang ko, /acc lang ru or /acc lang auto.\", \"Выбрать язык: /acc lang ru, /acc lang en или /acc lang auto.\");"
       ]
     },
     {
