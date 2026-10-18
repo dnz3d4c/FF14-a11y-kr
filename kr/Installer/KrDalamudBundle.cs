@@ -22,8 +22,7 @@ namespace FF14AccessibilityInstaller;
 ///
 /// **Switching it off needs no release.** Failing to fetch carries on with the
 /// updater path, so unpublishing the bundle release turns this off for everyone.
-/// Removing it for good is this file, KrHookSelection.cs, the graft rule
-/// installer-kr-bundle-offer and the KrBundle* strings (docs/decisions.md D-21).
+/// Removing it for good is described in docs/decisions.md D-21.
 ///
 /// **This does not replace the updater.** That program also injects Dalamud into
 /// the running game, and nothing here stands in for that.
@@ -32,6 +31,9 @@ internal static class KrDalamudBundle
 {
     /// <summary>The Dalamud version this plugin is built and checked against.</summary>
     public const string RequiredVersion = "15.0.3.7";
+
+    /// <summary>The asset package the bundle carries, and the oldest one accepted.</summary>
+    public const int RequiredAssets = 445;
 
     /// <summary>The release page a person can open, printed when fetching fails.</summary>
     public const string ReleasePage =
@@ -42,18 +44,18 @@ internal static class KrDalamudBundle
 
     /// <summary>
     /// SHA-256 of the asset, upper case hex. Checked before anything is unpacked,
-    /// because this archive goes straight into the folder Dalamud is loaded from:
-    /// a truncated download has to fail loudly rather than half-fill that folder.
+    /// because this archive goes straight into the folder Dalamud is loaded from.
     /// </summary>
     private const string ArchiveSha256 =
         "3806B1D3DFA1ED3FA1069643B7FF44B25E73259483775D6177F00B7BE97FDF8F";
 
     private static string HooksRoot => Path.Combine(KrProfile.Root, "addon", "Hooks");
+    private static string AssetsRoot => Path.Combine(KrProfile.Root, "dalamudAssets");
 
     /// <summary>
-    /// Makes sure the required version is on disk and the updater is set to it.
-    /// Every failure is reported and returns; the caller carries on with the
-    /// updater path either way, so nothing here can leave the install worse off.
+    /// Makes sure the required hook and assets are on disk and the updater is set
+    /// to that hook. Every failure is reported and returns; the caller carries on
+    /// with the updater path either way.
     ///
     /// Nothing is asked. Dalamud is not optional the way vnavmesh is, and the
     /// person already pressed Install.
@@ -63,8 +65,9 @@ internal static class KrDalamudBundle
         Action<string> info,
         Action<string> warn)
     {
-        if (!KrHookSelection.HookReady(HooksRoot, RequiredVersion)
-            && !await TryInstallAsync(download, info, warn))
+        var complete = KrHookSelection.HookReady(HooksRoot, RequiredVersion)
+                       && KrHookSelection.AssetsReady(KrProfile.AssetVersionPath, RequiredAssets);
+        if (!complete && !await TryInstallAsync(download, info, warn))
             return;
 
         PointUpdater(info, warn);
@@ -77,6 +80,10 @@ internal static class KrDalamudBundle
     {
         var archivePath = Path.Combine(
             Path.GetTempPath(), "kr_dalamud_bundle_" + Guid.NewGuid() + ".zip");
+        // Unpacked next to the profile, not into it, so a run that dies half way -
+        // full disk, a locked file - leaves the profile as it was. Same volume as
+        // the targets, so the moves below are renames, not copies.
+        var staging = Path.Combine(KrProfile.Root, ".kr-bundle-staging-" + Guid.NewGuid());
         try
         {
             info(Loc.Get("KrBundleDownloading"));
@@ -91,8 +98,8 @@ internal static class KrDalamudBundle
             }
 
             info(Loc.Get("KrBundleInstalling"));
-            Directory.CreateDirectory(KrProfile.Root);
-            ZipFile.ExtractToDirectory(archivePath, KrProfile.Root, overwriteFiles: true);
+            ZipFile.ExtractToDirectory(archivePath, staging);
+            Place(staging);
         }
         catch (Exception ex)
         {
@@ -103,8 +110,10 @@ internal static class KrDalamudBundle
         }
         finally
         {
-            // Losing the temp file matters less than stopping here would.
+            // Losing the temp files matters less than stopping here would.
             try { File.Delete(archivePath); }
+            catch (Exception) { }
+            try { if (Directory.Exists(staging)) Directory.Delete(staging, recursive: true); }
             catch (Exception) { }
         }
 
@@ -126,6 +135,41 @@ internal static class KrDalamudBundle
     }
 
     /// <summary>
+    /// Moves the unpacked hook and assets into the profile, and writes asset.ver
+    /// last. A hook folder that is already complete stays: it is the same build,
+    /// and the running game may hold it open.
+    /// </summary>
+    private static void Place(string staging)
+    {
+        var stagedHook = Path.Combine(staging, "addon", "Hooks", RequiredVersion);
+        var stagedAssets = Path.Combine(staging, "dalamudAssets", RequiredAssets.ToString());
+        if (!KrHookSelection.HookReady(Path.Combine(staging, "addon", "Hooks"), RequiredVersion)
+            || !Directory.Exists(stagedAssets))
+            throw new InvalidDataException(Loc.Get("KrBundleStillMissing", staging));
+
+        if (!KrHookSelection.HookReady(HooksRoot, RequiredVersion))
+            Replace(stagedHook, Path.Combine(HooksRoot, RequiredVersion));
+        Replace(stagedAssets, Path.Combine(AssetsRoot, RequiredAssets.ToString()));
+
+        Directory.CreateDirectory(Path.Combine(AssetsRoot, "local"));
+        var verTemp = KrProfile.AssetVersionPath + ".kr-bundle-tmp";
+        File.WriteAllText(verTemp, RequiredAssets.ToString());
+        File.Move(verTemp, KrProfile.AssetVersionPath, overwrite: true);
+    }
+
+    /// <summary>
+    /// Puts <paramref name="from"/> where <paramref name="to"/> is. Whatever was at
+    /// the target is a half-written folder from an earlier run, or the same
+    /// package number: neither is worth keeping over a verified copy.
+    /// </summary>
+    private static void Replace(string from, string to)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(to)!);
+        if (Directory.Exists(to)) Directory.Delete(to, recursive: true);
+        Directory.Move(from, to);
+    }
+
+    /// <summary>
     /// Sets the updater to inject the required version. Without this a profile
     /// that was on 15.0.3.5 gets the new folder and keeps starting the old one -
     /// measured on the development machine on 2026-10-18.
@@ -138,27 +182,36 @@ internal static class KrDalamudBundle
         var path = KrProfile.UpdaterSettingsPath;
         if (!File.Exists(path)) return;
 
+        var temp = path + ".kr-bundle-tmp";
         try
         {
             var text = File.ReadAllText(path);
-            var current = KrHookSelection.HookVersionIn(text);
-            if (!KrHookSelection.ShouldPoint(current, RequiredVersion)) return;
+            if (!KrHookSelection.ShouldPoint(KrHookSelection.HookVersionIn(text), RequiredVersion))
+                return;
 
             if (KrHookSelection.WithHookVersion(text, RequiredVersion) is not { } updated)
             {
                 warn(Loc.Get("KrHookVersionByHand", RequiredVersion));
                 return;
             }
+
             // The one write into another program's settings (KrProfile.Root has the
-            // rule and this exception). The backup is what lets it be undone by hand.
-            File.Copy(path, path + ".bak-installer", overwrite: true);
-            File.WriteAllText(path, updated);
+            // rule and this exception). File.Replace swaps the file and keeps the old
+            // one as the backup in one step, so a failed write cannot leave the
+            // updater with a truncated settings file.
+            File.WriteAllText(temp, updated);
+            File.Replace(temp, path, path + ".bak-installer");
             info(Loc.Get("KrHookVersionSet", RequiredVersion));
         }
         catch (Exception ex)
         {
             warn(Loc.Get("KrBundleFailed", ex.Message));
             warn(Loc.Get("KrHookVersionByHand", RequiredVersion));
+        }
+        finally
+        {
+            try { File.Delete(temp); }
+            catch (Exception) { }
         }
     }
 

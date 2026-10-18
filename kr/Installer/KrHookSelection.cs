@@ -42,14 +42,36 @@ internal static class KrHookSelection
     }
 
     /// <summary>
+    /// True when <paramref name="assetVerPath"/> names asset package
+    /// <paramref name="required"/> or newer. The hook alone does not make the
+    /// bundle complete - a profile can carry the right hook with older assets.
+    /// </summary>
+    public static bool AssetsReady(string assetVerPath, int required)
+    {
+        try
+        {
+            return File.Exists(assetVerPath)
+                   && int.TryParse(File.ReadAllText(assetVerPath).Trim(), out var have)
+                   && have >= required;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Whether the updater's choice should be moved to <paramref name="required"/>.
-    /// Only an older or unreadable choice is moved. A newer one is left alone: the
-    /// user may have moved there on purpose once the updater handles it.
+    /// Only a readable, older choice is moved. A newer one is left alone - the user
+    /// may have moved there on purpose once the updater handles it. An empty or
+    /// unreadable one is left alone too: the updater then falls back to its own
+    /// default or the highest hook installed, and rewriting a value we cannot read
+    /// would not be "only when older" (docs/decisions.md D-21).
     /// </summary>
     public static bool ShouldPoint(string current, string required)
     {
         if (!Version.TryParse(required, out var want)) return false;
-        if (!Version.TryParse(current, out var have)) return true;
+        if (!Version.TryParse(current, out var have)) return false;
         return have < want;
     }
 

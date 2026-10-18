@@ -59,13 +59,39 @@ public sealed class KrHookSelectionTests : IDisposable
     [InlineData("15.0.3.5", true)]
     [InlineData("15.0.3.7", false)]
     [InlineData("15.0.3.8", false)]
-    [InlineData("", true)]
-    [InlineData("not a version", true)]
-    public void Only_an_older_or_unreadable_choice_is_moved(string current, bool expected)
+    [InlineData("", false)]
+    [InlineData("not a version", false)]
+    public void Only_a_readable_older_choice_is_moved(string current, bool expected)
     {
         // A newer choice is left alone: once the updater handles 15.0.3.8 the
         // user may have moved there on purpose, and the plugin binds to it too.
+        // An empty or unreadable one is left alone as well: the updater then uses
+        // its own default (15.0.3.7 in 0.5.5) or the highest hook installed, and
+        // rewriting a value we cannot read is not "only when older".
         Assert.Equal(expected, KrHookSelection.ShouldPoint(current, "15.0.3.7"));
+    }
+
+    [Theory]
+    [InlineData("445", true)]
+    [InlineData("446", true)]
+    [InlineData("443", false)]
+    [InlineData("", false)]
+    [InlineData("broken", false)]
+    public void Assets_count_only_from_the_required_number_up(string written, bool expected)
+    {
+        // The hook alone is not the bundle: a profile can carry the 15.0.3.7 hook
+        // with assets 443 (the development machine did), and skipping the bundle
+        // then leaves the old assets behind.
+        var file = Path.Combine(_hooks, "asset.ver");
+        File.WriteAllText(file, written);
+
+        Assert.Equal(expected, KrHookSelection.AssetsReady(file, 445));
+    }
+
+    [Fact]
+    public void Missing_assets_are_not_ready()
+    {
+        Assert.False(KrHookSelection.AssetsReady(Path.Combine(_hooks, "asset.ver"), 445));
     }
 
     [Fact]
