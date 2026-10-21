@@ -1,428 +1,172 @@
-name: 원본 확인
+name: 원본 업데이트 알림
 
-# 원본의 새 태그를 찾아 **얹으면 무슨 일이 생기는지 재 보고**, 그 결과를 이슈 한
-# 장에 적는다. 얹지는 않는다.
+# 원본 모드에 새 릴리스가 나오면 ntfy로 알린다. **얹지도, 재 보지도 않는다.**
 #
-# ## 왜 PR을 안 여는가
+# ## 왜 재 보기를 걷어냈나
 #
-# 원래는 서브모듈 포인터를 옮긴 가지를 밀고 PR을 열었다. 그 구조를 걷어낸 까닭 셋.
+# 전에는 새 태그로 조립과 빌드를 러너에서 해 보고 그 결과를 이슈에 적었다. 그 잡은
+# 원본이 구조를 바꿀 때마다 죽었다 - 2026-10-17에 v6.08.129가 문장을 L(de, en, ru)로
+# 고르게 바뀌자 조립 단계에서 섰다. 원본이 쓰는 방식이 바뀌는 것은 얹을 때 사람이
+# 덧대기를 고치며 다룰 일이라, 매일 미리 재는 잡은 원리상 계속 깨진다. 알림만 남긴다
+# (사용자 결정, 2026-10-21. 까닭은 docs/decisions.md D-22).
 #
-#   1. **그 변경은 병합 가능한 적이 없다.** 얹으면 기본 가지가 미적용 수십~수백 곳과
-#      원본 코드의 경고를 안은 상태가 되고, build.yml이 -warnaserror로 재므로 기본
-#      가지의 빌드가 실패한다. 번역을 다 옮길 때까지 그 상태로 남고 발행도 못 한다.
-#      PR은 "병합하면 된다"를 뜻하는데 실제로는 병합이 작업의 시작이다.
-#   2. **포인터를 옮기는 비용이 거의 없다.** `git -C upstream checkout <태그>`와 커밋
-#      한 줄이다. 그것 하나 때문에 가지를 밀고 쓰기 권한을 가진 잡을 둘 이유가 없다.
-#   3. **PR이 쌓인다.** 업스트림이 하루 1.4개꼴로 태그를 내므로, 열린 PR이 낡은 태그를
-#      가리킨 채 새 PR이 또 열린다.
+# ## 버전을 무엇과 견주는가
 #
-# ## 그래도 매일 재는 까닭
+# **서브모듈 핀의 태그와 견준다.** 원본은 v6.08.129, 우리는 v6.8.129.0이라 번호끼리
+# 견주면 안 된다. 판정은 tools/upstream-watch가 하고 그 머리말에 까닭이 있다.
 #
-#   - **원본이 우리 덧대기 앵커를 깨뜨렸는지 그날 안다.** graft 규칙은 앵커를 못 찾으면
-#     이름을 대고 멈춘다. 얹을 때 처음 알면 그때 한꺼번에 터진다.
-#   - **얹을지 판단할 재료를 미리 받는다.** 미적용이 몇 곳 늘어나는지 미리 아는 것과
-#     얹고 나서 아는 것은 다르다.
-#   - **참조 어셈블리가 낡았다는 신호가 여기서 먼저 나온다.** 2026-09-07에 실제로 그랬다.
+# ## 같은 릴리스를 두 번 안 알리는 법
+#
+# 상태를 둘 곳이 없어서 **직전에 성공한 예약 실행의 시작 시각**을 기준으로 쓴다. 그
+# 뒤에 발행된 것만 알린다. 손으로 돌린 실행은 기준에서 뺀다 - 시험 실행이 기준을
+# 앞으로 끌면, 그 사이에 나온 진짜 릴리스를 아무도 안 알리고 지나간다.
+#
+# ## 비밀 값
+#
+# ntfy 주소·토픽·계정은 전부 Secrets에 둔다. 공개 저장소라 주소를 여기 적으면 서버
+# 이름이 드러난다. 하나라도 비면 알릴 것이 없는 날에도 실패한다 - 설정이 빠진 것을
+# 릴리스가 나온 날에야 알면 그날 알림이 없다.
 #
 # 러너를 windows-latest로 두는 까닭은 build.yml 맨 위에 적어 두었다.
 
 on:
   schedule:
-    # 매일 06:00 KST. 업스트림이 하루 1.4개꼴로 태그를 낸다.
+    # 매일 06:00 KST. 예약 실행은 1~2시간 늦게 도는 일이 잦다.
     - cron: "0 21 * * *"
   workflow_dispatch:
+    inputs:
+      test_pin:
+        description: "시험용. 핀을 이 원본 태그로 치고 시각 조건을 끈다 (예: v6.08.128)"
+        required: false
+        default: ""
 
-# 권한은 잡마다 둔다. 최상위에 두면 읽기만 하면 되는 잡까지 쓰기를 갖는다.
-#
-# 갈라 두는 까닭이 구조에 있다. 새 원본 태그를 체크아웃해 dotnet build를 돌리는 것은
-# **원본이 쓴 코드를 실행하는 일**이다 - 원본 csproj에 DeployToDevFolder 같은 커스텀
-# MSBuild 타깃이 실제로 있고, 그것이 빌드 중에 돈다. 그 잡이 우리 저장소 쓰기 토큰을
-# 함께 갖고 있으면, 원본 저장소가 침해될 때 그 코드가 토큰에 닿는다.
-#
-# 그래서 원본 코드를 실행하는 잡은 읽기만 갖고, 쓰기를 갖는 잡은 원본 코드를 아예
-# 실행하지 않는다. 둘 사이는 아티팩트로만 이어진다.
 permissions: {}
 
 # 우리 도구는 한국어로 보고한다. 윈도 러너의 파이썬 stdout은 cp1252라서 그대로
-# 두면 첫 한국어 출력에서 UnicodeEncodeError로 죽는다. 로컬에서는 콘솔 인코딩이
-# 달라 안 드러나고, 실제 러너에서만 나타난다.
+# 두면 첫 한국어 출력에서 UnicodeEncodeError로 죽는다.
 env:
   PYTHONIOENCODING: utf-8
   PYTHONUTF8: "1"
-  # 현황 이슈를 찾는 열쇠. 제목으로 찾으면 제목을 바꾸는 순간 못 찾는다.
-  STATUS_LABEL: upstream-status
 
 jobs:
-  # 얹을 것이 있는지만 본다. 없으면 아래 잡이 재지 않는다.
-  #
-  # 아무것도 안 한 실행을 실패로 끝내지 않는다. 자동화가 제대로 돌아 "새 태그 없음"을
-  # 확인한 것과 자동화가 죽은 것을 둘 다 실패로 만들면, 실패가 신호이기를 그만둔다.
-  # 기존 저장소에서는 예약 실행이 12일 연속 성공인데 자동화가 죽어 있었다 - 7건이
-  # 전부 26~56초에 아무것도 안 하고 끝났고 빌드 실측은 3분 36초였다.
-  check:
-    name: 새 태그 확인
+  notify:
+    name: 새 원본 릴리스 알림
     runs-on: windows-latest
+    timeout-minutes: 15
     permissions:
       contents: read
-    outputs:
-      current: ${{ steps.look.outputs.current }}
-      latest: ${{ steps.look.outputs.latest }}
-      has-new: ${{ steps.look.outputs.has-new }}
+      # 직전 성공 실행 시각을 읽는다.
+      actions: read
     steps:
+      - name: 알림 설정이 다 있는지 본다
+        shell: bash
+        env:
+          NTFY_URL: ${{ secrets.NTFY_URL }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          NTFY_USER: ${{ secrets.NTFY_USER }}
+          NTFY_PASSWORD: ${{ secrets.NTFY_PASSWORD }}
+        run: |
+          missing=""
+          for name in NTFY_URL NTFY_TOPIC NTFY_USER NTFY_PASSWORD; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "저장소 Secrets에 없다:$missing" >&2
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
         with:
           submodules: true
 
-      # 서브모듈 안에서 cd 하지 않는다. cd가 남으면 다음 명령이 원본 저장소에서
-      # 돌아 우리 커밋이 원본에 들어간다.
+      # 서브모듈 안에서 cd 하지 않는다. cd가 남으면 다음 명령이 원본 저장소에서 돈다.
       #
-      # fetch가 없으면 안 되는 자리다. actions/checkout이 서브모듈을 얕게 받으면
-      # **태그가 하나만 보인다**(2026-09-04 실측: 받은 직후 1개, fetch 뒤 58개).
-      # 그 상태에서는 latest가 current와 같아져 "새 태그 없음"으로 조용히 끝난다 -
-      # 이 워크플로가 막으려던 바로 그 모양이다. 그래서 받아 온 뒤에 세 가지를 잰다.
-      - name: 태그를 견준다
-        id: look
+      # fetch가 없으면 안 되는 자리다. actions/checkout이 서브모듈을 얕게 받으면 태그가
+      # 하나만 보여서(2026-09-04 실측: 받은 직후 1개, fetch 뒤 58개) 핀이 어느 태그인지
+      # 못 읽는다.
+      - name: 핀을 읽는다
+        id: pin
         shell: bash
+        env:
+          TEST_PIN: ${{ inputs.test_pin }}
         run: |
           git -C upstream fetch --tags --force origin
-          count=$(git -C upstream tag --list 'v*' | wc -l)
-          current=$(git -C upstream describe --tags --exact-match HEAD 2>/dev/null || echo "")
-          latest=$(git -C upstream tag --list 'v*' --sort=-v:refname | head -1)
-
-          if [ "$count" -le 1 ]; then
-            echo "원본 태그가 $count개만 보인다. 받아 오기가 반만 됐다." >&2
-            exit 1
-          fi
-          if [ -z "$current" ]; then
+          pin=$(git -C upstream describe --tags --exact-match HEAD 2>/dev/null || echo "")
+          if [ -z "$pin" ]; then
             echo "지금 핀이 어느 태그인지 모르겠다. 태그가 아닌 커밋을 가리키고 있다." >&2
             exit 1
           fi
-          if [ -z "$latest" ]; then
-            echo "원본의 최신 태그를 못 찾았다." >&2
-            exit 1
-          fi
-
-          echo "current=$current" >> "$GITHUB_OUTPUT"
-          echo "latest=$latest" >> "$GITHUB_OUTPUT"
-          if [ "$current" != "$latest" ]; then
-            echo "has-new=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has-new=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: 잡 요약
-        if: always()
-        shell: bash
-        run: |
-          {
-            echo "## 원본 태그"
-            echo
-            echo "| | |"
-            echo "|---|---|"
-            echo "| 우리가 쓰는 원본 | ${{ steps.look.outputs.current }} |"
-            echo "| 원본 최신 | ${{ steps.look.outputs.latest }} |"
-            echo
-            if [ "${{ steps.look.outputs.has-new }}" = "true" ]; then
-              echo "얹을 것이 있다. 아래 잡이 얹으면 무슨 일이 생기는지 재 본다."
-            else
-              echo "원본 최신을 이미 쓰고 있다. 현황 이슈가 열려 있으면 닫는다."
+          if [ -n "$TEST_PIN" ]; then
+            if ! [[ "$TEST_PIN" =~ ^v[0-9]+(\.[0-9]+)*$ ]]; then
+              echo "test_pin은 v6.08.128 같은 꼴이어야 한다: $TEST_PIN" >&2
+              exit 1
             fi
-          } >> "$GITHUB_STEP_SUMMARY"
-
-  # 잡 이름이 건너뛴 까닭까지 말한다. 목록에서 이 잡이 skipped인 것을 보는 것만으로
-  # "새 태그가 없었구나"를 안다.
-  #
-  # **동적 이름은 안 된다.** `name: ${{ ... has-new ... }}`를 넣어 봤다가 되돌렸다.
-  # 2026-09-04에 실제로 돌려 보니 `if`로 건너뛴 잡은 실행 컨텍스트가 없어서 이름의
-  # 표현식이 평가되지 않고 원문 그대로 뜬다 - 목록에 이렇게 나온다.
-  #
-  #     skipped | needs.check.outputs.has-new == 'true' && '새 버전 얹기' || '새 태그 없음'
-  #
-  # 구분하고 싶었던 바로 그 경우에 못 읽는 문자열이 뜨므로 목적을 정반대로 이룬다.
-  # 정적 이름이 표현식 없이 같은 일을 한다. tools/ci-check가 이 자리를 지킨다.
-  #
-  # 이 잡은 **원본이 쓴 코드를 실행한다.** 새 태그를 체크아웃해 dotnet build를 돌리고,
-  # 원본 csproj에는 커스텀 MSBuild 타깃이 있다. 그래서 읽기 권한만 갖는다.
-  #
-  # **갈아 끼우기는 러너 안에서만 한다.** 밀지 않으므로 우리 저장소는 그대로다.
-  measure:
-    name: 얹으면 무슨 일이 생기는지 재 본다 (새 태그가 없으면 건너뜀)
-    needs: check
-    if: needs.check.outputs.has-new == 'true'
-    runs-on: windows-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-
-      - uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "10.0.x"
-
-      - name: Dalamud 참조
-        id: refs
-        uses: ./.github/actions/dalamud-refs
-        with:
-          token: ${{ github.token }}
-
-      # 지금 핀으로 한 번 조립해 둔다. 새 버전의 절대 숫자만으로는 늘었는지 원래
-      # 그랬는지가 안 보인다. 문서에 적어 둔 기준선과 대는 방법도 있지만 그
-      # 숫자는 손으로 옮겨 적은 것이라 언젠가 실제와 갈라진다.
-      - name: 지금 핀으로 조립
-        shell: bash
-        run: |
-          uv run python tools/assemble/assemble.py
-          cp build/assemble-report.json before.json
-
-      - name: 새 태그로 갈아 끼운다
-        shell: bash
-        run: git -C upstream fetch --tags --force origin && git -C upstream checkout "${{ needs.check.outputs.latest }}"
-
-      - name: 조립
-        shell: bash
-        run: |
-          uv run python tools/assemble/assemble.py | tee assemble.log
-          cp build/assemble-report.json after.json
-
-      # **여기만 -warnaserror를 안 쓴다.** 이 잡이 재는 것은 원본이 방금 낸 코드이고,
-      # 그 코드의 경고는 우리가 고칠 수 없다 - 원본의 결함은 우리가 고치지 않기로
-      # 정해 두었다. 실패로 만들면 통과할 길이 아예 없어 매일 실패하고, 그러면
-      # 실패가 신호이기를 그만둔다. 저장소가 이미 같은 논증을 두 곳에 갖고 있다 -
-      # build.yml의 "미번역 개수 자체는 실패가 아니다"와 위 check 잡의 "새 태그
-      # 없음을 실패로 만들지 않는다"다. tools/ci-check의 규칙 9가 이 자리를 지킨다.
-      #
-      # 컴파일 오류는 그대로 실패다. 그것은 **우리 것이다** - 참조 어셈블리 버전이
-      # 낡았다는 뜻이고, 2026-09-07에 실제로 그랬다(CS1061을 15.0.3.3으로 올려 풀었다).
-      #
-      # shell: bash는 pipefail이 켜져 있어서 tee를 거쳐도 dotnet의 실패가 그대로
-      # 단계의 실패가 된다.
-      - name: 빌드
-        shell: bash
-        env:
-          DALAMUD_HOME: ${{ steps.refs.outputs.home }}
-        run: |
-          dotnet build -c Release \
-            build/FF14Accessibility/FF14Accessibility.csproj | tee build.log
-
-      # 경고를 버리지 않는다. 실패로 만들지 않는 대신 **세어서 사람에게 낸다.**
-      #
-      # 빌드가 실패해도 돈다. 오류로 죽은 로그에도 경고가 같이 들어 있다.
-      #
-      # 중복을 없애는 까닭: MSBuild가 마지막 요약 절에서 같은 경고를 들여쓰기만
-      # 붙여 되풀이한다. 그대로 세면 개수가 두 배가 되고 같은 줄이 본문에 두 번 온다.
-      # 꼬리의 `[...csproj]`도 같은 이유로 뗀다.
-      - name: 원본 경고를 센다
-        id: warn
-        if: always()
-        shell: bash
-        run: |
-          sed -n 's/^[[:space:]]*//; s/[[:space:]]*\[[^][]*\][[:space:]]*$//; /: warning [A-Z][A-Z0-9]*:/p' \
-            build.log 2>/dev/null | sort -u > warnings.txt || true
-          count=$(wc -l < warnings.txt | tr -d ' ')
-          echo "count=$count" >> "$GITHUB_OUTPUT"
-          echo "원본이 데려온 경고 $count개."
-          cat warnings.txt
-
-      # 현황 이슈에 그대로 들어갈 글. 여기서 만드는 까닭은 이 잡이 숫자를 다 갖고
-      # 있어서다. 쓰기 권한을 가진 잡은 이 글을 받아 올리기만 한다.
-      #
-      # **목록에 상한을 둔다.** 한 번에 여러 버전을 얹으면 새 미적용이 147곳까지
-      # 나오는데, 그대로 적으면 378줄이 되어 무엇을 봐야 하는지가 그 안에 묻힌다.
-      # 전체는 아래 산출물이 갖고, 잘린 만큼은 꼬리 한 줄이 개수로 말한다.
-      - name: 이슈 본문
-        if: always()
-        shell: bash
-        run: |
-          uv run python tools/assemble/compare.py before.json after.json --limit 15 --out change.md
-          count() { uv run python -c "
-          import json, sys
-          print(len(json.load(open(sys.argv[1], encoding='utf-8'))['untranslated']))
-          " "$1"; }
-          before_un=$(count before.json)
-          after_un=$(count after.json)
-          if [ "${{ steps.warn.outputs.count }}" = "0" ]; then
-            build="경고 없이 선다"
-          else
-            build="**경고 ${{ steps.warn.outputs.count }}개** — 기본 가지에서는 빌드가 실패한다"
+            echo "시험 실행이다. 실제 핀 $pin 대신 $TEST_PIN 으로 친다."
+            pin="$TEST_PIN"
           fi
-          {
-            echo "> 이 이슈는 매일 06:00에 자동으로 다시 쓰인다. 손으로 고치면 다음 실행이 덮는다."
-            echo
-            echo "## 지금"
-            echo
-            echo "| | |"
-            echo "|---|---|"
-            echo "| 우리가 쓰는 원본 | \`${{ needs.check.outputs.current }}\` |"
-            echo "| 원본 최신 | \`${{ needs.check.outputs.latest }}\` |"
-            echo "| 얹으면 빌드가 | $build |"
-            echo "| 얹으면 한국어 미적용이 | ${before_un}곳 → **${after_un}곳** |"
-            echo "| 마지막 확인 | $(date -u '+%Y-%m-%d %H:%M') UTC |"
-            echo
-            echo "## 얹으면 생기는 일"
-            echo
-            if [ "${{ steps.warn.outputs.count }}" != "0" ]; then
-              echo "### 빌드 경고 ${{ steps.warn.outputs.count }}개"
-              echo
-              echo "기본 가지는 \`-warnaserror\`로 빌드하므로, **이대로 얹으면 기본 가지의 빌드가 실패한다.**"
-              echo "원본의 결함은 우리가 고치지 않으므로(\`upstream-reports/rejected.md\`)"
-              echo "얹기 전에 무엇을 할지 정해야 한다."
-              echo
-              echo '```'
-              cat warnings.txt
-              echo '```'
-              echo
-            else
-              echo "빌드 경고는 없다."
-              echo
-            fi
-            cat change.md
-            echo
-            echo "## 얹을 때 할 일"
-            echo
-            echo "1. 원본 핀을 옮긴다 — \`git -C upstream checkout ${{ needs.check.outputs.latest }} && git add upstream\`"
-            echo "2. 미적용 ${after_un}곳을 \`korean/strings.json\`에 옮긴다. \`uv run python tools/assemble/assemble.py\`로 다시 잰다"
-            echo "3. 빌드 경고를 어떻게 할지 정한다. 원본 결함이면 \`upstream-reports/\`에 적고 우리는 안 고친다"
-            echo "4. \`docs/status.md\`의 원본 버전과 번역 잔량 숫자를 맞춘다. \`tools/docs-check\`가 산출물과 대조한다"
-            echo "5. \`docs/changelog.md\`에 한 줄 적는다"
-            echo "6. \`korean/version.json\`의 \`kr_revision\`을 올린다"
-            echo "7. \`docs/release-notes/<버전>.md\`를 쓴다. \`tools/notes-check\`가 N1~N28을 잰다"
-            echo "8. 인게임에서 귀로 판정한다"
-            echo "9. 발행은 \`release.yml\`을 손으로 돌린다. 러너가 못 재는 게이트 셋을 입력으로 선언한다"
-            echo
-            echo "---"
-            echo
-            echo "잘린 목록의 나머지와 조립 보고 전체는"
-            echo "[이 실행](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})의"
-            echo "잡 요약과 산출물에 있다."
-          } > issue.md
+          url=$(git config -f .gitmodules submodule.upstream.url)
+          slug=$(echo "$url" | sed -E 's#^https://github.com/##; s#\.git$##')
+          echo "pin=$pin" >> "$GITHUB_OUTPUT"
+          echo "slug=$slug" >> "$GITHUB_OUTPUT"
 
-      - name: 글과 인벤토리를 넘긴다
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: upstream-status-${{ needs.check.outputs.latest }}
-          path: |
-            issue.md
-            before.json
-            after.json
-          if-no-files-found: error
-
-      - name: 잡 요약
-        if: always()
-        shell: bash
-        run: |
-          {
-            echo "## ${{ needs.check.outputs.current }} 에서 ${{ needs.check.outputs.latest }} 로"
-            echo
-            cat issue.md 2>/dev/null || echo "잴 것을 못 만들었다."
-            echo
-            echo "## 달라진 것 전체"
-            echo
-            echo "이슈는 목록마다 15개까지만 담는다. 잘린 나머지가 여기 있다."
-            echo
-            uv run python tools/assemble/compare.py before.json after.json 2>/dev/null \
-              || echo "견줄 것을 못 만들었다."
-            echo
-            echo "## 조립 보고"
-            echo
-            echo '```'
-            cat assemble.log 2>/dev/null || echo "조립이 결과를 못 남겼다."
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-
-  # 쓰기 권한은 여기에만 있다. 이 잡은 **원본 코드를 한 줄도 실행하지 않는다** -
-  # 저장소를 받지도 않고, 조립도 빌드도 안 하고, 앞 잡이 넘긴 글만 올린다.
-  #
-  # `always()`로 도는 까닭은 갈래 셋을 다 적어야 해서다. 얹을 것이 없으면 이슈를
-  # 닫고, 재다가 멈췄으면 그 사실 자체가 가장 중요한 신호다.
-  report:
-    name: 현황 이슈 갱신
-    needs: [check, measure]
-    if: always() && needs.check.result == 'success'
-    runs-on: windows-latest
-    permissions:
-      issues: write
-    steps:
-      - name: 잰 글을 받는다
-        if: needs.measure.result == 'success'
-        uses: actions/download-artifact@v4
-        with:
-          name: upstream-status-${{ needs.check.outputs.latest }}
-
-      # 이슈 하나를 계속 갱신한다. 태그마다 새로 만들면 하루 1.4개꼴로 쌓인다.
-      #
-      # 라벨로 찾는 까닭: 제목에는 버전이 들어가서 매일 바뀐다. 제목으로 찾으면
-      # 제목을 바꾸는 순간 못 찾고 이슈가 하나 더 생긴다.
-      #
       # gh에는 시간 제한 옵션이 없어서 단계에 timeout-minutes를 단다.
-      - name: 이슈를 만들거나 갱신한다
-        id: issue
-        timeout-minutes: 10
+      - name: 원본 릴리스와 직전 실행을 받는다
+        id: fetch
+        timeout-minutes: 5
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh label create "$STATUS_LABEL" --repo "$GITHUB_REPOSITORY" --force \
-            --color 0E8A16 --description "원본 최신과 우리 핀의 차이. 자동으로 갱신된다"
-          number=$(gh issue list --repo "$GITHUB_REPOSITORY" --label "$STATUS_LABEL" \
-            --state open --json number --jq '.[0].number')
+          gh api "repos/${{ steps.pin.outputs.slug }}/releases?per_page=30" > releases.json
+          since=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow sync.yml \
+            --event schedule --status success --limit 1 --json createdAt --jq '.[0].createdAt // ""')
+          ours=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName 2>/dev/null || echo "")
+          echo "since=$since" >> "$GITHUB_OUTPUT"
+          echo "ours=$ours" >> "$GITHUB_OUTPUT"
 
-          if [ "${{ needs.measure.result }}" = "skipped" ]; then
-            if [ -n "$number" ]; then
-              gh issue close "$number" --repo "$GITHUB_REPOSITORY" \
-                --comment "원본 최신 \`${{ needs.check.outputs.latest }}\` — 이미 쓰고 있다. 새 태그가 나오면 다시 열린다."
-              echo "state=원본 최신을 이미 쓰고 있어서 이슈를 닫았다 (#$number)" >> "$GITHUB_OUTPUT"
-            else
-              echo "state=원본 최신을 이미 쓰고 있다. 열린 이슈가 없어 아무것도 안 했다" >> "$GITHUB_OUTPUT"
-            fi
-            exit 0
-          fi
+      - uses: astral-sh/setup-uv@v5
 
-          if [ "${{ needs.measure.result }}" = "success" ]; then
-            title="원본 모드 ${{ needs.check.outputs.current }} → ${{ needs.check.outputs.latest }} 업데이트 대기"
-          else
-            title="원본 모드 ${{ needs.check.outputs.latest }} — 재다가 멈췄다"
-            {
-              echo "> 이 이슈는 매일 06:00에 자동으로 다시 쓰인다."
-              echo
-              echo "## 얹으면 무슨 일이 생기는지 재지 못했다"
-              echo
-              echo "조립이나 빌드가 \`${{ needs.check.outputs.latest }}\`에서 멈췄다."
-              echo "**원본이 우리 덧대기 앵커를 고쳤을 가능성이 가장 높다** — graft 규칙은"
-              echo "앵커를 못 찾으면 규칙 이름을 대고 멈춘다."
-              echo
-              echo "[실행 로그](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})에서 어느 단계인지 본다."
-              echo
-              echo "| | |"
-              echo "|---|---|"
-              echo "| 우리가 쓰는 원본 | \`${{ needs.check.outputs.current }}\` |"
-              echo "| 원본 최신 | \`${{ needs.check.outputs.latest }}\` |"
-              echo "| 마지막 확인 | $(date -u '+%Y-%m-%d %H:%M') UTC |"
-            } > issue.md
-          fi
+      - name: 알릴 것을 고른다
+        shell: bash
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          TEST_PIN: ${{ inputs.test_pin }}
+        run: |
+          flag=""
+          [ -n "$TEST_PIN" ] && flag="--ignore-since"
+          uv run --no-project python tools/upstream-watch/upstream_watch.py \
+            --pin "${{ steps.pin.outputs.pin }}" --ours "${{ steps.fetch.outputs.ours }}" \
+            --releases releases.json --since "${{ steps.fetch.outputs.since }}" $flag \
+            --topic "$NTFY_TOPIC" --out payload.json | tee judge.md
 
-          if [ -n "$number" ]; then
-            gh issue edit "$number" --repo "$GITHUB_REPOSITORY" \
-              --title "$title" --body-file issue.md
-            echo "state=이슈를 갱신했다 (#$number) — $title" >> "$GITHUB_OUTPUT"
-          else
-            gh issue create --repo "$GITHUB_REPOSITORY" --label "$STATUS_LABEL" \
-              --title "$title" --body-file issue.md
-            echo "state=이슈를 새로 열었다 — $title" >> "$GITHUB_OUTPUT"
-          fi
+      # ntfy는 JSON을 루트 주소로 받는다. 제목에 한국어가 들어가는데 HTTP 헤더는
+      # ASCII만 안전해서 Title 헤더 대신 JSON으로 보낸다.
+      #
+      # --fail-with-body: 401·404에도 curl이 0으로 끝나면 알림이 안 갔는데 초록이 된다.
+      - name: ntfy로 보낸다
+        if: hashFiles('payload.json') != ''
+        timeout-minutes: 2
+        shell: bash
+        env:
+          NTFY_URL: ${{ secrets.NTFY_URL }}
+          NTFY_USER: ${{ secrets.NTFY_USER }}
+          NTFY_PASSWORD: ${{ secrets.NTFY_PASSWORD }}
+        run: |
+          curl -sS --fail-with-body --max-time 60 -u "$NTFY_USER:$NTFY_PASSWORD" \
+            -H "Content-Type: application/json" --data-binary @payload.json "$NTFY_URL" > sent.json
+          id=$(uv run --no-project python -c "import json; print(json.load(open('sent.json', encoding='utf-8'))['id'])")
+          echo "ntfy가 받았다 (메시지 $id)." | tee sent.md
 
       - name: 잡 요약
         if: always()
         shell: bash
         run: |
           {
-            echo "## 현황 이슈"
+            echo "## 원본 업데이트 알림"
             echo
-            echo "${{ steps.issue.outputs.state || '이슈까지 못 갔다.' }}"
+            cat judge.md 2>/dev/null || echo "판정까지 못 갔다."
+            if [ -f payload.json ]; then
+              echo
+              cat sent.md 2>/dev/null || echo "**알릴 것이 있었는데 보내지 못했다.**"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"

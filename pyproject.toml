@@ -31,6 +31,7 @@ pythonpath = [
     "tools/ko-words",
     "tools/ko-punct",
     "tools/hm-voice",
+    "tools/upstream-watch",
 ]
 testpaths = ["tools"]
 
@@ -58,6 +59,7 @@ known-first-party = [
     "ko_lexicon",
     "ko_punct",
     "ko_speech",
+    "upstream_watch",
     "ko_style",
     "ko_words",
     "kr_profile",
