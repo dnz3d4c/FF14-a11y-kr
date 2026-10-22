@@ -14,16 +14,28 @@ D-11). 핀은 우리가 실제로 얹은 원본이라 "얹을 것이 생겼다"�
 견줄 때는 마디마다 정수로 읽는다. 문자열로 견주면 `v6.08.35`가 `v6.08.129`보다
 커진다.
 
-## 왜 직전 성공 실행 시각을 받는가
+## 같은 릴리스를 두 번 안 알리는 법
 
-이슈를 안 쓰기로 해서(사용자 결정, 2026-10-21) "이미 알렸다"를 적어 둘 자리가
-없다. 핀보다 새 것만 알리면 핀을 옮길 때까지 매일 같은 알림이 간다. 그래서
-**직전 성공 실행이 시작한 뒤에 발행된 것**만 알린다. 실행 이력이 상태 몫을 한다.
-하루를 건너뛰거나 실패해도 다음 성공 실행이 그 구간을 다시 훑는다.
+핀보다 새 것만 알리면 핀을 옮길 때까지 매일 같은 알림이 간다. 그래서 실행마다
+**그날 받은 정식 릴리스의 태그 목록**을 남기고(`--write-seen`), 다음 실행은 직전
+성공 실행이 남긴 목록에 **없는 태그만** 알린다(`--seen`). 워크플로가 그 목록을
+아티팩트로 잇는다.
+
+처음에는 직전 성공 실행의 시작 시각으로 갈랐다. 그러면 실행이 시작된 뒤 목록을 받기
+전에 나온 릴리스를 다음 실행이 또 알린다. 끝난 시각으로 바꾸면 거꾸로 목록을 받은 뒤
+끝나기 전에 나온 것을 놓친다. 목록은 시계를 안 보므로 둘 다 없다(사용자 결정: 정확히
+알린다, 2026-10-22).
+
+시각(`--since`)은 **목록이 없을 때만** 쓴다. 이 방식으로 바꾼 뒤 첫 실행과, 아티팩트가
+만료될 만큼 실행이 오래 실패한 경우다.
+
+**draft와 prerelease는 목록에 안 넣는다.** 넣으면 나중에 정식으로 올라온 날 이미 본
+것으로 쳐서 알림이 빠진다.
 
 사용법:
     uv run python tools/upstream-watch/upstream_watch.py --pin v6.08.129 \\
-        --ours v6.8.129.0 --releases releases.json --since 2026-10-20T21:00:00Z \\
+        --ours v6.8.129.0 --releases releases.json --seen prev/seen.json \\
+        --since 2026-10-20T21:00:00Z --write-seen seen.json \\
         --topic dewey-hermes --out payload.json
 """
 
@@ -60,10 +72,25 @@ def parse_time(text: str) -> datetime:
     return datetime.fromisoformat(text.replace("Z", "+00:00"))
 
 
+def _published(rel: dict[str, Any]) -> bool:
+    return not rel.get("draft") and not rel.get("prerelease")
+
+
+def seen_tags(releases: list[dict[str, Any]]) -> list[str]:
+    """다음 실행에 넘길 "이미 본" 목록. 정식 릴리스만 담는다."""
+    return sorted(rel["tag_name"] for rel in releases if _published(rel))
+
+
 def pick_new(
-    releases: list[dict[str, Any]], pin: str, since: datetime | None
+    releases: list[dict[str, Any]],
+    pin: str,
+    since: datetime | None,
+    seen: set[str] | None = None,
 ) -> list[dict[str, Any]]:
-    """핀보다 새 버전이고 `since` 뒤에 발행된 정식 릴리스. 최신이 앞이다."""
+    """핀보다 새 정식 릴리스 가운데 아직 안 알린 것. 최신이 앞이다.
+
+    `seen`이 있으면 그것만으로 가르고 `since`는 안 본다. 빈 집합도 "목록이 있다"다.
+    """
     base = parse_version(pin)
     if base is None:
         # 0으로 치면 원본 이력 전체가 새 버전이 되어 알림이 쏟아진다.
@@ -71,12 +98,15 @@ def pick_new(
 
     picked = []
     for rel in releases:
-        if rel.get("draft") or rel.get("prerelease"):
+        if not _published(rel):
             continue
         version = parse_version(rel.get("tag_name", ""))
         if version is None or version <= base:
             continue
-        if since is not None and parse_time(rel["published_at"]) <= since:
+        if seen is not None:
+            if rel["tag_name"] in seen:
+                continue
+        elif since is not None and parse_time(rel["published_at"]) <= since:
             continue
         picked.append((version, rel))
     picked.sort(key=lambda pair: pair[0], reverse=True)
@@ -128,21 +158,40 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--pin", required=True, help="서브모듈 핀의 원본 태그")
     ap.add_argument("--ours", default="", help="우리 최신 릴리스 태그. 표시에만 쓴다")
     ap.add_argument("--releases", required=True, type=Path, help="원본 릴리스 목록 JSON")
-    ap.add_argument("--since", default="", help="직전 성공 실행 시작 시각. 없으면 첫 실행")
-    ap.add_argument("--ignore-since", action="store_true", help="시험용. 시각 조건을 끈다")
+    ap.add_argument("--seen", type=Path, help="직전 성공 실행이 남긴 목록. 파일이 없어도 된다")
+    ap.add_argument("--since", default="", help="목록이 없을 때만 쓰는 직전 성공 실행 시각")
+    ap.add_argument(
+        "--ignore-since", action="store_true", help="시험용. 목록과 시각을 둘 다 안 본다"
+    )
+    ap.add_argument("--write-seen", type=Path, help="다음 실행에 넘길 목록을 여기 쓴다")
     ap.add_argument("--topic", required=True)
     ap.add_argument("--out", required=True, type=Path, help="알릴 것이 있을 때만 쓴다")
     args = ap.parse_args(argv)
 
     releases = json.loads(args.releases.read_text(encoding="utf-8"))
-    since = None if args.ignore_since or not args.since else parse_time(args.since)
-    new = pick_new(releases, args.pin, since)
+    seen: set[str] | None = None
+    if args.seen is not None and args.seen.is_file():
+        seen = set(json.loads(args.seen.read_text(encoding="utf-8")))
+    since = parse_time(args.since) if args.since else None
+
+    if args.ignore_since:
+        basis = "끔(시험)"
+        new = pick_new(releases, args.pin, None)
+    else:
+        if seen is not None:
+            basis = f"직전 실행이 본 정식 릴리스 {len(seen)}개"
+        else:
+            basis = f"목록 없음, 시각 {args.since}" if args.since else "없음(첫 실행)"
+        new = pick_new(releases, args.pin, since, seen)
+
+    if args.write_seen is not None:
+        args.write_seen.write_text(json.dumps(seen_tags(releases)), encoding="utf-8")
 
     print("| | |")
     print("|---|---|")
     print(f"| 우리 핀 | {args.pin} |")
     print(f"| 우리 최신 릴리스 | {args.ours or '모름'} |")
-    print(f"| 기준 시각 | {'끔(시험)' if args.ignore_since else args.since or '없음(첫 실행)'} |")
+    print(f"| 기준 | {basis} |")
     print()
     if not new:
         print("알릴 새 원본 릴리스가 없다.")

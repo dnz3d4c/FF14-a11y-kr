@@ -93,6 +93,44 @@ def test_first_run_without_history_sends_what_is_newer() -> None:
     assert [r["tag_name"] for r in picked] == ["v6.08.130"]
 
 
+def test_seen_list_decides_instead_of_time() -> None:
+    """직전 실행이 목록을 받은 뒤에 나온 릴리스는 시작 시각보다 늦어도 이른 것처럼
+    보일 수 있고, 반대도 된다. 본 목록이 있으면 시각을 안 본다."""
+    releases = [
+        release("v6.08.131", "2026-10-20T00:00:00Z"),  # since보다 이르지만 못 봤다
+        release("v6.08.130", "2026-10-21T10:00:00Z"),  # since보다 늦지만 이미 봤다
+    ]
+    picked = uw.pick_new(
+        releases, "v6.08.129", since=at("2026-10-21T00:00:00Z"), seen={"v6.08.130"}
+    )
+    assert [r["tag_name"] for r in picked] == ["v6.08.131"]
+
+
+def test_empty_seen_list_is_not_the_same_as_no_list() -> None:
+    releases = [release("v6.08.130", "2025-01-01T00:00:00Z")]
+    picked = uw.pick_new(releases, "v6.08.129", since=at("2026-10-21T00:00:00Z"), seen=set())
+    assert [r["tag_name"] for r in picked] == ["v6.08.130"]
+
+
+def test_seen_keeps_only_published_releases() -> None:
+    """draft나 prerelease를 본 것으로 적으면 정식으로 올라온 날 알림이 빠진다."""
+    releases = [
+        release("v6.08.132", "2026-10-21T15:00:00Z", draft=True),
+        release("v6.08.131", "2026-10-21T12:00:00Z", pre=True),
+        release("v6.08.130", "2026-10-21T10:00:00Z"),
+        release("v6.08.129", "2026-10-17T19:20:01Z"),
+    ]
+    assert uw.seen_tags(releases) == ["v6.08.129", "v6.08.130"]
+
+
+def test_prerelease_promoted_later_is_still_sent() -> None:
+    before = [release("v6.08.130", "2026-10-21T10:00:00Z", pre=True)]
+    after = [release("v6.08.130", "2026-10-21T10:00:00Z")]
+    seen = set(uw.seen_tags(before))
+    picked = uw.pick_new(after, "v6.08.129", since=None, seen=seen)
+    assert [r["tag_name"] for r in picked] == ["v6.08.130"]
+
+
 def test_unreadable_pin_stops_instead_of_sending_everything() -> None:
     """핀을 못 읽었는데 0으로 치면 원본 이력 전체가 새 버전이 된다."""
     with pytest.raises(ValueError):
@@ -185,6 +223,47 @@ def test_main_test_pin_ignores_time(tmp_path) -> None:
     )
     assert code == 0
     assert "시험" in json.loads(out.read_text("utf-8"))["title"]
+
+
+def _main_args(tmp_path, releases: list[dict], pin: str = "v6.08.129") -> list[str]:
+    path = tmp_path / "releases.json"
+    path.write_text(json.dumps(releases), "utf-8")
+    return ["--pin", pin, "--ours", "v6.8.129.0", "--releases", str(path),
+            "--topic", "t", "--out", str(tmp_path / "payload.json"),
+            "--write-seen", str(tmp_path / "seen-out.json")]  # fmt: skip
+
+
+def test_main_reads_seen_list_over_time(tmp_path) -> None:
+    seen = tmp_path / "seen.json"
+    seen.write_text(json.dumps(["v6.08.130"]), "utf-8")
+    args = _main_args(tmp_path, [release("v6.08.130", "2026-10-21T10:00:00Z")])
+    assert uw.main([*args, "--since", "2026-10-20T00:00:00Z", "--seen", str(seen)]) == 0
+    assert not (tmp_path / "payload.json").exists()
+
+
+def test_main_falls_back_to_time_when_no_list_was_left(tmp_path) -> None:
+    """바꾼 뒤 첫 실행과 아티팩트가 만료된 경우다. 목록 파일 자리가 비어 있다."""
+    args = _main_args(tmp_path, [release("v6.08.130", "2026-10-21T10:00:00Z")])
+    missing = tmp_path / "nothing" / "seen.json"
+    assert uw.main([*args, "--since", "2026-10-21T21:00:00Z", "--seen", str(missing)]) == 0
+    assert not (tmp_path / "payload.json").exists()
+
+
+def test_main_always_leaves_the_list_for_the_next_run(tmp_path) -> None:
+    args = _main_args(
+        tmp_path,
+        [release("v6.08.129", "2026-10-17T19:20:01Z"), release("v6.08.130", "x", draft=True)],
+    )
+    assert uw.main([*args, "--since", "2026-10-21T21:00:00Z"]) == 0
+    assert json.loads((tmp_path / "seen-out.json").read_text("utf-8")) == ["v6.08.129"]
+
+
+def test_main_test_pin_ignores_seen_list_too(tmp_path) -> None:
+    seen = tmp_path / "seen.json"
+    seen.write_text(json.dumps(["v6.08.129"]), "utf-8")
+    args = _main_args(tmp_path, [release("v6.08.129", "2026-10-17T19:20:01Z")], pin="v6.08.128")
+    assert uw.main([*args, "--seen", str(seen), "--ignore-since"]) == 0
+    assert (tmp_path / "payload.json").exists()
 
 
 def test_time_keeps_timezone() -> None:
