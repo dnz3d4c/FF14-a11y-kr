@@ -5,5 +5,7 @@
     "한국어는 커밋으로 얹지 않는다. tools/assemble이 원본 트리를 build/로 복사한 뒤 korean/ 대장과 graft/rules.json을 적용해서 조립한다. build/는 gitignore 대상이고 저장소에 없는 것이 정상이다.",
     "빌드는 반드시 Release로 한다. 원본 csproj의 DeployToDevFolder 타깃이 Debug 조건이라, Debug로 빌드하면 결과가 XIVLauncher/devPlugins로 자동 복사되어 정식 설치본과 충돌한다.",
     "사용자는 스크린리더(NVDA) 사용자다. 이 모드가 발화하는 텍스트의 어순·구두점·기호는 임의로 가공하지 않는다."
-  ]
+  ],
+  "ko_paths": ["korean/strings.json"],
+  "source_language": "German"
 }
